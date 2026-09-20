@@ -79,6 +79,10 @@ h6:before {
 
 </style>
 
+> **AUDIT BASELINE — 2026-09-20**
+> CKAD currently uses Kubernetes v1.35; recheck near exam day because the environment follows Kubernetes releases.
+> Ref: [CKAD FAQ](https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks) · [v1.35 docs](https://v1-35.docs.kubernetes.io/docs/)
+
 # General hints
 
 * Use spaces when you edit, not tabs
@@ -227,6 +231,11 @@ RollingUpdate (default) or Recreate
 `kubectl apply –f file.deployment.yml –-record=true` (Deprecated)
 
 Record the command in the Deployment revision history, so that this update may be removed in the future.
+
+> **OUTDATED**
+> `--record` is deprecated, and `--save-config` does not create rollout history.
+> New: Deployments retain revisions; annotate `kubernetes.io/change-cause` when explanatory text is useful.
+> Ref: [Deployment history](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/controllers/deployment/#checking-rollout-history-of-a-deployment)
 
 # Other option to Update deployment annotation
 

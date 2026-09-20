@@ -79,6 +79,10 @@ h6:before {
 
 </style>
 
+> **AUDIT BASELINE — 2026-09-20**
+> CKAD currently uses Kubernetes v1.35; recheck near exam day because the environment follows Kubernetes releases.
+> Ref: [CKAD FAQ](https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks) · [v1.35 docs](https://v1-35.docs.kubernetes.io/docs/)
+
 # Admission controllers
 
 * Is involved after authentication and authorization but before persisting.
@@ -223,6 +227,11 @@ spec:
 
 ## Startup Probe (Legacy only)
 
+> **OUTDATED**
+> Startup probes are not legacy, and the mechanism list below omits gRPC.
+> New: v1.35 has three probe purposes and four mechanisms: exec, HTTP, TCP, and gRPC.
+> Ref: [v1.35 probes](https://v1-35.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/)
+
 * Slow starting container
 
 ### Failing probes
@@ -329,5 +338,3 @@ Create en ephemeral debug container and even make a copy of a pod adding some de
 * Field selectors let you select Kubernetes objects based on the value of one or more resource fields. 
 * Supports operator like =, ==, !=
 * example `kubectl get services  --all-namespaces --field-selector metadata.namespace!=default`
-
- 

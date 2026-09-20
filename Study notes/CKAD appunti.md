@@ -78,6 +78,10 @@ h6:before {
 }
 
 </style>
+
+> **AUDIT BASELINE — 2026-09-20**
+> CKAD currently uses Kubernetes v1.35; recheck near exam day because the environment follows Kubernetes releases.
+> Ref: [CKAD FAQ](https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks) · [v1.35 docs](https://v1-35.docs.kubernetes.io/docs/)
   
 # Application Design and Build
 
@@ -164,6 +168,11 @@ dopesn't remove the old image, and you can find to images with the same id `dock
 Only if no container is using it. and also more than one at once
 
 #### Dump an image as a tar file
+
+> **OUTDATED**
+> Docker `save` has no `--format oci-archive`; the flag shown below is Podman syntax.
+> New: Docker writes a loadable tar; Podman can explicitly write `oci-archive`.
+> Ref: [Docker save](https://docs.docker.com/reference/cli/docker/image/save/) · [Podman save](https://docs.podman.io/en/stable/markdown/podman-save.1.html)
 
 `docker save -o output-file.tar image-name:tag`
 
@@ -261,6 +270,11 @@ args:
 
 * TimeZone
 
+> **OUTDATED**
+> The schedule need not inherit the controller's local time zone.
+> New: in v1.35, set `.spec.timeZone`, for example `Etc/UTC`.
+> Ref: [CronJob time zones](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones)
+
 Timezone comes from the control panel of your k8s API Server
 
 #### Cronjob Controller 
@@ -306,6 +320,11 @@ It  governs whether new jobs will start if previous instances are still running.
 * Used when a container needs some more logic to better integrate with the environment. (e.g. istio service mesh )
 
 ### Sidecar pattern
+
+> **OUTDATED**
+> The generic “second app container” model omits Kubernetes-native sidecars.
+> New: v1.35 sidecars are `initContainers` with `restartPolicy: Always`; the feature is stable since v1.33.
+> Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
 
 * Main container and sidecar
 
@@ -511,6 +530,11 @@ kubectl annotate deployment [name] kubernetes.io/change-cause="Change details" -
 * `kubectl rollout status –f file.deployment.yml`
 
 #### Get information about a Deployment
+
+> **OUTDATED**
+> `--save-config` stores last-applied data; it does not create Deployment rollout history.
+> New: ReplicaSets retain revisions; annotate `kubernetes.io/change-cause` only when explanatory text is useful.
+> Ref: [Deployment history](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/controllers/deployment/#checking-rollout-history-of-a-deployment)
 
 * There is a history if you use things like `‑‑save‑config` that will be tracked for you, and that's done through the annotations
 
@@ -746,6 +770,11 @@ as a parameter in `kube-apiserver.yaml` there can be an option `--runtimeconfig=
 * Probes can be used in Pds's definition (yaml) but of course also in deployments.
 
 ### Types of Probes
+
+> **OUTDATED**
+> Startup probes are not legacy, and the mechanism list below omits gRPC.
+> New: v1.35 has three probe purposes and four mechanisms: exec, HTTP, TCP, and gRPC.
+> Ref: [v1.35 probes](https://v1-35.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/)
 
 * Two (Readiness and Liveness) plus one legacy (Startup)
 
@@ -1097,6 +1126,11 @@ limits:
 
  ### Resource Quotas
 
+> **OUTDATED**
+> The “starting with v1.29” qualifier is not useful for the CKAD v1.35 environment.
+> New: v1.35 lists `ResourceQuota` among the admission plugins enabled by default.
+> Ref: [Admission controllers](https://v1-35.docs.kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#which-plugins-are-enabled-by-default)
+
 * Quotas set limitations on the `namespace` level 
 
 * Quotas can limit not only resource but also can limit the amount of any kind of object created, like number of pods.
@@ -1293,6 +1327,11 @@ data:
 * Every namespace gets a default ServiceAccount upon creation.
 
 ### Creating a Service Account
+
+> **OUTDATED**
+> The example uses `kubernetes.io/enforce-mountable-secrets`, deprecated since v1.32.
+> New: use separate namespaces to isolate access to mounted Secrets.
+> Ref: [Annotation reference](https://v1-35.docs.kubernetes.io/docs/reference/labels-annotations-taints/#kubernetes-io-enforce-mountable-secrets)
 
 * via yaml
 
@@ -1599,10 +1638,20 @@ spec:
 
 ### DNS
 
+> **OUTDATED**
+> Modern clusters normally run CoreDNS Pods, not Pods named `kube-dns`.
+> New: the Service remains named `kube-dns` for compatibility, while the backing Pods are usually CoreDNS.
+> Ref: [CoreDNS service](https://v1-35.docs.kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/)
+
 * There's a `kube-dns` service and `kube-dns` pods in the kube-system namespaces.
 * Every pods get the address of the dns service injected inside it's configuration, for instance inside `/etc/resolve.conf` file as `nameserver`
 
 ## Use Ingress Rules to Expose Applications
+
+> **OUTDATED**
+> Ingress remains in CKAD scope, but the API is frozen; the community Ingress-NGINX controller is retired.
+> New: keep Ingress for the exam; prefer Gateway API or a maintained controller for new production work.
+> Ref: [v1.35 Ingress](https://v1-35.docs.kubernetes.io/docs/concepts/services-networking/ingress/) · [retirement](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/)
 
 * Load balancers can expose only one service via a load balancer on the cloud, so if you need to expose more, you need more load balancers in the cloud which means cost.
 
