@@ -142,7 +142,7 @@ kubectl config set-context --current --namespace=<nameOfTheNamespace>
 
 `-n <namespace name>` option on the command line of each command
 
-## Change the editor for K9s commands edit
+## Change the editor for K8s commands edit
 
 `KUBE_EDITOR="nano" k edit svc/<service-name>`
 
@@ -162,6 +162,8 @@ As an alternative to writing yaml
 
 `k expose deploy <deploy-name`> --port=<desired port> --target-port=<pod's port> --type=NodePort --name=<service-desired-name>
 
+* Note that this will crerate a NodePort as specified but with a random external port in the allowed range (30000-32767) which we can get from k get svc
+
 ## Create a temporary pod as an interactive TTY using image alpine and set restart to Never, named temp-pod
 
 `k run -it --restart=Never -image=alpine temp-pod`
@@ -170,7 +172,7 @@ As an alternative to writing yaml
 
 `k create deploy <deploy-name> --image=<image>[:tag] --dry-run=client -o yaml > deploy.yaml` 
 
-* Note that this will crerate a NodePort as specified but with a random external port in the allowed range (30000-32767) which we can get from k get svc
+
 
 # Modify a deployment from the command line (for example if you created it without a yaml)
 
@@ -226,52 +228,53 @@ RollingUpdate (default) or Recreate
 
  Saves the configuration in resource's annotations
 
- # Apply changes to a deployment
+ # Deployment Updates & Rollout History
 
-`kubectl apply –f file.deployment.yml –-record=true` (Deprecated)
+* **Triggering a Revision:** A new rollout revision is created *automatically* when the Pod template (`spec.template`) is modified.  
+ Scaling or metadata changes do not generate a new revision.
+* **Where History Lives:** History is inherently maintained by the older ReplicaSets preserved by the Deployment controller. 
+* **Recording Changes (Replaces deprecated `--record`):** Annotate the deployment to manually populate the `CHANGE-CAUSE` column in the rollout history.
 
-Record the command in the Deployment revision history, so that this update may be removed in the future.
+```bash
+kubectl annotate deployment <deployment-name> kubernetes.io/change-cause="Change details" --overwrite
+```
 
-> **OUTDATED**
-> `--record` is deprecated, and `--save-config` does not create rollout history.
-> New: Deployments retain revisions; annotate `kubernetes.io/change-cause` when explanatory text is useful.
-> Ref: [Deployment history](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/controllers/deployment/#checking-rollout-history-of-a-deployment)
+## Checking Status & History
 
-# Other option to Update deployment annotation
+**Check current rollout status:**
+```bash
+kubectl rollout status deployment/<deployment-name>
+```
 
-kubectl annotate deployment [name] kubernetes.io/change-cause="Change details" --overwrite=true
+**View all revisions:**
+```bash
+kubectl rollout history deployment/<deployment-name>
+```
 
-## Get information about a Deployment
+**View details of a specific revision:**
+```bash
+kubectl rollout history deployment/<deployment-name> --revision=2
+```
 
-`kubectl rollout status deployment [deployment-name]`
+## Rollbacks (Undo)
 
-# Rollback
+**Rollback to the immediately previous revision:**
+```bash
+kubectl rollout undo deployment/<deployment-name>
+```
 
-* There is a history if you use things like ‑‑save‑config that will be tracked for you, and that's done through the annotations
-
-## Get information about a Deployment
-
-`kubectl rollout history deployment [deployment-name]`
-
-# Get information about a specific Deployment revision
-
-`kubectl rollout history deployment [deployment-name] --revision=2`
-
-## Check status
-
-kubectl rollout status –f file.deployment.yml
-
-## Rollback a Deployment
-
-kubectl rollout undo –f file.deployment.yml
-
-## Rollback to a specific revision
-
-kubectl rollout undo –f file.deployment.yml --to-revision=2 
+**Rollback to a specific historical revision:**
+```bash
+kubectl rollout undo deployment/<deployment-name> --to-revision=2
+```
 
 # Jq
 
-`k get deploy <deploy-name> -o json | jq '.metadata.annotations." kubernetes.io/change-cause"'` // double quotes to escape slash and dash
+ Double quotes to escape slash and dash
+
+* kubectl get deploy <deploy-name> -o json | jq '.metadata.annotations."kubernetes.io/change-cause"'  
+or
+* kubectl get deploy <deploy-name> -o json | jq '.metadata.annotations["kubernetes.io/change-cause"]'
 
 # Helm
  
@@ -297,7 +300,7 @@ Running instance of a chart (combined with a config) inside K8s
 
 * hubs give repository info
 
-### repository
+### Repository
 
 * repo's have charts
 
@@ -331,7 +334,7 @@ Running instance of a chart (combined with a config) inside K8s
 
 * to search for a version, `helm search repo <chart-name> --version=<version-number>`
 
-* to update all repo, `helm repo update`
+* to update all repos, `helm repo update`
 
 * to update a repo, `helm repo update <repo-name>`
 

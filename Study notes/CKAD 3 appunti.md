@@ -99,7 +99,7 @@ h6:before {
 ### LimitRanger
 
 * Applies default Pod memory/cpu limits for a namespace
-* You can set a LimitRanger for a namespace but then you enforce it with LimitRanger controller
+* You set a `LimitRange` for a namespace, which is then enforced by the `LimitRanger` admission controller.
 
 ### PersistentVolumeClaimResize
 
@@ -174,7 +174,12 @@ Exams requests, creates namespaces if not existing
 
 ## All versions for a given resource
 
-* ` ` 
+* Find the API group for the resource (e.g., Deployments use 'apps').  
+`kubectl api-resources | grep deployment`
+
+* List all available versions for that specific API group.  
+`kubectl api-versions | grep <api-group>/`  
+`kubectl api-versions | grep apps/`
 
 ## Preferred version for an API group
 
@@ -189,79 +194,68 @@ Exams requests, creates namespaces if not existing
 * in the exam context not having multiple terminals `k proxy 8001 & curl` wil put you into interactive curl where you can run curl commands
 * in the exam context not having multiple terminals `k proxy 8001 & ` wil run k proxy in the backgroung and you can later kill process with `kill <PID>`
 * if unsure of the PID `ps -a | grep kubectl`
-
 # Probes
 
-* In a pod or deployment, doesn't matter
-* Note that the liveness probe doesn't wait for the readiness probe to succeed, they're independent
+* Probes are configured strictly at the container level (`spec.containers[].<probeType>` or `spec.template.spec.containers[].<probeType>`).
+* Liveness and Readiness probes run independently and simultaneously, unless a Startup probe is defined to delay their execution.
 
-## Readiness Probe
+## Probe Purposes
 
-* Completed initialization and is therefore able to receive requests
-
-```yaml
-spec:
-  readinessProbe:
-    tcpSocket:
-      port: 8080
-    initialDelaySeconds: 15
-    periodSeconds: 10
-```
-
-## Liveness Probe
-
-* Healthy, running as expected, Is able to answer calls
+### Readiness Probe
+* Determines if the container is fully initialized and ready to receive traffic.
+* **Failure action:** The Pod's IP address is removed from all matching Service endpoints. It does **not** restart the container.
 
 ```yaml
 spec:
-  livenessProbe:
-        exec:
-          command:
-          - cat 
-          - /tmp/healthy
-        initialDelaySeconds: 2 //wait to let the pod start
-        timeoutSeconds: 3
-        periodSeconds: 5 //default is 10
-        failureThreshold: 1 //default is 3. Number of allowed failures is failureThreshold -1
+  containers:
+  - name: app
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 10
 ```
 
-## Startup Probe (Legacy only)
+### Liveness Probe
+* Determines if the container is fundamentally healthy and not trapped in a dead state.
+* **Failure action:** The `kubelet` kills the container and restarts it (subject to the Pod's `restartPolicy`).
 
-> **OUTDATED**
-> Startup probes are not legacy, and the mechanism list below omits gRPC.
-> New: v1.35 has three probe purposes and four mechanisms: exec, HTTP, TCP, and gRPC.
-> Ref: [v1.35 probes](https://v1-35.docs.kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/)
+```yaml
+spec:
+  containers:
+  - name: app
+    livenessProbe:
+      exec:
+        command:
+        - cat 
+        - /tmp/healthy
+      initialDelaySeconds: 2 # Time to wait before the first probe
+      timeoutSeconds: 3
+      periodSeconds: 5       # Frequency of execution (default: 10)
+      failureThreshold: 1    # Consecutive failures required to trigger a restart (default: 3)
+```
 
-* Slow starting container
+### Startup Probe
+* Designed specifically for applications with long or unpredictable initialization times.
+* Disables both Liveness and Readiness probes until the Startup probe succeeds for the first time.
+* **Failure action:** If it fails past its threshold, the `kubelet` kills and restarts the container.
 
-### Failing probes
+## Probe Mechanisms (Handlers)
 
-* Default of restartPolicy is Always
-* kubelet eventually sends a request to restart the probe
+* **exec**: Executes a command inside the container. Success requires an exit code of `0`.
+* **httpGet**: Performs an HTTP GET request. Success requires an HTTP status code between `200` and `399`.
+* **tcpSocket**: Attempts to open a TCP connection to the specified port. Success requires a successfully established connection.
+* **grpc**: Performs a native gRPC health check. Success requires the application to return a `SERVING` status.
 
-## Probe Types 
-
-### ExecActions 
-
-* Execute an action inside the container. Check for a file, run a command, success on exit 0
-
-### TCPSocketAction
-
-* Just tcp check against a container's ip address and port
-
-### HTTPGetAction 
-
-* As long as it returns in the 200 range
-
-## Probes results
-
-* Success
-* Failure
-* Unknown 
+## Probe Results
+* **Success**: The container passed the diagnostic.
+* **Failure**: The container failed the diagnostic (triggers the probe's specific failure action).
+* **Unknown**: The diagnostic execution itself failed (e.g., timeout). No action is taken.
 
 # Create yaml for a pod
 
-* Instead of the usual `k create <resource> -o yaml --dry-run=client > my-resource.yaml` we're gonna do
+* Instead of the usual `k create <resource> -o yaml --dry-run=client > my-resource.yaml`  
+we're gonna do
 * `k run <desired-pod-name> --image=<image-name:tag> -o yaml --dry-run=client > my-pod.yaml`
 
 # Monitoring
@@ -278,16 +272,9 @@ spec:
 
 * Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. 
 * Metrics API can also be accessed by `kubectl top`, making it easier to debug autoscaling pipelines.
-
 * Metrics Server is not meant for non-autoscaling purposes.
 * For example, don't use it to forward metrics to monitoring solutions, or as a source of monitoring solution metrics. 
 * In such cases please collect metrics from Kubelet /metrics/resource endpoint directly.
-
-### Installing Metrics Server
-
-* Just follow the instructions
-* Check prerequisites
-* Note that the command to be added it's not on the command line but inside the yaml
 
 ## kubectl top
 
@@ -302,20 +289,21 @@ spec:
 
 # Container logs
 
-* `k get logs <pod-name>`
-* `k get logs <pod-name> -c <container-name>` //for multi- container pods
+* `k logs <pod-name>`
+* `k logs <pod-name> -c <container-name>` // for multi-container pods
 * `k logs deployment/<deployment-name>`
-* `k get logs -p <pod-name>` //previous. I  f there is a container that was terminated but still available
-* `k get logs -f <pod-name>` //follow. streams the logs to the console 
-* `k get logs --tail=20 <pod-name>` //last 20 log lines
-* `k get logs --since==10s <pod-name>` //or 2m of 1h
-* `k get logs -l app=backend --all-containers=true ` //or 2m of 1h
-  
-## terminated containers' logs that you could access wit -p
+* `k logs -f <pod-name>` // follow/stream the logs to the console 
+* `k logs --tail=20 <pod-name>` // last 20 log lines
+* `k logs --since=10s <pod-name>` // e.g., 10s, 2m, or 1h
+* `k logs -l app=backend --all-containers=true` // logs from all containers in pods matching label
 
-* By default, if a container restarts, the kubelet keeps one terminated container with its logs.
-* If a pod is evicted from the node, all corresponding containers are also evicted, along with their logs.
-* The kubelet makes logs available to clients via a special feature of the Kubernetes API.
+## The `-p` (or `--previous`) flag
+
+Retrieves logs for a **restarted container** (e.g., during a `CrashLoopBackOff`). It does not retrieve logs for just any terminated pod.
+
+* **When to use `-p`:** A pod is running or crashing, and the `kubelet` automatically restarted its container. Use `-p` to fetch the logs of that *dead instance* to see why it crashed. By default, the `kubelet` keeps exactly one terminated container instance with its logs for this purpose.
+* **Completed Pods (No `-p` needed):** If a pod finishes its task (like a Job) but the pod object *still exists* in the cluster, standard `k logs <pod-name>` works.
+* **Evicted or Deleted Pods:** If a pod is evicted or entirely removed (`kubectl delete pod`), the corresponding containers and their local logs are permanently wiped from the worker node. Neither standard `k logs` nor `-p` can retrieve them.
 
 # Debugging  Kubernetes
 
@@ -331,7 +319,7 @@ Create en ephemeral debug container and even make a copy of a pod adding some de
  
 # Creating a NodePort for a deploy
 
-* `k expose deploy <deploy-name> --port=<container-port> -type=NodePort 
+* `k expose deploy <deploy-name> --port=<container-port> -type=NodePort`
 
 # Field selectors
 
