@@ -1,7 +1,5 @@
 # Loop — writer ↔ adversarial reviewer
 
-One iteration of this file is performed per turn. The turns are driven by `/goal` (see `prompts/goal.md`), not by the `/loop` skill.
-
 All paths are relative to the repository root (`git rev-parse --show-toplevel`).
 Context and scope decisions: `prompts/goal.md`. Read `prompts/goal.md` once per iteration before acting.
 
@@ -22,8 +20,8 @@ A subagent's report reaches only the orchestrator. The orchestrator copies what 
 ## One iteration
 
 1. Read `prompts/status.md`.
-2. **If an agent is marked running,** do not dispatch another agent. End the turn and wait for that agent's completion notice. `/goal` delivers the notice as a new turn.
-3. **If every section is `done` or `done-with-open-points` and the final audit is `done`,** run the completion steps in the "Start" section of `prompts/goal.md`.
+2. **If an agent is marked running,** do not dispatch another agent. Wait for that agent's completion notice. If no notice arrives, schedule a fallback wakeup (1200 s) and end the iteration.
+3. **If every section is `done` or `done-with-open-points` and the final audit is `done`,** stop the loop, report to User and update `ACTIVITY_TRACKER.md` as `prompts/goal.md` says.
 4. **Otherwise,** take the first section that is not finished and act on the section's state:
 
 | State | Action | Next state |
@@ -47,9 +45,9 @@ A subagent's report reaches only the orchestrator. The orchestrator copies what 
    - each main CKAD section (sections 1–6);
    - the final audit.
 
-   After committing one of these, run `git push`. The preamble (section 0) is not a major step on its own: its commit is pushed together with section 1. If `git push` fails, stop working, print the error, and ask User to fix it. Do not force-push, and do not rewrite history.
+   After committing one of these, run `git push`. The preamble (section 0) is not a major step on its own: its commit is pushed together with section 1. If `git push` fails, stop the loop and report the error to User. Do not force-push, and do not rewrite history.
 7. Update `Current step` in `prompts/status.md`.
-8. Print `prompts/status.md` and end the turn.
+8. Schedule the next wakeup (60 s) and end the iteration.
 
 The **final audit** is the last row in the status table. The final audit runs the reviewer in *audit* mode, then the writer in *fix* mode if needed. The final audit uses the same state machine and the same limit of 3 rounds.
 
