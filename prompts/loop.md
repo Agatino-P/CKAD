@@ -5,7 +5,7 @@ Context and scope decisions: `prompts/goal.md`. Read `prompts/goal.md` once per 
 
 ## Roles
 
-- **Orchestrator** — the session running this loop. It dispatches the subagents, edits `prompts/status.md` and commits. It never writes note content itself.
+- **Orchestrator** — the session running this loop. It dispatches the subagents, edits `prompts/status.md`, commits and pushes. It never writes note content itself.
 - **Writer** — a fresh subagent per run. It writes one section of `Study notes/CKAD appunti.md`.
 - **Reviewer** — a fresh subagent per run, independent of the writer. It never edits the notes; it only reports findings.
 
@@ -40,9 +40,14 @@ A subagent's report reaches only the orchestrator. The orchestrator copies what 
    git add "Study notes/CKAD appunti.md" prompts/status.md
    git commit -m "notes: rebuild <section name> in CKAD appunti" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -- "Study notes/CKAD appunti.md" prompts/status.md
    ```
-   Never commit other files. Never push.
-6. Update `Current step` in `prompts/status.md`.
-7. Schedule the next wakeup (60 s) and end the iteration.
+   Never commit other files.
+6. **Push at major steps.** In this repository a major step is:
+   - each main CKAD section (sections 1–6);
+   - the final audit.
+
+   After committing one of these, run `git push`. The preamble (section 0) is not a major step on its own: its commit is pushed together with section 1. If `git push` fails, stop the loop and report the error to User. Do not force-push, and do not rewrite history.
+7. Update `Current step` in `prompts/status.md`.
+8. Schedule the next wakeup (60 s) and end the iteration.
 
 The **final audit** is the last row in the status table. The final audit runs the reviewer in *audit* mode, then the writer in *fix* mode if needed. The final audit uses the same state machine and the same limit of 3 rounds.
 

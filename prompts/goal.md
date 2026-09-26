@@ -23,17 +23,19 @@ The goal is complete when every section in `prompts/status.md` is `done` or `don
 
 ## Process
 
-A writer ↔ adversarial-reviewer loop, one section per cycle, followed by one final completeness cycle. Each writer run and each reviewer run is a **fresh subagent**. The orchestrator (the session running the loop) never writes note content itself; it only dispatches the agents, updates `prompts/status.md` and commits.
+A writer ↔ adversarial-reviewer loop, one section per cycle, followed by one final completeness cycle. Each writer run and each reviewer run is a **fresh subagent**. The orchestrator (the session running the loop) never writes note content itself; it only dispatches the agents, updates `prompts/status.md`, commits and pushes.
 
 - A section finishes when the reviewer reports **no blocking findings**, or after **3 review rounds**. After round 3, the remaining blocking findings become open points in `prompts/status.md`.
 - After each finished section, the orchestrator makes **one git commit**.
+- The repository is pushed at major steps: before the loop begins, after each main CKAD section (sections 1–6), and after the final audit. The details are in `prompts/loop.md`.
 - `prompts/status.md` is the single source of truth for progress and open points. It holds the **current state only**: no history, no log and no dated entries. A resolved point is deleted from the file, because the fix itself now lives in the notes.
 
 ## Preconditions (check before starting)
 
 1. The three source files exist under `Study notes/backup/`.
 2. The move of the old files into `Study notes/backup/` is already committed (`git status` shows no staged renames). If the move is not committed, stop and ask User. Do not commit the move on User's behalf.
-3. `prompts/status.md` exists. If every section in `prompts/status.md` is still `todo`, the run starts fresh; otherwise the run resumes from the recorded state.
+3. Nothing is left unpushed before the loop begins. If `git status -sb` shows the branch ahead of `origin`, run `git push` first; that push is the "before we begin" major step.
+4. `prompts/status.md` exists. If every section in `prompts/status.md` is still `todo`, the run starts fresh; otherwise the run resumes from the recorded state.
 
 ## Start
 
