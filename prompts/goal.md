@@ -39,14 +39,17 @@ A writer ↔ adversarial-reviewer loop, one section per cycle, followed by one f
 
 ## Start
 
-Once the preconditions hold, start the loop by invoking the `loop` skill with no interval (self-paced) and these arguments:
+This goal is launched with Claude Code's `/goal` command; the exact `/goal` line is kept in `prompts/goal-command.txt`. `/goal` drives the turns: after every turn, an evaluator model checks the completion condition and, if the condition is not met, starts another turn. Do **not** also start the `/loop` skill; the two would dispatch work in parallel.
 
-```
-Follow prompts/loop.md exactly: read prompts/status.md, perform the next step, update prompts/status.md.
-```
+Each turn:
+1. On the first turn, check the preconditions above.
+2. Perform **one** iteration of `prompts/loop.md`.
+3. End the turn by printing `prompts/status.md`, so the evaluator can see progress. The evaluator reads only the conversation; the evaluator cannot read files.
 
-When `prompts/status.md` shows the goal complete, the loop stops itself and reports to User:
-- a summary of what was merged and corrected;
-- the open points left for User.
-
-Finally, add one concise entry to `ACTIVITY_TRACKER.md` recording that the rebuild is done and pointing to `prompts/status.md` for the open points.
+When `prompts/status.md` shows every row finished:
+1. Add one concise entry to `ACTIVITY_TRACKER.md`. The entry records that the rebuild is done and points to `prompts/status.md` for the open points.
+2. Commit only `ACTIVITY_TRACKER.md` and push.
+3. Print the final `prompts/status.md` and the output of `git status -sb`.
+4. Report to User:
+   - a summary of what was merged and corrected;
+   - the open points left for User.
