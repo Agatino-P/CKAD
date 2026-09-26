@@ -150,7 +150,7 @@ docker image tag <old-name> <new-name>
 docker image ckad:docker apesce/ckad:docker
 ```
 
-dopesn't remove the old image, and you can find to images with the same id `docker image ls`
+doesn't remove the old image, and you can find to images with the same id `docker image ls`
 
 #### Pullinmg an image
 
@@ -169,25 +169,29 @@ Only if no container is using it. and also more than one at once
 
 #### Dump an image as a tar file
 
-> **OUTDATED**
-> Docker `save` has no `--format oci-archive`; the flag shown below is Podman syntax.
-> New: Docker writes a loadable tar; Podman can explicitly write `oci-archive`.
-> Ref: [Docker save](https://docs.docker.com/reference/cli/docker/image/save/) · [Podman save](https://docs.podman.io/en/stable/markdown/podman-save.1.html)
+`docker image save -o <file>.tar <image>[:<tag>]` (alias: `docker save`)
+`docker save -o ckad.tar ckad:latest` → writes `ckad.tar` containing all layers + metadata
 
-`docker save -o output-file.tar image-name:tag`
+* Docker has **no `--format` flag** on `save`. Docker always writes one kind of tar, and `docker load` can read that tar back.
+* The tar Docker writes is **OCI-compliant**: the tar has `oci-layout`, `index.json` and `blobs/`, plus the legacy `manifest.json` for older tools.
+* `-o` / `--output` writes to a file. Without `-o`, Docker writes the tar to stdout, so the output can be piped:
+  `docker save ckad:pluralsight | gzip > ckad-image.tar.gz`
+  (the result is a gzip file, not a zip, so the extension is `.tar.gz`; `docker load -i ckad-image.tar.gz` reads the gzip directly — gzip, bzip2, xz and zstd are all accepted)
+* `--platform os[/arch[/variant]]` saves only the given platform of a multi-platform image:
+  `docker save --platform linux/amd64 -o ckad-amd64.tar ckad:latest`
+* Several images can go into one tar: `docker save -o all.tar ckad:latest nginx:1.27`
 
-It always saves images in the OCI (Open Container Initiative) format, which is the default format used by Docker for saving images.
+**Podman** is the tool where the format is chosen explicitly:
 
-The resulting output is a tar archive containing the image layers and metadata
+`podman save --format <docker-archive|oci-archive|oci-dir|docker-dir> -o <file> <image>`
+`podman save --format oci-archive -o ckad.tar ckad:latest` → OCI archive
 
-`docker save ckad:latest --output ckad.tar `
+* Podman's default is `docker-archive`, so `--format oci-archive` is required when an OCI archive is asked for.
 
-`docker save ckad:pluralsight | gzip > ckad-image.zip`
+<mark>Exam: if the task asks for an OCI-format archive, check which tool the task says to use.
+ With Podman → add `--format oci-archive`. With Docker → plain `docker save -o` already produces an OCI-compliant tar.</mark>
 
-<mark> Exam: careful that if they want the OCI format you need `--format oci-archive`.
- This seems no more the case with Docker, now defaulting to oci-archive</mark>
-
-* The layers inside the oci-archive are compressed while the layers inside the docker-archive are not compressed. That can make quite a difference in size.
+Ref: [Docker save](https://docs.docker.com/reference/cli/docker/image/save/) · [Docker load](https://docs.docker.com/reference/cli/docker/image/load/) · [Podman save](https://docs.podman.io/en/stable/markdown/podman-save.1.html)
 
 #### Fixing image names for pushing 
 
@@ -230,7 +234,7 @@ spec:
   backoffLimit: 4               # Max retries if a pod fails, against an exponential delay, starting with 10s
   template:
     spec:
-      restartPolicy: Never      # It's useful for debugging g because you can see the logs of failing pods.
+      restartPolicy: Never      # It's useful for debugging because you can see the logs of failing pods.
       containers:
       - name: ctr
         image: alpine:latest
@@ -239,7 +243,7 @@ spec:
 
 * a command that runs for longer
 
-`['sh', '-c' 'echo "this will be slow" && sleep60']`
+`['sh', '-c' 'echo "this will be slow" && sleep 60']`
 
 * A yaml multi line commands
 
@@ -265,7 +269,7 @@ args:
 5) Day of thew week
 
 `"* * * * *"` runs every minute  
-`"0 2 4 * *"` runs at 2:00 every 4th day of the month
+`"0 2 4 * *"` runs at 2:00 every 4th day of the month  
 `"*/2 * * * *"` runs every two minutes
 
 * TimeZone

@@ -34,3 +34,20 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Update rule:** Add short notes only when review or practice reveals a useful gap; avoid syllabus-driven expansion.
 - **Study implication:** Separate conceptual gaps from speed, command recall, and other exam-only practice needs.
 - **Next action:** Wait for User's note review; later update the notes from concrete practice-test findings.
+
+### 2026-09-26 — Image save section rewritten
+
+- **Change:** Rewrote "Dump an image as a tar file" in `Study notes/CKAD appunti.md` and removed the OUTDATED box.
+- **Verified online:** `docker save` has only `-o/--output` and `--platform` (no `--format`); the Docker save tar is OCI-compliant (`oci-layout`, `index.json`, `blobs/`, plus `manifest.json`); `docker load` accepts gzip, bzip2, xz, and zstd archives; Podman `save --format` defaults to `docker-archive`.
+- **User preference:** Notes state current behavior only, without version history.
+- **Dropped as unverified:** The claim that `oci-archive` layers are compressed and `docker-archive` layers are not; Podman docs do not compare the two formats.
+- **Open:** The official CKAD handbook was not checked for which container tools the exam provides; third-party 2026 guides say both Docker and Podman.
+
+### 2026-09-26 — Notes restructure and review-tracker retirement
+
+- **Structure decided:** Two note files: `Study notes/CKAD appunti.md` (full corrected reference) and `Study notes/CKAD appunti recap.md` (short exam-day sheet). The previous four note files are kept as-is in `Study notes/backup/`.
+- **Main-file rebuild:** Runs as a writer ↔ adversarial-reviewer loop defined in `prompts/goal.md` and `prompts/loop.md`; progress and open points live in `prompts/status.md`.
+- **Retired:** `NOTES_REVIEW_TRACKER.md`, whose content was duplicated here, superseded by `prompts/`, or stale. The points below were unique to that file.
+- **Open — Killer Shell results:** `Study notes/Killer Shell - Exam Simulators - results.pdf` has not yet been compared with the topics covered by the notes.
+- **Open — practice findings destination:** Decide where new findings from practice tests go; likely candidates are the recap for quick reminders and the main file for longer explanations.
+- **Recap rebuild input:** Compared with the old files 2 and 3, the recap added OCI images and Dockerfiles; Jobs and CronJobs (including `sh -c` usage and `k logs job/<name>`); sidecars and storage scoping; CRDs; RBAC; quotas; ConfigMaps and `$(VAR)` in args; ServiceAccounts and their Secrets; security contexts; NetworkPolicies; service DNS names; Ingress; nano settings; and `helm ls -a`.
