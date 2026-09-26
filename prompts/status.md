@@ -7,11 +7,11 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Sections 0 and 1 are finished, committed and pushed. The next step is section 2, state `todo`: dispatch the Writer in write mode.
+Section 3 (Application Observability and Maintenance), write mode: the Writer is running. On completion, section 3 moves to `review`, round 1.
 
 ## Agent running
 
-none
+Writer — section 3 (Application Observability and Maintenance), write mode.
 
 ## Sections
 
@@ -19,11 +19,11 @@ none
 |---|---|---|---|---|
 | 0 | Preamble | Base: CSS `<style>` block and audit header. Re-verify the current CKAD Kubernetes version online and update the header. | done | 1 |
 | 1 | Application Design and Build | Base: "Application Design and Build" (images, Docker/Podman, Jobs, CronJobs, multi-container Pods, volumes) | done | 1 |
-| 2 | Application Deployment | Base: "Application Deployment". File 2: create/expose/dry-run Deployment, edit, scale, Deployment `spec`/`strategy`, `--save-config`, rollout history and rollback, Helm. File 3: `k run` Pod YAML, NodePort expose. File 2: `k run -it --restart=Never -image=alpine temp-pod` (source typo `-image` → `--image`). | todo | 0 |
+| 2 | Application Deployment | Base: "Application Deployment". File 2: create/expose/dry-run Deployment, edit, scale, Deployment `spec`/`strategy`, `--save-config`, rollout history and rollback, Helm. File 3: `k run` Pod YAML, NodePort expose. File 2: `k run -it --restart=Never -image=alpine temp-pod` (source typo `-image` → `--image`). | done | 1 |
 | 3 | Application Observability and Maintenance | Base: "Application Observability and Maintenance". File 3: admission controllers, K8s version, API groups/versions, `kubectl proxy`, probes, monitoring/Metrics Server, logs, events, `kubectl debug`. | todo | 0 |
 | 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | todo | 0 |
 | 5 | Services and Networking | Base: "Services and Networking" | todo | 0 |
-| 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. | todo | 0 |
+| 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | todo | 0 |
 | 7 | Final audit | All three sources against the whole new file (reviewer in audit mode). | todo | 0 |
 
 States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-open-points`.
@@ -41,3 +41,6 @@ States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-
 - **1.7** — `user-decision` — "Cronjobs" (minor): "`0 2 4 * *` runs at 2:00 every 4th day of the month" reads like "every 4 days"; the expression means 02:00 on day 4 of each month.
 - **1.8** — `user-decision` — "Jobs" (minor): the bullet "Jobs can create multiple Pods and even run them in parallel" nearly repeats the first bullet on parallel Pods.
 - **1.9** — `user-decision` — "Volumes" (minor): "Storage classes (SC)" and "Storage Classes" are two headings on one subject, and the third bullet under "Storage Classes" restates the provisioning timing given under "VolumeBindingMode". Structure inherited from the base.
+- **2.1** — `user-decision` — "Imperatively Create a service for a deployment" (minor): the bullet on `--port` being copied from the exposed resource does not say that `kubectl expose` fails when the containers declare no `ports` (inference, no direct doc quote). https://kubernetes.io/docs/reference/kubectl/generated/kubectl_expose/
+- **2.2** — `user-decision` — "Helm commands" (minor): "`helm search repo` shows only the newest version of each chart" omits that development versions are excluded unless `--devel` is passed. https://helm.sh/docs/helm/helm_search_repo/
+- **2.3** — `user-decision` — "Deployment updates and rollout history" / "Rollout history" (minor): sibling headings with nearly the same name; "Get information about a Deployment" now holds only `rollout status`.

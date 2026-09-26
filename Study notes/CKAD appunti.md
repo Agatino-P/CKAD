@@ -436,3 +436,265 @@ Are referred inside the pod in `spec.volumes[].persistentVolumeClaim.claimName`.
 ### Ephemeral Volumes   
 
  * Ephemeral volumes are specified inline in the Pod spec, which simplifies application deployment and management.
+
+# Application Deployment
+
+## Use Kubernetes Primitives to Implement Common Deployment Strategies
+
+### Create without yaml
+
+As an alternative to writing yaml, `kubectl create` builds a resource directly from the command line:
+
+`kubectl create deployment <deploy-name> --image=<image>[:tag]` (short form: `k create deploy ...`)
+
+### Use `kubectl create` to get a deployment yaml file, to later modify
+
+`kubectl create deployment <deploy-name> --image=<image>[:tag] --dry-run=client -o yaml > deploy.yaml`  
+`kubectl create deployment nginx --image=nginx:alpine --dry-run=client -o yaml > deploy.yaml`
+
+### Use `kubectl run` to get a pod yaml file, to later modify
+
+* For a Pod, instead of the usual `kubectl create <resource> ... --dry-run=client -o yaml`, use `kubectl run`:
+
+`kubectl run <pod-name> --image=<image>[:tag] --dry-run=client -o yaml > pod.yaml`  
+`kubectl run nginx --image=nginx:alpine --dry-run=client -o yaml > pod.yaml`
+
+### Create a temporary pod as an interactive TTY using image alpine and set restart to Never, named temp-pod
+
+`kubectl run -it --restart=Never --image=alpine temp-pod`
+
+### Imperative commands
+
+* Scale a deployment: `kubectl scale deployment <deployment-name> --replicas=<number of pods>`
+* Change the image of a container: `kubectl set image deployment/<deployment-name> <container-name>=<image>[:tag]`  
+  `kubectl set image deployment/nginx nginx=nginx:1.16.1`
+* Modify a deployment from the command line (for example if you created it without a yaml): `kubectl edit deploy/<deploy-name>` opens the deployment in the editor set by `KUBE_EDITOR` (or `EDITOR`; fallback `vi` on Linux)
+
+### Imperatively changing the selector on a service
+
+`kubectl set selector svc <svc-name> 'role=green'`
+
+* `kubectl set selector` works only on Service objects.
+* The new selector **replaces** the whole old selector: `'role=green'` alone leaves only `role: green` in `spec.selector`, and any other selector labels are gone. Pass every label needed, e.g. `'app=web,role=green'`.
+* Equivalent to going inside the Service yaml, looking for `spec.selector` (a plain label map in a Service, no `matchLabels`) and changing `role: blue` to `role: green`
+
+### Imperatively Create a service for a deployment
+
+`kubectl expose deploy <deploy-name> --port=<desired port> --target-port=<pod's port> --type=NodePort --name=<service-desired-name>`
+
+* `--target-port` is optional: without it, the target port is the same as `--port`. So `kubectl expose deploy <deploy-name> --port=<container-port> --type=NodePort` creates a NodePort Service whose port and target port are both the container port.
+* `--port` is optional too: without it, the port is copied from the exposed resource.
+* With `--type=NodePort` and no node port given, Kubernetes picks the node port from the allowed range (default 30000-32767); read it with `kubectl get svc`.
+
+### Structure of Blue Green
+
+* a set of pods with labels (e.g.: role) identifying them as blue, which might mean v1.0 (in addition to potentially other labels)
+
+```yaml
+spec:
+  #....
+  selector:
+    matchLabels:
+      #....
+      role: blue
+  template:
+    metadata:
+      labels:
+        #....
+        role: blue
+#....
+```
+
+* a set of pods with labels identifying them as green, which might mean v1.1 (in addition to potentially other labels)
+
+```yaml
+spec:
+  #....
+  selector:
+    matchLabels:
+      #....
+      role: green
+  template:
+    metadata:
+      labels:
+        #....
+        role: green
+#....
+```
+
+* a blue service (e.g. Load Balancer, or node port) that directs traffic from an internally used port (e.g.: 9000) to "blue" pods via a selector with
+
+```yaml
+spec:
+  #....
+  selector:
+    #....
+    role: blue
+#...
+```
+
+* a green service (e.g. Load Balancer, or node port) that directs traffic from an internally used port (e.g.: 9001) to "green" pods via a selector with
+
+```yaml
+spec:
+  #....
+  selector:
+    #....
+    role: green
+#...
+```
+
+* a public service (e.g. Load Balancer, or node port) that directs traffic from an externally used port (e.g.: 443) to blue or green pods via a selector with
+
+```yaml
+spec:
+  #....
+  selector:
+    #....
+    role: green # or role: blue
+#...
+```
+
+* And we'd swap to which group of pods the public service directs traffic by changing its selector only
+
+## Understand Deployments and How to Perform Rolling Updates
+
+### spec: properties
+
+```yaml
+spec:
+  minReadySeconds: 1           # Seconds a new Pod must be ready, without any container crashing, to be considered available (default 0)
+  progressDeadlineSeconds: 60  # Seconds to wait for progress before reporting the Deployment as failed progressing (default 600); must be greater than minReadySeconds
+  revisionHistoryLimit: 5      # Number of old ReplicaSets to retain to allow rollback (default 10)
+```
+
+### spec.strategy: properties
+
+```yaml
+strategy:
+   type: RollingUpdate   # RollingUpdate (default) or Recreate, which kills all existing Pods before new ones are created
+   rollingUpdate:
+     maxSurge: 1         # Max Pods that can be created over the desired replicas count. Absolute number or percentage. Default 25%
+     maxUnavailable: 1   # Max Pods that can be unavailable during the update. Absolute number or percentage. Default 25%
+```
+
+* `maxSurge` and `maxUnavailable` cannot both be 0.
+
+### Saving the configuration during a deployment
+
+`kubectl create -f file.deployment.yml --save-config`
+
+* Saves the configuration of the object in its annotations (`kubectl.kubernetes.io/last-applied-configuration`), so that `kubectl apply` can be used on the object later.
+* `--save-config` does not create rollout history (see below).
+
+### Deployment updates and rollout history
+
+* **Triggering a revision:** a rollout, and with it a new revision, is triggered only when the Pod template (`spec.template`) changes, for example its labels or container images. Other updates, such as scaling, do not trigger a rollout.
+* **Where history lives:** the revision history is stored in the old ReplicaSets that the Deployment keeps (how many: `revisionHistoryLimit`).
+* **Recording changes:** annotate the Deployment to fill the `CHANGE-CAUSE` column of the rollout history (the `--record` flag is deprecated). The annotation is copied to the revision when the revision is created.
+
+`kubectl annotate deployment <deployment-name> kubernetes.io/change-cause="Change details" --overwrite`
+
+* `--overwrite` is needed when the annotation already exists; without it the command fails.
+
+### Get information about a Deployment
+
+* Check the current rollout status (watches the latest rollout until it is done):
+
+`kubectl rollout status deployment/<deployment-name>`  
+`kubectl rollout status -f file.deployment.yml`
+
+### Rollout history
+
+* View all revisions:
+
+`kubectl rollout history deployment/<deployment-name>`
+
+* Get information about a specific Deployment revision:
+
+`kubectl rollout history deployment/<deployment-name> --revision=2`
+
+### Rollback a Deployment
+
+* Rollback to the immediately previous revision:
+
+`kubectl rollout undo deployment/<deployment-name>`  
+`kubectl rollout undo -f file.deployment.yml`
+
+* Rollback to a specific revision:
+
+`kubectl rollout undo deployment/<deployment-name> --to-revision=2`  
+`kubectl rollout undo -f file.deployment.yml --to-revision=2`
+
+## Use the Helm Package Manager to Deploy Existing Packages
+
+### Concepts
+
+* Chart - A Helm package: bundle of the resource definitions used to create an instance of a Kubernetes application.
+
+* Config - Configuration information (a set of values, typically from a `values.yaml` file) that Helm merges with a chart to create a release.
+
+* Release - Running instance of a chart (combined with a config) inside K8s. If you install the same chart twice, you get two releases, each with its own release name.
+
+* Library - A library chart defines chart primitives or definitions, sort of "functions" or short "blocks", that can be shared by the templates of multiple charts.
+
+* Repository - The place where charts are collected and shared: repos have charts.
+
+* Hub (defaults to Artifact Hub) - Hubs give repository info: Artifact Hub lists charts from many repositories.
+
+### Helm commands
+
+* `helm -h`  
+  `-h` also works with subcommands (e.g. `helm search repo -h`)
+
+* `helm search hub`  
+  Searches Artifact Hub (the default hub), which lists charts from many repositories; a repository found there can then be added locally with `helm repo add`.
+
+- `helm search hub` options  
+  - `--list-repo-url` option gives you the chart repository's full URL but is hard to read in table format.  
+  - Table format is the default but you can do `-o yaml` or `-o json`.  
+  - You find the chart version and the app version (in simple case it looks like the image version).
+
+* `helm repo add <repo_name_you_chose> <repo_url_from_search>`  
+  Adds a repo to your local client
+
+* `helm repo list`  
+  Lists the repos added to your local client
+
+* `helm repo update`  
+  Updates all the locally added repos. `helm repo update <repo-name>` updates only the given repo.
+
+* `helm search repo` / `helm search repo <chart>`
+  - Searches the repositories that you have added to your local helm client (with `helm repo add`).
+  - This search is done over local data, no public network needed.
+  - Each chart is identified as `<repo_local_name>/<chart_name>`.
+  - Shows only the newest version of each chart; to see all versions use `--versions`.
+  - To search for a version (a semantic versioning constraint): `helm search repo <chart-name> --version=<version-number>`
+  - To see all the options: `helm search repo --help`
+
+* `helm show values <repo/chart>`  
+  To know what values can be overridden in the chart
+
+* `helm pull <repo/chart> --untar`
+  - As some charts have a lot of values, it can be useful to have the chart "unzipped" to a folder, to check the different files (values or whatever else).
+  - Note that `helm pull` doesn't actually install the chart.
+
+* Values
+  - Supplying values overrides the defaults of the chart (e.g.: admin user & password).
+  - Values are supplied at `helm install` or `helm upgrade` time, either via a file (`-f` / `--values <file>`) or with `--set` (e.g. `--set name=value`).
+
+* `helm install <name_you_chose> <repo/chart>`  
+  This name is used for deploy (and therefore pods) and svc. At least in my test with bitnami/nginx.  
+  It also shows up when you do `helm list`
+
+* `helm upgrade`  
+  When doing upgrade, typically to a next version, you can also override some values
+
+* `helm status <release-name>`  
+  Shows the state of a release
+
+* `helm list`  
+  Lists releases (installations), in the current namespace unless one is specified
+
+* `helm uninstall <release-name>`  
+  Removes the release from the cluster
