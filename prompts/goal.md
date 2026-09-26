@@ -49,4 +49,10 @@ When `prompts/status.md` shows the goal complete, the loop stops itself and repo
 - a summary of what was merged and corrected;
 - the open points left for User.
 
-Finally, add one concise entry to `ACTIVITY_TRACKER.md` recording that the rebuild is done and pointing to `prompts/status.md` for the open points.
+Finally, add one concise entry to `ACTIVITY_TRACKER.md` recording that the rebuild is done and pointing to `prompts/status.md` for the open points. Then commit only `ACTIVITY_TRACKER.md` and push:
+
+```
+git add ACTIVITY_TRACKER.md
+git commit -m "docs: record CKAD appunti rebuild" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -- ACTIVITY_TRACKER.md
+git push
+```
