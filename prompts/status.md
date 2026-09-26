@@ -7,7 +7,7 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Not started. The next step is section 0, state `todo`: dispatch the Writer in write mode.
+Section 0 is finished and committed (push goes with section 1). The next step is section 1, state `todo`: dispatch the Writer in write mode.
 
 ## Agent running
 
@@ -17,7 +17,7 @@ none
 
 | # | Section | Source mapping | State | Round |
 |---|---|---|---|---|
-| 0 | Preamble | Base: CSS `<style>` block and audit header. Re-verify the current CKAD Kubernetes version online and update the header. | todo | 0 |
+| 0 | Preamble | Base: CSS `<style>` block and audit header. Re-verify the current CKAD Kubernetes version online and update the header. | done | 1 |
 | 1 | Application Design and Build | Base: "Application Design and Build" (images, Docker/Podman, Jobs, CronJobs, multi-container Pods, volumes) | todo | 0 |
 | 2 | Application Deployment | Base: "Application Deployment". File 2: create/expose/dry-run Deployment, edit, scale, Deployment `spec`/`strategy`, `--save-config`, rollout history and rollback, Helm. File 3: `k run` Pod YAML, NodePort expose. | todo | 0 |
 | 3 | Application Observability and Maintenance | Base: "Application Observability and Maintenance". File 3: admission controllers, K8s version, API groups/versions, `kubectl proxy`, probes, monitoring/Metrics Server, logs, events, `kubectl debug`. | todo | 0 |
@@ -30,4 +30,5 @@ States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-
 
 ## Open points
 
-None.
+- **0.1** — `user-decision` — Audit header: the header states CKAD uses Kubernetes v1.35, as the Linux Foundation FAQ and CKAD page say, while kubernetes.io lists v1.36 and v1.37 as released; the LF pages may lag their own 4–8-week alignment policy. Recheck the LF FAQ before the exam. https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks , https://kubernetes.io/releases/
+- **0.2** — `user-decision` — `<style>` block: the h5/h6 rules now use `counter-increment: h5` / `h6` and a `"."` separator, a repair none of the three sources had verbatim (file 3 fixed only the counter). Keep or revert.
