@@ -162,7 +162,7 @@ set tabstospaces
   (a chart hosted in an OCI registry is not added as a repo: use its `oci://` reference directly with `helm install` / `helm pull`)
 * `helm show values` => `helm pull --untar` 
 * `helm install` => `helm list` => `helm status` => `helm upgrade` => `helm uninstall` 
-* By default releases in pending-upgrade state aren't listed, but we can show all to find and delete the broken release: `helm -n mercury ls -a`
+* To find and delete a broken release stuck in pending-upgrade state: `helm -n mercury ls --pending` (works in Helm 3 and Helm 4). Plain `helm ls` hides pending releases in Helm 3 (there `helm -n mercury ls -a` shows all); Helm 4 lists every status by default and has no `-a`. Check `helm version` in the exam environment.
 
 # Application Observability and maintenance
  
