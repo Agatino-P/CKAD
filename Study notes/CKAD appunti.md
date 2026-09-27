@@ -1044,3 +1044,515 @@ Create an ephemeral debug container and even make a copy of a pod adding some de
 
 * Copy of the pod changing an existing container: if `--container` names a container of the pod, that container is changed in the copy (image set by `--image`, command set after `--`) instead of a new container being added:  
 `kubectl debug <failed-but-existing-podname> -it --image=<image-name> --copy-to=<name-of-the-new-pod> --container=<container-we-need-to-debug> -- sh`
+
+# Application Environment, Configuration and Security
+
+## Discover and use resources that extend kubernetes
+
+### Defining custom resources and operators
+
+* A resource is an endpoint in the Kubernetes API that stores a collection of API objects of a certain kind (e.g. the built-in `pods` resource contains a collection of Pod objects).
+
+#### Custom resources
+
+* A custom resource is a way to extend k8s by creating new object types.
+* Once installed, custom resources are served by the Kubernetes API itself, at a new API endpoint: their objects are created and accessed with `kubectl`, just like built-in resources (e.g. `kubectl get applications`).
+
+##### Custom resource definitions
+
+* Custom resource definitions, or CRDs, are how we define the custom resources that we can then use either with operators or as a method of grouping or clustering like objects.
+
+```yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: applications.example.com # must be <names.plural>.<group>, i.e. the plural name and the group below
+spec:
+  group: example.com
+  scope: Namespaced  # or Cluster
+  names:
+    plural: applications # this has to match with beginning of metadata.name above
+    singular: application
+    kind: Application
+    shortNames:
+    - app
+  versions:
+  - name: v1
+    served: true  # served=true means the version is enabled (served via the REST API)
+    storage: true # storage=true means this is the version used when the objects are persisted (stored in etcd)
+    # you can serve more than one version, but one and only one must be set to storage=true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              frontend:
+                type: object 
+                properties:
+                  image:
+                    type: string
+                  replicas:
+                    type: integer
+              # ... backend: 
+              
+```              
+
+* Note that the schema is indented: each field goes under the `properties:` of its parent. A field placed at the wrong level (e.g. `replicas:` next to `properties:` instead of under it) makes `kubectl apply` fail with `strict decoding error: unknown field`.
+
+* Note that just because we called the properties image and replicas k8s is not going to spin up an application with this image and replicas. Telling k8s what to do with these properties is the job of an operator set up and installed, associated with this custom resource.
+
+* To create such an object of this kind we'd have a yaml file (let's call it for example app.yaml) similar to this:
+
+```yaml
+apiVersion: example.com/v1 # group and version from previous one
+kind: Application # names.kind from previous one
+metadata:
+  name: my-app
+spec: 
+  frontend:
+    image: nginx:latest
+    replicas: 2
+```
+
+#### Operators
+
+* Custom resources are used with operators, i.e. custom controllers that watch those resources and perform activities (e.g. create, update) defined by what we write in their code. Code can be Go, Python, and more.
+* The Operator works using the principle of control loop and functions as a controller.
+* The operator will monitor our custom resources. And then based on the information it gathers from these custom resources, it will then bring that information into the operator code, and the operator can then take action on an object (not necessarily the one that was being monitored) or otherwise, depending on what its code tells.
+
+<mark>Custom resources definition is in scope for the exam, writing operators is not</mark>
+
+## Understand Authentication, Authorization and Admission Control
+
+### RBAC Role-Based Access Control
+
+#### Role
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+```
+
+* A Role always sets permissions within a particular namespace.
+* When you create a Role, you have to specify the namespace it belongs in.
+
+#### ClusterRole
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # "namespace" omitted since ClusterRoles are not namespaced
+  name: secret-reader
+rules:
+- apiGroups: [""]
+  #
+  # at the HTTP level, the name of the resource for accessing Secret
+  # objects is "secrets"
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+```
+
+* A ClusterRole can be used to grant the same permissions as a Role.
+* Because ClusterRoles are cluster-scoped, you can also use them to grant access to:
+  - cluster-scoped resources (like nodes)
+  - non-resource endpoints (like /healthz)
+  - namespaced resources (like Pods), across all namespaces
+
+#### RoleBinding / ClusterRoleBinding
+
+```yaml
+# This role binding allows "jane" to read pods in the "default" namespace.
+# You need to already have a Role named "pod-reader" in that namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding    # a ClusterRoleBinding has no metadata.namespace and its roleRef.kind can only be ClusterRole
+metadata:
+  name: read-pods
+  namespace: default
+subjects:            # You can specify more than one "subject"
+- kind: User         # User, Group or ServiceAccount
+  name: jane         # "name" is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:             # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: Role         # Role or ClusterRole
+  name: pod-reader   # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+```
+
+* After you create a binding, you cannot change the Role or ClusterRole that it refers to.  
+  If you try to change a binding's roleRef, you get a validation error (`cannot change roleRef`). 
+
+### ABAC Attribute-Based Access Control
+
+* Out of scope for the exam
+* To enable ABAC mode, specify `--authorization-policy-file=SOME_FILENAME` and `--authorization-mode=ABAC` on startup (of kube-apiserver).
+* The file format is one JSON object per line. There should be no enclosing list or map, only one map per line. Each line is a "policy object".
+
+### Admission Controllers
+ 
+#### Mutating Controllers
+
+* E.G.: The `DefaultStorageClass` mutating admission controller observes the creation of PersistentVolumeClaims that do not request any specific storage class, and adds the default storage class to them.
+
+#### Checking if an admission controller is enabled
+
+On the control plane node, `ps -ef | grep kube-apiserver` shows the running kube-apiserver command line with its flags (e.g. `--enable-admission-plugins=...`), but where the flags are set actually depends on the specific k8s configuration.
+  * `-e` selects all processes (identical to `-A`) 
+  * `-f` provides a full-format listing for each process (and prints the command arguments).
+  
+Note: without `-e`/`-A`, ps only selects the processes with the same effective user ID as the current user and associated with the same terminal. Think of `-A` like "absolutely everything". 
+On a related note `-a` is different: it selects all processes except both session leaders and processes not associated with a terminal.
+
+<mark>For the exam the recommended way is looking into `/etc/kubernetes/manifests/kube-apiserver.yaml`</mark>
+
+### EventRateLimit controller 
+
+* An example of admission controller that uses configuration is `EventRateLimit` (alpha, disabled by default) which controls how many event requests can reach the Kubernetes API.  
+  Once the controller is enabled, it needs some configuration to know what to stop: the configuration file is referenced from the file given to the kube-apiserver flag `--admission-control-config-file`.
+
+```yaml
+apiVersion: eventratelimit.admission.k8s.io/v1alpha1
+kind: Configuration
+limits:
+  - type: Namespace
+    qps: 50
+    burst: 100
+    cacheSize: 2000
+  - type: User
+    qps: 10
+    burst: 50
+```
+
+## Understand and Define Resource Requirements, Limits and Quotas
+
+### Resource Requests and Limits
+
+* Requests and limits are set for each container of a `Pod`; the Pod's request/limit for a resource is the sum of its containers' requests/limits.
+
+* In the Pod yaml template there are 
+  * `spec.containers[].resources.limits.cpu`
+  * `spec.containers[].resources.limits.memory`
+  * `spec.containers[].resources.limits.hugepages-<size>`
+  * `spec.containers[].resources.requests.cpu`
+  * `spec.containers[].resources.requests.memory`
+  * `spec.containers[].resources.requests.hugepages-<size>`
+
+* Requests must be less than or equal to limits, otherwise the pod won't deploy (`must be less than or equal to cpu limit`)
+
+* `requests` are what the kube-scheduler uses to decide which node to place the Pod on; the kubelet also reserves at least the request amount for that container. A container can use more than its request if the node has it available.
+
+* The CPU limit defines a hard ceiling on how much CPU time that the container can use. During each scheduling interval (time slice), the Linux kernel checks to see if this limit is exceeded; if so, the kernel waits before allowing that cgroup to resume execution.
+
+* The CPU request typically defines a weighting. If several different containers (cgroups) want to run on a contended system, workloads with larger CPU requests are allocated more CPU time than workloads with small requests.
+
+* If a container exceeds its memory request and the node that it runs on becomes short of memory overall, it is likely that the Pod the container belongs to will be evicted.
+
+* A container might or might not be allowed to exceed its CPU limit for extended periods of time. However, container runtimes don't terminate Pods or containers for excessive CPU usage.
+
+### Resource Quotas
+
+* Quotas set limitations on the `namespace` level 
+
+* Quotas can limit not only resource but also can limit the amount of any kind of object created, like number of pods.
+
+* `ResourceQuota` is an admission controller enabled by default in kube-apiserver. A quota is enforced in a namespace when there is a ResourceQuota in that namespace.
+
+* You define ResourceQuotas via a `kind: ResourceQuota` yaml file, inside which there is `metadata.namespace` to assign it to a namespace
+
+* `spec.hard` section has requests, limits, number of pods
+
+* `spec.scopes` it's a tricky topic, better refer to docs, but know it exists
+  * Each quota can have an associated set of scopes. 
+  * A quota will only measure usage for a resource if it matches the intersection of enumerated scopes.
+
+## Understanding ConfigMaps
+
+* ConfigMaps should not contain secrets
+* The values under `data` in a ConfigMap can only be strings (binary data goes under `binaryData`, base64-encoded).
+* If we want a value with boolean values we need to quote the values, like "true" or "false". Same for numbers, like "100". Unquoted, the ConfigMap is rejected (`cannot unmarshal bool into Go struct field ConfigMap.data of type string`).
+
+<mark>EXAM: In the exam they might try to induce into error by providing secrets and not secrets data together, you have to put them in ConfigMaps and Secrets</mark>
+
+### Defining ConfigMaps
+
+* `ConfigMap` is a kind
+* In the yaml, the KeyValuePairs are under the `data:` section 
+* Values can also be multiple lines of content
+* Data cannot exceed 1 MiB
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-demo
+data:
+  # property-like keys; each key maps to a simple value
+  player_initial_lives: "3"
+  ui_properties_file_name: "user-interface.properties"
+
+  # file-like keys
+  game.properties: |
+    enemy.types=aliens,monsters
+    player.maximum-lives=5    
+  user-interface.properties: |
+    color.good=purple
+    color.bad=yellow
+    allow.textmode=true  
+```
+
+### Using ConfigMaps
+
+* There are four different ways that you can use a ConfigMap to configure a container inside a Pod:
+
+1. Inside a container command and args
+2. Environment variables for a container
+3. Add a file in read-only volume, for the application to read
+4. Write code to run inside the Pod that uses the Kubernetes API to read a ConfigMap (Totally Not in scope for the exam)
+
+* if the names that we want in the pod are different from the ones in the config map , can map them one by one
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo-pod
+spec:
+  containers:
+    - name: demo
+      image: alpine
+      command: ["sleep", "3600"]
+      args: ["$(PLAYER_INITIAL_LIVES)"] # $(VAR) expands the environment variable defined below.
+                                        # args are appended to command: the container runs `sleep 3600 3`
+      env:
+        # Define the environment variable
+        - name: PLAYER_INITIAL_LIVES # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo           # The ConfigMap this value comes from.
+              key: player_initial_lives # The key to fetch.
+        - name: UI_PROPERTIES_FILE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo
+              key: ui_properties_file_name
+      volumeMounts:
+      - name: config
+        mountPath: "/config"
+        readOnly: true
+  volumes:
+  # You set volumes at the Pod level, then mount them into containers inside that Pod
+  - name: config
+    configMap:
+      # Provide the name of the ConfigMap you want to mount.
+      name: game-demo
+      # An array of keys from the ConfigMap to create as files
+      items:
+      - key: "game.properties"
+        path: "game.properties"
+      - key: "user-interface.properties"
+        path: "user-interface.properties"
+        
+```
+
+* if the names that we want in the pod are the same of the ones in the config map, we can load the whole config map at once
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myconfigmap
+data:
+  username: k8s-admin
+  access_level: "1"
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env-configmap
+spec:
+  containers:
+    - name: app
+      command: ["/bin/sh", "-c", "printenv"]
+      image: busybox:latest
+      envFrom:
+        - configMapRef:
+            name: myconfigmap
+
+```
+
+* [Using ConfigMaps as files from a Pod](https://kubernetes.io/docs/concepts/configuration/configmap/#using-configmaps-as-files-from-a-pod)
+
+To consume a ConfigMap in a volume in a Pod:
+
+1. Create a ConfigMap or use an existing one. Multiple Pods can reference the same ConfigMap.
+2. Modify your Pod definition to add a volume under `.spec.volumes[]`. Name the volume anything, and have a `.spec.volumes[].configMap.name` field set to reference your ConfigMap object.
+3. Add a `.spec.containers[].volumeMounts[]` to each container that needs the ConfigMap. Specify `.spec.containers[].volumeMounts[].readOnly = true` and `.spec.containers[].volumeMounts[].mountPath` to an unused directory name where you would like the ConfigMap to appear.
+4. Modify your image or command line so that the program looks for files in that directory. Each key in the ConfigMap `data` map becomes the filename under `mountPath`.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: redis
+    volumeMounts:
+    - name: foo
+      mountPath: "/etc/foo"
+      readOnly: true
+  volumes:
+  - name: foo
+    configMap:
+      name: myconfigmap
+```
+
+## Create and consume secrets
+
+* Secrets can be mounted as data volumes or exposed as environment variables to be used by a container in a Pod. So, like ConfigMaps, you can use Secrets to configure a container inside a Pod:
+
+1. Inside a container command and args (through an environment variable, `$(VAR)`)
+2. Environment variables for a container
+3. Add a file in read-only volume, for the application to read
+4. Write code to run inside the Pod that uses the Kubernetes API to read a Secret (Totally Not in scope for the exam)
+
+* Secrets are also used by the kubelet to pull container images from private registries (`imagePullSecrets`).
+
+```yaml 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-pass-secret
+type: Opaque     # it is the default           
+data:
+  db-pass: dmFsdWUtMg0KDQo=   # values under data are base64-encoded; use stringData for plain text
+```
+
+<mark>Opaque works in most user supplied data, but if the task description contains keywords like TLS or Docker config, in that case check docs (types `kubernetes.io/tls`, `kubernetes.io/dockerconfigjson`)</mark>
+
+* K8S Secrets do not do the encryption: base64 is only an encoding, and by default Secrets are stored unencrypted in etcd. Encryption at rest has to be enabled by the cluster administrator.
+
+* Secrets are used very similarly to ConfigMaps inside Pods (`secretKeyRef` instead of `configMapKeyRef`, `secretRef` instead of `configMapRef`, and in volumes `secret.secretName` instead of `configMap.name`)
+
+## Understand Service Accounts
+
+* A service account is a type of non-human account that, in Kubernetes, provides a distinct identity in a Kubernetes cluster.
+* Instead of passwords, ServiceAccounts use tokens.
+* ServiceAccounts let our pods access the Kubernetes API.
+* Application Pods, system components, and entities inside and outside the cluster can use a specific ServiceAccount's credentials to identify as that ServiceAccount.
+* This identity is useful in various situations, including authenticating to the API server or implementing identity-based security policies.
+* They are Namespaced: Each service account is bound to a Kubernetes namespace. 
+* Every namespace gets a default ServiceAccount upon creation.
+
+### Creating a Service Account
+
+* via yaml
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-serviceaccount
+  namespace: my-namespace
+```
+
+* imperatively
+
+`kubectl create serviceaccount reader-service`
+
+### Assign a ServiceAccount to a Pod
+
+* To assign a ServiceAccount to a Pod, you set the `spec.serviceAccountName` field in the Pod specification. Kubernetes then automatically provides the credentials for that ServiceAccount to the Pod. 
+* Kubernetes gets a short-lived, automatically rotating token using the TokenRequest API and mounts the token as a projected volume.
+
+* By default, Kubernetes provides the Pod with the credentials for an assigned ServiceAccount, whether that is the default ServiceAccount or a custom ServiceAccount that you specify.
+
+* To prevent Kubernetes from automatically injecting credentials for a specified ServiceAccount or the default ServiceAccount, set the `automountServiceAccountToken` field in your Pod specification to false.
+
+### Using a service token
+
+* You need to bind it to a Role by a `RoleBinding` or a `ClusterRoleBinding`, depending if you are connecting to a `Role` or to a `ClusterRole`.
+* Within the RoleBinding yaml definition file the `subjects[n].kind` is defined as `ServiceAccount`, as it's not a user, together with the ServiceAccount's `namespace` (`kind: Service` is rejected: supported values are `ServiceAccount`, `User`, `Group`).
+
+```yaml
+subjects:
+- kind: ServiceAccount
+  name: reader-service
+  namespace: default
+```
+
+### confirming that the service account got associated with a pod, use `kubectl describe pod <pod_name>`
+
+* The output has a `Service Account:` line.
+
+## Understand Security Contexts
+
+* A security context defines privilege and access control settings for a Pod or Container by adding to their spec section as `spec.securityContext...` or `spec.containers[x].securityContext...`
+
+* When setting security context for volumes (`fsGroup`), that has to go under the Pod section `spec.securityContext`, not the container one: `fsGroup` does not exist in the container `securityContext`.
+
+* Security context settings include, but are not limited to:
+
+  * Discretionary Access Control: Permission to access an object, like a file, is based on user ID (UID) and group ID (GID).
+
+  * Security Enhanced Linux (SELinux): Objects are assigned security labels.
+
+  * Running as privileged or unprivileged.
+
+  * Linux Capabilities: Give a process some privileges, but not all the privileges of the root user.
+
+  * AppArmor: Use program profiles to restrict the capabilities of individual programs.
+
+  * Seccomp: Filter a process's system calls.
+
+  * allowPrivilegeEscalation: Controls whether a process can gain more privileges than its parent process. This bool directly controls whether the no_new_privs flag gets set on the container process. 
+    
+    * allowPrivilegeEscalation is always true when the container:
+
+      * is run as privileged, or
+      * has CAP_SYS_ADMIN
+
+  *  readOnlyRootFilesystem: Mounts the container's root filesystem as read-only.
+
+```yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-context-demo
+spec:
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+    runAsGroup: 3000
+    fsGroup: 2000
+    supplementalGroups: [4000]
+  volumes:
+  - name: sec-ctx-vol
+    emptyDir: {}
+  containers:
+  - name: sec-ctx-demo
+    image: busybox:1.28
+    command: [ "sh", "-c", "sleep 1h" ]
+    volumeMounts:
+    - name: sec-ctx-vol
+      mountPath: /data/demo
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+```
+
+* Note that the opposite of `add:` capabilities is `drop:`

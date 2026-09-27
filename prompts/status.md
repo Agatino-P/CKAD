@@ -7,11 +7,11 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Sections 0–3 are finished, committed and pushed. The next step is section 4, state `todo`: dispatch the Writer in write mode.
+Section 5 (Services and Networking), write mode: the Writer is running. On completion, section 5 moves to `review`, round 1.
 
 ## Agent running
 
-none
+Writer — section 5 (Services and Networking), write mode.
 
 ## Sections
 
@@ -21,7 +21,7 @@ none
 | 1 | Application Design and Build | Base: "Application Design and Build" (images, Docker/Podman, Jobs, CronJobs, multi-container Pods, volumes) | done | 1 |
 | 2 | Application Deployment | Base: "Application Deployment". File 2: create/expose/dry-run Deployment, edit, scale, Deployment `spec`/`strategy`, `--save-config`, rollout history and rollback, Helm. File 3: `k run` Pod YAML, NodePort expose. File 2: `k run -it --restart=Never -image=alpine temp-pod` (source typo `-image` → `--image`). | done | 1 |
 | 3 | Application Observability and Maintenance | Base: "Application Observability and Maintenance". File 3: admission controllers, K8s version, API groups/versions, `kubectl proxy`, probes, monitoring/Metrics Server, logs, events, `kubectl debug`. | done | 2 |
-| 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | todo | 0 |
+| 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | done | 2 |
 | 5 | Services and Networking | Base: "Services and Networking" | todo | 0 |
 | 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | todo | 0 |
 | 7 | Final audit | All three sources against the whole new file (reviewer in audit mode). | todo | 0 |
