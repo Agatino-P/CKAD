@@ -20,7 +20,7 @@ A subagent's report reaches only the orchestrator. The orchestrator copies what 
 ## One iteration
 
 1. Read `prompts/status.md`.
-2. **If an agent is marked running,** do not dispatch another agent. Wait for that agent's completion notice. If no notice arrives, schedule a fallback wakeup (1200 s) and end the iteration.
+2. **If an agent is marked running,** do not dispatch another agent. Wait for that agent's completion notice. If no notice arrives, schedule a fallback wakeup (120 s) and end the iteration.
 3. **If every section is `done` or `done-with-open-points` and the final audit is `done`,** stop the loop, report to User and update `ACTIVITY_TRACKER.md` as `prompts/goal.md` says.
 4. **Otherwise,** take the first section that is not finished and act on the section's state:
 
