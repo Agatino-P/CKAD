@@ -7,11 +7,11 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Section 7 (Final audit), `review` round 1: the Reviewer is running in audit mode. On completion, apply the decision rule in `prompts/loop.md`.
+The rebuild is complete: every section is `done` or `done-with-open-points`. The open points below are left for User.
 
 ## Agent running
 
-Reviewer — section 7 (Final audit), audit mode, round 1.
+none
 
 ## Sections
 
@@ -24,7 +24,7 @@ Reviewer — section 7 (Final audit), audit mode, round 1.
 | 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | done | 2 |
 | 5 | Services and Networking | Base: "Services and Networking" | done | 2 |
 | 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | done | 1 |
-| 7 | Final audit | All three sources against the whole new file (reviewer in audit mode). | review | 1 |
+| 7 | Final audit | All three sources against the whole new file (reviewer in audit mode). | done-with-open-points | 3 |
 
 States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-open-points`.
 
@@ -40,3 +40,6 @@ States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-
 - **3.5** — `user-decision` — "View admission controller plugins for kube-apiserver" / "Using `kube-apiserver`": the step "run `k get pods` in kube-system to find the apiserver Pod name" appears in both; merge.
 - **5.1** — `user-decision` — "Use Ingress Rules to Expose Applications": "exposed through a single load balancer on port 80 or 443" reads as one port or the other; the controller normally serves both, so "80 and 443".
 - **6.1** — `user-decision` — "Using jq (example)": the reason for quoting the key is partly wrong — only `/` and `-` break compilation (read as division and subtraction); an unquoted `.` instead splits the key into a nested path and returns the wrong value (tested with jq 1.7.1).
+- **7.1** — `disputed` — "Understand Security Contexts": the base bullet "Filesystem settings to restrict access only to certain filesystems" is removed as a false claim — the official security-context list has no such setting, and `readOnlyRootFilesystem` keeps its own bullet. Keep the removal or restore the bullet. https://v1-35.docs.kubernetes.io/docs/tasks/configure-pod-container/security-context/
+- **7.2** — `blocking` — "Remove an image": the first bullet ("Without `-f`, removal is refused if a container uses the image") is wrong for an image with several tags — removing one of its tags only untags, even while a container uses the image (tested, Docker 29.7.2). Proposed: "Removing one tag of an image that still has other tags only removes that tag, even while a container uses the image." and "Without `-f`, removing the last tag or removing by ID is refused while any container (running or stopped) uses the image." https://docs.docker.com/reference/cli/docker/image/rm/
+- **7.3** — `user-decision` — "Remove an image": "(listed as `<none>`)" — with the containerd image store the untagged image shows only with `docker image ls -a` (tested); proposed "listed as `<none>` by `docker image ls -a`".

@@ -108,7 +108,7 @@ h6:before {
 
 ### Docker 
 
-##### Help
+#### Help
 
 It is always allowed to use `--help`
 
@@ -119,7 +119,7 @@ It is always allowed to use `--help`
 * However, there is a structure to the name of an image. 
 * A full image name (image reference) has the following structure:
 
-`[HOST[:PORT]/]NAMESPACE/REPOSITORY[:TAG]`
+`[HOST[:PORT]/][NAMESPACE/]REPOSITORY[:TAG]`
 
   * HOST: The optional registry hostname where the image is located.  
     If no host is specified, Docker Hub (`docker.io`) is used by default.  
@@ -168,10 +168,10 @@ doesn't remove the old image name, and you can find two image names with the sam
 
 `docker image rm <image-name>`
 
-* Removal is refused if a container (running or stopped) uses the image.
-* `-f` with a tag only removes the tag; the image itself stays.
-* `-f` with the image ID deletes the image if only stopped containers use it; if a running container uses it, removal is refused even with `-f`: stop and remove the container first.
-* If the image has more than one tag, `docker image rm <name>:<tag>` only removes that tag; the image is deleted when its last tag is removed.
+* Without `-f`, removal is refused if a container (running or stopped) uses the image.
+* By tag, with no container using the image: `docker image rm <name>:<tag>` removes that tag; the image is deleted too when that tag was its last one.
+* By tag with `-f`, when a container uses the image: only the tag is removed; the image stays (listed as `<none>`).
+* By image ID: refused without `-f` if the image has more than one tag. With `-f`, all its tags are removed and the image is deleted, unless a running container uses it: then removal is refused even with `-f` ("cannot be forced"); stop and remove the container first.
 * More than one image can be removed at once: `docker image rm <image1> <image2>`
 
 #### Dump an image as a tar file
@@ -473,7 +473,7 @@ As an alternative to writing yaml, `kubectl create` builds a resource directly f
 * Scale a deployment: `kubectl scale deployment <deployment-name> --replicas=<number of pods>`
 * Change the image of a container: `kubectl set image deployment/<deployment-name> <container-name>=<image>[:tag]`  
   `kubectl set image deployment/nginx nginx=nginx:1.16.1`
-* Modify a deployment from the command line (for example if you created it without a yaml): `kubectl edit deploy/<deploy-name>` opens the deployment in the editor set by `KUBE_EDITOR` (or `EDITOR`; fallback `vi` on Linux)
+* Modify a deployment from the command line (for example if you created it without a yaml): `kubectl edit deploy/<deploy-name>` opens the deployment in the configured editor (see "Change the editor for K8s commands edit" in General Knowledge)
 
 ### Imperatively changing the selector on a service
 
@@ -1580,9 +1580,9 @@ spec:
 
 * The entities that a Pod can communicate with are identified through a combination of the following three identifiers:
 
-  1 Other pods that are allowed (exception: a pod cannot block access to itself)
-  2 Namespaces that are allowed
-  3 IP blocks (exception: traffic to and from the node where a Pod is running is always allowed, regardless of the IP address of the Pod or the node)  
+  1. Other pods that are allowed (exception: a pod cannot block access to itself)
+  2. Namespaces that are allowed
+  3. IP blocks (exception: traffic to and from the node where a Pod is running is always allowed, regardless of the IP address of the Pod or the node)  
 
   When defining a pod- or namespace-based NetworkPolicy, you use a selector to specify what traffic is allowed to and from the Pod(s) that match the selector.
 
