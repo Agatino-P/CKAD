@@ -100,7 +100,7 @@ h6:before {
   - Config (ports to expose etc)
   - Command to run the app
 
-- In the exam they really don't want to load the image onto a registry, leaking exam info. <!-- UNVERIFIED: see prompts/status.md -->
+- In the exam they really don't want to load the image onto a registry, leaking exam info.
 
 <mark>Exam: Dockerfiles are needed to be known for the exam </mark>
 
@@ -168,7 +168,9 @@ doesn't remove the old image name, and you can find two image names with the sam
 
 `docker image rm <image-name>`
 
-* Removal is refused if a container (running or stopped) uses the image; `-f` forces the removal.
+* Removal is refused if a container (running or stopped) uses the image.
+* `-f` with a tag only removes the tag; the image itself stays.
+* `-f` with the image ID deletes the image if only stopped containers use it; if a running container uses it, removal is refused even with `-f`: stop and remove the container first.
 * If the image has more than one tag, `docker image rm <name>:<tag>` only removes that tag; the image is deleted when its last tag is removed.
 * More than one image can be removed at once: `docker image rm <image1> <image2>`
 
@@ -200,8 +202,8 @@ Ref: [Docker save](https://docs.docker.com/reference/cli/docker/image/save/) · 
 
 #### Fixing image names for pushing 
 
- * To be able to push it to a remote repository, you need to add the name of the repository to the beginning of the tag. And the exam gives you the name of the repository, just don't push it on the registry (e.g. dockerhub) <!-- UNVERIFIED: see prompts/status.md -->
- * if you push to docker hub and use docker, you don't need to prefix the repository with `docker.io/` (Docker's default host). For any other registry, the registry host (and port, if needed) must be in the name. Other tools may need the `docker.io/` prefix even for Docker Hub. <!-- UNVERIFIED: see prompts/status.md -->
+ * To be able to push it to a remote repository, you need to add the name of the repository to the beginning of the tag. And the exam gives you the name of the repository, just don't push it on the registry (e.g. dockerhub)
+ * if you push to docker hub and use docker, you don't need to prefix the repository with `docker.io/`, but with other tools or other registries, you need it.
 
 ## Understanding Jobs and CronJobs
 
@@ -218,10 +220,10 @@ Each outer creates the inner: Cronjob -> Job -> Pod -> Container
 
 ### Jobs
 
-* Jobs are about running a specific number of pods all the way through to completion. And if needed Pods can be run in parallel, a given number at a time.
+* Jobs are about running a specific number of pods all the way through to completion.
+* If needed, Pods can be run in parallel, a given number at a time.
 * Jobs are managed by the Job Controller in the control plane that manages them through successful completion.
 * Jobs can offer intelligence (e.g.: Restart the Pod, Retries, Kill long-running, Clean-up).
-* Jobs can create multiple Pods and even run them in parallel.
 * Deleting the Job also deletes the Pods it created.
 
 #### Yaml 
@@ -274,7 +276,7 @@ args:
 5) Day of the week
 
 `"* * * * *"` runs every minute  
-`"0 2 4 * *"` runs at 2:00 every 4th day of the month  
+`"0 2 4 * *"` runs at 02:00 on day 4 of every month  
 `"*/2 * * * *"` runs every two minutes
 
 * TimeZone
@@ -374,8 +376,10 @@ Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloa
 
 * for activities that are needed only at startup. As an example the FrontEnd has to wait for the backEnd to start, that logic can go into an init container
 * `initContainers:` inside the `spec:` section of the yaml file.
-* Init containers run one at a time, in the order that you list them; each must complete successfully before the next one starts.
-* Normal containers start only after all the init containers have completed
+* Init containers run one at a time, in the order that you list them.
+  * A regular init container must complete successfully before the next one starts.
+  * A sidecar (an init container with `restartPolicy: Always`) keeps running; the next one starts as soon as the sidecar has started.
+* Normal containers start only after all regular init containers have completed and all sidecars have started.
 
 ### List all containers within pod
 
@@ -387,7 +391,7 @@ Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloa
 
 * Without volumes, containers write to their own temporary filesystem on the node they're running on: the files are lost when the container crashes or is restarted.
 * This creates problems in case of node down or moving pods to another node.
-* Typically, on prem clusters use on-prem storage, and cloud clusters use cloud storage. <!-- UNVERIFIED: see prompts/status.md -->
+* Typically, on prem clusters use on-prem storage, and cloud clusters use cloud storage.
 * You need the specific driver for a given type of storage to make it available to K8s.
 * Storage systems can be external to K8s, like EMC (on-prem) or AWS Elastic Block Store or Azure File.
 * Storage plugins (CSI drivers) run their node part as pods managed by a DaemonSet. This makes sure they run on every node. 
@@ -428,6 +432,7 @@ Are not referenced directly by the pod: `containers[].volumeMounts[].name` refer
 Are referred inside the pod in `spec.volumes[].persistentVolumeClaim.claimName`. The PVC must be in the same namespace as the pod.
 
 ### Storage Classes 
+<!-- REORDER: the Volumes headings (Storage classes (SC), PV, PVC, Storage Classes) need reordering; to be decided with User, see prompts/status.md 1.9 -->
 
 * The normal pattern is to use a StorageClass to define a class of storage with all of the features that you want from the back‑end system.
 * Then, when you deploy your Pods, you reference a PersistentVolumeClaim that makes a reference to the class.
@@ -483,7 +488,7 @@ As an alternative to writing yaml, `kubectl create` builds a resource directly f
 `kubectl expose deploy <deploy-name> --port=<desired port> --target-port=<pod's port> --type=NodePort --name=<service-desired-name>`
 
 * `--target-port` is optional: without it, the target port is the same as `--port`. So `kubectl expose deploy <deploy-name> --port=<container-port> --type=NodePort` creates a NodePort Service whose port and target port are both the container port.
-* `--port` is optional too: without it, the port is copied from the exposed resource.
+* `--port` is optional too: without it, the port is copied from the exposed resource. If the containers declare no `ports`, expose fails with "couldn't find port via --port flag or introspection": pass `--port` explicitly.
 * With `--type=NodePort` and no node port given, Kubernetes picks the node port from the allowed range (default 30000-32767); read it with `kubectl get svc`.
 
 ### Structure of Blue Green
@@ -698,3 +703,344 @@ strategy:
 
 * `helm uninstall <release-name>`  
   Removes the release from the cluster
+
+# Application Observability and Maintenance
+
+## Understanding API Deprecations
+
+### Admission controllers
+
+* Is involved after authentication and authorization but before persisting (mutating admission controllers run first, then validating ones).
+* Can reject a request (e.g.: PVC asking for too much storage) and or mutate a request
+* Can block requests to create, delete and modify objects, and custom verbs (e.g. a request to connect to a Pod via an API server proxy)
+* Cannot block requests to read (get, watch, list)
+* Can enforce security policies
+* Can block insecure images from running
+* The admission controllers are compiled into the kube-apiserver binary, and may only be configured by the cluster administrator
+* Not necessarily all compiled admission controllers are enabled
+
+#### Examples
+
+##### LimitRanger
+
+* Applies default Pod memory/cpu requests and limits for a namespace, to the containers that don't set them.
+* You set a `LimitRange` for a namespace, which is then enforced by the `LimitRanger` admission controller.
+* A Pod that violates a `LimitRange` constraint (e.g. above the max) is rejected (`403 Forbidden`).
+* The defaults are not checked for consistency: a Pod that sets a request higher than the `LimitRange` default limit, without setting a limit, fails (request must be less than or equal to the limit). It works if you also specify a limit value for that Pod inside the yaml.
+
+##### PersistentVolumeClaimResize
+
+* By default prevents resizing of all claims, unless the claim storage class enables it by setting the `allowVolumeExpansion` property to `true`
+
+##### NamespaceAutoProvision
+
+Examines requests on namespaced resources, creates the namespace if it does not exist
+
+#### Where are these configured
+
+* Stored in `/etc/kubernetes/manifests/kube-apiserver.yaml` (kubeadm clusters, on the control plane node)
+* It's the static Pod running the api-server; the flag is in the container command:
+```yaml
+#...
+spec:
+  containers:
+  - command:
+    - kube-apiserver
+    - --....
+    - --enable-admission-plugins=NamespaceAutoProvision,another-plugin,...
+    #...
+```
+
+* You need to sudo to be able to `cat` this
+
+* To access it in Docker Desktop:
+  * `docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh`
+  * `cd /etc/kubernetes/manifests`
+  * `vi kube-apiserver.yaml`
+
+#### View admission controller plugins for kube-apiserver
+
+* `kubectl describe pod kube-apiserver -n kube-system` (`describe` also matches a name prefix)
+* `kubectl describe pod kube-apiserver -n kube-system | grep enable-admission-plugins`
+* This shows only the plugins enabled with the flag, in addition to the default enabled ones.
+* Do a `k get pods -n kube-system` first to confirm the name of the apiserver pod: the static Pod name is suffixed with the node name (e.g. `kube-apiserver-cl1-control-plane`)
+* `KUBE_EDITOR=nano k edit pod kube-apiserver-cl1-control-plane -n kube-system` opens the Pod, but this is a mirror Pod of a static Pod: it is visible on the API server but cannot be controlled from there. Change the manifest file instead.
+
+#### Using `kube-apiserver`
+
+* You can invoke the `kube-apiserver` executable inside the `kube-apiserver` pod in the `kube-system` namespace.
+* `kube-apiserver -h` gives information about the options available.
+* `kube-apiserver -h | grep enable-admission-plugins` shows the admission plugins enabled by default.
+* `k config set-context --current --namespace=kube-system`
+* `k get pods` to get the api-server pod
+* `k exec -it kube-apiserver-docker-desktop -- kube-apiserver -h` executes `kube-apiserver -h` inside the container. The double dashes end the `kubectl` command and start the command given to the container.
+* `k exec -it kube-apiserver-master -- sh` fails: the kube-apiserver image is distroless (built on the `go-runner` image) and has no shell. Run the binary directly as above.
+
+#### Modify admission controllers settings
+
+* The flags are given to `kube-apiserver` when it starts:
+
+`kube-apiserver --enable-admission-plugins=<plugin1>,<plugin2>`
+or
+`kube-apiserver --disable-admission-plugins=<plugin1>,<plugin2>`
+
+* To change them on the running cluster, edit `/etc/kubernetes/manifests/kube-apiserver.yaml` on the control plane node. The kubelet watches that directory and recreates the static Pod by itself: no `kubectl apply` needed.
+* The api-server Pod might need a moment to come back online
+* Better make a copy (`cp`) of the file first, but put the copy outside `/etc/kubernetes/manifests` (e.g. in `/tmp`): the kubelet reads every file not starting with a dot in that directory, whatever the extension, so a `kube-apiserver.yaml.backup` there would be read as a second Pod.
+
+#### K8s version
+
+`k version -o yaml` major.minor.patch as usual
+* GA is for General availability = release
+* Otherwise `v<number>alpha<alpha number>` or `v<number>beta<beta number>`, e.g.: `coordination.k8s.io/v1alpha2`
+
+#### ApiGroups
+
+* List the resources, their group and versions by `k api-resources`
+
+* note that `v1` is the api version of that specific group
+
+##### Core Group 
+
+* When there's no group name the resource is in the Core Group (also called legacy group), REST path `/api/v1`
+
+* apiVersion: v1 (no group name)
+* e.g.: pods
+
+##### Named Groups
+
+* apiVersion: batch/v1, REST path `/apis/<group>/<version>`
+* e.g.: cron jobs
+
+#### View api resources
+
+* `k api-resources --sort-by=name` (can sort by `name` or `kind`)
+* `k api-resources --api-group=rbac.authorization.k8s.io`
+
+#### View Api Group for a given resource
+
+* `k explain deploy`
+* GROUP: apps  
+  KIND: Deployment  
+  VERSION: v1
+
+* Gives kind, version and group. No group (no `GROUP:` line) means Core group
+* KIND: ConfigMap  
+  VERSION: v1
+
+#### Enabling alpha versions
+
+* Alpha versions are not enabled by default.
+* They are enabled with the option `--runtime-config=<group>/<version>` of kube-apiserver (in `/etc/kubernetes/manifests/kube-apiserver.yaml`), e.g. `--runtime-config=coordination.k8s.io/v1alpha2`
+* The group/version must exist in that Kubernetes release (check the API reference for the release): an unknown one (e.g. `batch/v2alpha1`) makes kube-apiserver fail to start with `group version ... that has not been registered`.
+* The same option in that file also lists the alpha versions that are enabled.
+
+#### Order of versions
+
+* Alpha. E.g: `v1alpha3`
+* Beta. E.g: `v1beta2`
+* Stable. E.g: `v2` //Also called GA General availability
+
+##### Removal of API elements
+
+* It can happen only with a version increment of the API group
+* API Objects must round trip between API versions without information loss. Go from v1 to v2 to v1, and the v1 object is identical: a field added in v2 needs an equivalent field in v1, or is represented as an annotation. Anyhow the system must be able to handle it.
+* GA is basically forever: may be deprecated, but not removed within a major version.
+* Beta: deprecated no more than 9 months or 3 minor releases (whichever is longer) after introduction, and no longer served 9 months or 3 minor releases (whichever is longer) after deprecation.
+* Alpha: may be removed in any release without prior deprecation notice.
+
+#### All Versions
+
+* `kubectl api-versions`
+* `kubectl api-versions | grep autoscaling`
+
+* All versions for a given resource:
+  * Find the API group for the resource (e.g., Deployments use `apps`).  
+  `kubectl api-resources | grep deployment`
+  * List all available versions for that specific API group.  
+  `kubectl api-versions | grep <api-group>/`  
+  `kubectl api-versions | grep apps/`
+
+#### Preferred version for an API group
+
+* e.g.: for certificates
+* First you have to call `kubectl proxy --port=8001 &` (8001 is the default port)
+* `&` so that it stays in the background until later you kill it: find the PID with `ps -a | grep kubectl` and `kill <pid>`. In the exam context, not having multiple terminals, running the proxy in the background lets you run the `curl` commands below in the same terminal.
+* Then `curl localhost:8001/apis/certificates.k8s.io`
+* preferredVersion is in the payload
+
+* `curl localhost:8001/apis/batch`
+* `curl localhost:8001/apis/`
+
+## Implementing Probes and Health Checks
+
+### Probe definition
+
+* A Probe is a diagnostic performed periodically by the kubelet on a container. Somehow like a health check.
+
+* Probes are configured at the container level: `spec.containers[].<probeType>` in a Pod, `spec.template.spec.containers[].<probeType>` in a Deployment.
+
+### Types of Probes
+
+* Three purposes: Readiness, Liveness and Startup
+* Liveness and Readiness probes run independently and in parallel (the liveness probe doesn't wait for the readiness probe to succeed), unless a Startup probe is defined to delay their execution.
+
+#### Readiness Probe
+
+* Determines if the container completed initialization and is therefore able to receive traffic.
+* **Failure action:** the Pod's IP address is removed from the EndpointSlices of all matching Services, and the Pod's `Ready` condition is set to `false`. It does **not** restart the container.
+
+```yaml
+spec:
+  containers:
+  - name: app
+    readinessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 15 # default is 0
+      periodSeconds: 10       # default is 10
+```
+
+#### Liveness Probe
+
+* Determines if the container is healthy and running as expected, not trapped in a dead state.
+* **Failure action:** the `kubelet` kills the container, and the container is subjected to the Pod's `restartPolicy`.
+
+```yaml
+spec:
+  containers:
+  - name: app
+    livenessProbe:
+      exec:
+        command:
+        - cat 
+        - /tmp/healthy
+      initialDelaySeconds: 2 # Time to wait before the first probe, to let the container start (default 0)
+      timeoutSeconds: 3      # default is 1
+      periodSeconds: 5       # Frequency of execution (default 10)
+      failureThreshold: 1    # Consecutive failures that make the probe failed (default 3). Number of allowed failures is failureThreshold -1
+```
+
+#### Startup Probe
+
+* Startup is meant for containers with a long or unpredictable time to start, so that we don't start checking if it's healthy before it starts up.
+* Disables both Liveness and Readiness probes until the Startup probe succeeds.
+* **Failure action:** the `kubelet` kills the container, and the container is subjected to the Pod's `restartPolicy`.
+
+### Restart Policy
+
+* Defaults to Always, can be overwritten if needed (`Always`, `OnFailure`, `Never`). In a Deployment's Pod template, `Always` is the only allowed value.
+
+* Failure of the Startup or Liveness probe causes the container to be killed and restarted according to the restart policy (the Pod is not recreated). Failure of the Readiness probe does not restart anything.
+
+### Probe Types (mechanisms)
+
+Each probe defines exactly one of these four mechanisms.
+
+#### ExecActions (`exec`)
+
+* Execute an action inside the container. Check for a file, run a command... success on exit 0
+
+#### TCPSocketAction (`tcpSocket`)
+
+* Just tcp check against the Pod's IP address on a specified port: success if the port is open (a connection can be established)
+
+#### HTTPGetAction (`httpGet`)
+
+* HTTP GET request against the Pod's IP address on a port and path: success if the status code is at least 200 and less than 400
+
+#### gRPC (`grpc`)
+
+* Native gRPC health check: success if the `status` of the response is `SERVING`
+
+### Probes results
+
+Only three types of result:
+
+* Success: the container passed the diagnostic
+* Failure: the container failed the diagnostic (triggers the probe's failure action). A probe that times out (`timeoutSeconds`) counts as a failure.
+* Unknown: the diagnostic itself failed; no action is taken, and the kubelet will make further checks
+
+## Using Provided Tools to Monitor Kubernetes Applications
+
+### Options
+- Web UI Dashboard (deprecated and archived, no longer maintained; the Kubernetes docs suggest Headlamp for new installations)
+- Metrics Server
+- kube-state-metrics
+- Prometheus (even with alerts)
+- Grafana
+- etc..
+
+### Metrics Server
+
+* Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. 
+* Metrics API can also be accessed by `kubectl top`, making it easier to debug autoscaling pipelines.
+* Metrics Server is meant only for autoscaling purposes.
+* For example, don't use it to forward metrics to monitoring solutions, or as a source of monitoring solution metrics. 
+* In such cases please collect metrics from Kubelet `/metrics/resource` endpoint directly.
+
+#### Installing Metrics Server
+
+* Where it's not installed by default, like Docker Desktop
+* Just follow the instructions of the metrics-server repository: `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
+* Check prerequisites (e.g. the Kubelet certificate must be signed by the cluster Certificate Authority)
+* Note that the command to be added is not on the command line but inside the yaml: e.g. `--kubelet-insecure-tls` (skip verifying the Kubelet certificates, for testing purposes only) goes in the args of the metrics-server container
+
+#### How Metrics Server works
+
+* On each node there's a `kubelet` who gets input from `cAdvisor` (who gets it from `Container Runtimes, such as containerd`) and from pod data.
+* Kubelet is the communication mechanism between a node and the control plane.
+* Metrics Server gets input from kubelets via the kubelet `/metrics/resource` endpoint.
+* Kubectl can then connect to the Api Server, which serves the `Metrics Api` provided by Metrics Server.
+* Note that metrics are not updated in real time, there's a delay (Metrics Server collects metrics every 15 seconds)
+ 
+#### Verifying that Metrics Server is installed
+
+* Easiest way is to look for all pods in kube-system namespace and grep for metrics-server: `k get pods -n kube-system | grep metrics-server`
+
+#### kubectl top to interrogate Metrics Server
+
+* `k top nodes` gives resources usage (CPU and Memory)
+* `k top pods`
+
+## Utilizing Container Logs
+
+### Container logs
+
+* `k logs <pod-name>`
+* `k logs <pod-name> -c <container-name>` //for multi-container pods
+* `k logs deployment/<deployment-name>`
+* `k logs -p <pod-name>` //previous (`--previous`). Logs of the previous instance of a restarted container, see below
+* `k logs -f <pod-name>` //follow. streams the logs to the console 
+* `k logs --tail=20 <pod-name>` //last 20 log lines
+* `k logs --since=10s <pod-name>` //or 2m or 1h
+* `k logs -l app=backend --all-containers=true` //logs from all containers in the pods matching the label
+
+#### terminated containers' logs that you could access with -p
+
+Retrieves logs for a **restarted container** (e.g., during a `CrashLoopBackOff`). It does not retrieve logs for just any terminated pod.
+
+* **When to use `-p`:** a pod is running or crashing, and the `kubelet` restarted its container. Use `-p` to fetch the logs of that *dead instance* to see why it crashed. By default, if a container restarts, the kubelet keeps one terminated container with its logs.
+* **Completed Pods (no `-p` needed):** if a pod finishes its task (like a Job) but the pod object *still exists* in the cluster, standard `k logs <pod-name>` works.
+* **Evicted or Deleted Pods:** if a pod is evicted from the node, or removed with `kubectl delete pod`, all corresponding containers are also removed, along with their logs. Neither standard `k logs` nor `-p` can retrieve them.
+* The kubelet makes logs available to clients via a special feature of the Kubernetes API.
+
+## Debugging Kubernetes
+ 
+### Get events `kubectl get events`
+
+* For a pod `k describe pod <pod-name>` (Events section at the end)
+* For a namespace `k get events`
+* For all namespaces `k get events --all-namespaces`
+
+### `kubectl debug`
+
+Create an ephemeral debug container and even make a copy of a pod adding some debug utilities for debugging purposes.
+
+* Ephemeral container in the running pod: `kubectl debug -it <pod-name> --image=busybox:1.28 --target=<container-name>`
+
+* Copy of the pod with a new debug container added:  
+`kubectl debug <failed-but-existing-podname> -it --image=<image-name> --copy-to=<name-of-the-new-pod>`
+
+* Copy of the pod changing an existing container: if `--container` names a container of the pod, that container is changed in the copy (image set by `--image`, command set after `--`) instead of a new container being added:  
+`kubectl debug <failed-but-existing-podname> -it --image=<image-name> --copy-to=<name-of-the-new-pod> --container=<container-we-need-to-debug> -- sh`
