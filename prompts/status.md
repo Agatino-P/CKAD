@@ -7,11 +7,11 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Codex review pass, defined in `prompts/codex-review.md` (Codex CLI, model `gpt-5.6-sol`, as reviewer; wrong or missing content only; Claude verifies each finding and applies confirmed fixes directly). Section 0 is done; every fix accepted so far is in the notes. Next: run the reviews shown in the table (State `review`, Round = the round to run next): section 1 round 2, section 2 round 3, section 3 round 2, section 4 round 2, section 5 round 2, section 6 round 3. Codex usage ran out; the earlier attempts at these runs failed on the limit and do not count as rounds.
+The Codex review pass (`prompts/codex-review.md`) is complete: every section is `done` or `done-with-open-points`, and the final audit found no lost content and no contradictions. The open points below are left for User.
 
 ## Agent running
 
-Codex reviewers running: s3 r3 (outputs `prompts/tmp/codex_s<N>_r<round>.out`)
+none
 
 ## Sections
 
@@ -24,7 +24,7 @@ Codex reviewers running: s3 r3 (outputs `prompts/tmp/codex_s<N>_r<round>.out`)
 | 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | done | 2 |
 | 5 | Services and Networking | Base: "Services and Networking" | done-with-open-points | 2 |
 | 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | done | 3 |
-| 7 | Final audit | All three sources against the whole new file (Codex reviewer in audit mode). | review | 1 |
+| 7 | Final audit | All three sources against the whole new file (Codex reviewer in audit mode). | done | 1 |
 
 States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-open-points`.
 
