@@ -1556,3 +1556,271 @@ spec:
 ```
 
 * Note that the opposite of `add:` capabilities is `drop:`
+
+# Services and Networking
+
+## Demonstrate Basic Understanding of Network Policies
+
+* The Pods connect to the `Pod network` created by the `Network plugin`.
+* Network policies only work if your network plugin supports them: the network plugin is what enforces them.
+
+* If you apply more than one policy to some pods, the policies do not conflict: they are additive, and the allowed traffic is the union of what the policies allow.
+* Policies that you create are always allow policies, there's no way to specifically deny a particular traffic flow.
+
+* Network policies are namespaced: a policy applies only to Pods in its own namespace. If you don't set `metadata.namespace` (or `-n`), kubectl creates the policy in the current context's namespace (`default` unless changed).
+* To allow traffic from/to Pods in other namespaces, use a `namespaceSelector` under `spec.ingress[].from[]` (or `spec.egress[].to[]`). A policy cannot name a namespace directly; to select a namespace by name, match the label `kubernetes.io/metadata.name`, which the control plane sets automatically on every namespace with the namespace name as value:  
+  `spec.ingress[].from[].namespaceSelector.matchLabels` with `kubernetes.io/metadata.name: <namespace-name>`  
+  or `egress` / `to` of course.
+
+* A policy applies only to Pods (selected by `spec.podSelector`), but the other end of a rule can be Pods, namespaces or IP blocks.
+* `kubectl get netpol` with netpol being the short name for network policies.
+* The most common way to specify Pods for a policy is via `matchLabels`
+* You can also allow traffic with `ipBlock` criteria (CIDR ranges), but `ipBlock` is meant for cluster-external IPs, since Pod IPs are ephemeral and unpredictable. Cluster ingress and egress mechanisms often rewrite (NAT) the source or destination IP, and whether that happens before or after policy processing depends on the network plugin, cloud provider and Service implementation.
+* The easiest way to get Pods' labels is `kubectl get pods --show-labels`
+
+* The entities that a Pod can communicate with are identified through a combination of the following three identifiers:
+
+  1 Other pods that are allowed (exception: a pod cannot block access to itself)
+  2 Namespaces that are allowed
+  3 IP blocks (exception: traffic to and from the node where a Pod is running is always allowed, regardless of the IP address of the Pod or the node)  
+
+  When defining a pod- or namespace-based NetworkPolicy, you use a selector to specify what traffic is allowed to and from the Pod(s) that match the selector.
+
+The example below selects namespaces by a custom label `namespace`, so the target namespaces must be labeled first:
+
+```
+kubectl label namespace frontend namespace=frontend
+kubectl label namespace backend namespace=backend
+```
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-namespaces
+spec:
+  podSelector:
+    matchLabels:
+      app: myapp
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchExpressions:
+        - key: namespace
+          operator: In
+          values: ["frontend", "backend"]
+```
+
+### Understanding what a policy does
+
+`kubectl describe netpol <policy_name>`
+
+### Pod isolation
+
+* By default, a pod is non-isolated for egress; all outbound connections are allowed. A pod is isolated for egress if there is any NetworkPolicy that both selects the pod and has "Egress" in its policyTypes.
+
+* By default, a pod is non-isolated for ingress; all inbound connections are allowed. A pod is isolated for ingress if there is any NetworkPolicy that both selects the pod and has "Ingress" in its policyTypes.
+
+### Single rule versus many 
+
+<mark>Possible exam tricky point</mark>
+
+* Be very careful at the difference of items under `- from` or `- to`
+* If an item like `namespaceSelector:` doesn't have a dash `-` it means it's not an element by itself but goes together with the previous one
+* Indentation matters too: `matchLabels` must be indented under `podSelector` / `namespaceSelector`, otherwise the API server rejects the policy (`unknown field "spec.ingress[0].from[0].matchLabels"`).
+
+Single `from` element, so `namespaceSelector` belongs to the same element as `podSelector`. Therefore allow Pods with `ckad` AND in `ps`
+
+```yaml
+- from:
+  - podSelector:
+      matchLabels:
+        project: ckad
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: ps
+```
+
+Two separate elements in the `from` array. Therefore allow Pods with `ckad` (in the policy's own namespace) OR any Pod in `ps`
+```yaml
+- from:
+  - podSelector:
+      matchLabels:
+        project: ckad
+  - namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: ps
+```
+
+* Note that in `kubectl describe netpol` you will see the different elements as different `From:`
+### Ingress and Egress
+
+* Ingress is for incoming traffic
+* Egress is for outgoing traffic
+
+
+### Default policies
+
+* By default, if no policies exist in a namespace, then all ingress and egress traffic is allowed to and from pods in that namespace. The following examples let you change the default behavior in that namespace.
+
+* Making so that Default deny all ingress traffic  
+
+Note the `podSelector: {}`  
+
+You can create a "default" ingress isolation policy for a namespace by creating a NetworkPolicy that selects all pods but does not allow any ingress traffic to those pods.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+```
+
+This ensures that even pods that aren't selected by any other NetworkPolicy will still be isolated for ingress. This policy does not affect isolation for egress from any pod.
+
+* Making so Allow all ingress traffic
+
+If you want to allow all incoming connections to all pods in a namespace, you can create a policy that explicitly allows that.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress
+spec:
+  podSelector: {}
+  ingress:
+  - {}
+  policyTypes:
+  - Ingress
+```
+
+## Provide and Troubleshoot Access to Applications via Services
+
+* A service is a stable network abstraction that sits in front of a set of pods
+* A Service's Name and IP Address don't change while it exists.
+* The name gets automatically recorded in the cluster's internal DNS that all PODs have access to.
+
+### ClusterIP
+
+* It's the default type if you don't specify a `type:`
+* Exposes the Service on a cluster-internal virtual IP and port (allocated from the Service IP range, not from the Pod network), therefore it is available only to other apps and pods inside the same cluster.
+* Unless there are specific needs (and in that case, restrictions and risk of collision) the ip gets automatically assigned by K8S.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-clusterip-service # this gets registered in the cluster's internal DNS
+spec:
+  type: ClusterIP   # case-sensitive: `ClusterIp` is rejected
+  selector:
+    app: ckad
+  ports:
+    - port: 9000
+      targetPort: 8080
+            # By default and for convenience, the `targetPort` is set to
+            # the same value as the `port` field.
+ ```
+
+ * `kubectl describe svc <service-name>`  gives also the target Pods (IP:port) under the row: `Endpoints`
+
+### NodePort 
+
+* Works on top of Cluster IP. It exposes the service to the outside world, via static port on all cluster nodes' IP.
+* NodePorts services build their own ClusterIP services behind the scenes to build on.
+* External clients can hit any cluster node on the chosen port and reach the service.
+* By default the ports of a Service are TCP, and the NodePorts are allocated between 30000 and 32767.
+
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - nodePort: 30007       # Optional field
+                            # By default and for convenience, the Kubernetes control plane
+                            # will allocate a port from a range (default: 30000-32767)
+      port: 80
+      targetPort: 80        # By default and for convenience, the `targetPort` is set to
+                            # the same value as the `port` field.
+
+
+```
+
+### LoadBalancer
+
+* Integrates with cloud load-balancer: Kubernetes itself does not ship a load balancing component, the cloud provider (or another integration) provides it
+* Make a service accessible via an external load balancer
+* External clients can reach a service via the external load balancer. The load balancer's address appears in `.status.loadBalancer.ingress` as an IP, or as a DNS hostname for DNS-based load balancers (typically AWS).
+
+### Exam tips
+
+* If direct connection to Pods are causing issues, you need a service.
+* If you need to connect only between Pods in the same cluster, you need a cluster IP service.
+* If it has to be exposed via known port on all nodes, then it's a NodePort service.
+* If you need to expose via cloud load-balancer, it's a LoadBalancer Service.
+* If the service exists but it's not working, first of all check selector vs pods' labels.
+* It's ok if the selector lists 2 of 3 labels on pods, but not if it lists 3 and pod has only 2 matching
+
+### DNS
+
+* There's a `kube-dns` Service in the kube-system namespace. The name stays `kube-dns` for compatibility, but the Pods behind the Service are normally CoreDNS Pods (label `k8s-app=kube-dns`).
+* Every pod (with the default `dnsPolicy: ClusterFirst`) gets the address of the dns service injected inside its configuration, in the `/etc/resolv.conf` file as `nameserver`
+
+## Use Ingress Rules to Expose Applications
+
+* Ingress remains in CKAD scope, but the Ingress API is frozen: the Kubernetes project recommends Gateway API for new work. The community Ingress-NGINX controller is retired (no more releases or security fixes; existing installs keep working and the install artifacts stay available).
+
+* Each LoadBalancer Service gets its own load balancer on the cloud, so if you need to expose more services, you need more load balancers in the cloud which means cost.
+
+* Ingress can expose many services, each of course with his own (behind the scenes) ClusterIP.
+* Ingress is only for HTTP and HTTPS
+* The Ingress controller is usually exposed through a single load balancer on port 80 or 443. Then it uses host and/or path based routing to send traffic to backend services. 
+
+* Ingress are working via Ing Spec (defines the rules) and Ing Controller (implements the rules)
+* Kubernetes doesn't ship with a native controller, one has to be installed. In the exam, it's already installed.
+* Should you need one, install a maintained Ingress controller from its official install manifest or Helm chart.
+
+`kubectl get ing` //short for ingress
+
+### IngressClass
+
+* It's a way to run more than one ingress controller on the same cluster.
+
+`kubectl get ingressclass` 
+
+* what you get here must match the `spec.ingressClassName` in the ingress definition. If `ingressClassName` is omitted, the IngressClass marked as default (annotation `ingressclass.kubernetes.io/is-default-class: "true"`) is used.
+<mark>Exam important: when copying from the docs, ingressClassName must be checked/corrected</mark>
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /   # controller-specific: read by Ingress-NGINX (and controllers that emulate its annotations); others ignore it
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
+```
