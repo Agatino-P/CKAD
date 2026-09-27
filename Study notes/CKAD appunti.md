@@ -596,7 +596,7 @@ strategy:
 ### Deployment updates and change-cause
 
 * **Triggering a revision:** a rollout, and with it a new revision, is triggered only when the Pod template (`spec.template`) changes, for example its labels or container images. Other updates, such as scaling, do not trigger a rollout.
-* **Where history lives:** the revision history is stored in the old ReplicaSets that the Deployment keeps (how many: `revisionHistoryLimit`).
+* **Where history lives:** the revision history is stored in the ReplicaSets the Deployment controls (the current one and the old ones); `revisionHistoryLimit` sets how many old ReplicaSets are kept.
 * **Recording changes:** annotate the Deployment to fill the `CHANGE-CAUSE` column of the rollout history (the `--record` flag is deprecated). The annotation is copied to the revision when the revision is created.
 
 `kubectl annotate deployment <deployment-name> kubernetes.io/change-cause="Change details" --overwrite`
@@ -654,7 +654,7 @@ strategy:
   `-h` also works with subcommands (e.g. `helm search repo -h`)
 
 * `helm search hub`  
-  Searches Artifact Hub (the default hub), which lists charts from many repositories; a repository found there can then be added locally with `helm repo add`.
+  Searches Artifact Hub (the default hub), which lists charts from many repositories; a traditional chart repository found there can then be added locally with `helm repo add`. A chart hosted in an OCI registry is not added as a repository: use its `oci://` reference directly, e.g. `helm install <release-name> oci://<registry>/<path>/<chart>`.
 
 - `helm search hub` options  
   - `--list-repo-url` option gives you the chart repository's full URL but is hard to read in table format.  

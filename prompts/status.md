@@ -11,7 +11,7 @@ Codex review pass, defined in `prompts/codex-review.md` (Codex CLI, model `gpt-5
 
 ## Agent running
 
-Codex reviewers running: s1 r2, s2 r3, s3 r2, s4 r2, s6 r3 (outputs `prompts/tmp/codex_s<N>_r<round>.out`)
+Codex reviewers running: s1 r2, s3 r2, s4 r2, s6 r3 (outputs `prompts/tmp/codex_s<N>_r<round>.out`)
 
 ## Sections
 
@@ -19,7 +19,7 @@ Codex reviewers running: s1 r2, s2 r3, s3 r2, s4 r2, s6 r3 (outputs `prompts/tmp
 |---|---|---|---|---|
 | 0 | Preamble | Base: CSS `<style>` block and audit header. Re-verify the current CKAD Kubernetes version online and update the header. | done | 1 |
 | 1 | Application Design and Build | Base: "Application Design and Build" (images, Docker/Podman, Jobs, CronJobs, multi-container Pods, volumes) | review | 2 |
-| 2 | Application Deployment | Base: "Application Deployment". File 2: create/expose/dry-run Deployment, edit, scale, Deployment `spec`/`strategy`, `--save-config`, rollout history and rollback, Helm. File 3: `k run` Pod YAML, NodePort expose. File 2: `k run -it --restart=Never -image=alpine temp-pod` (source typo `-image` → `--image`). | review | 3 |
+| 2 | Application Deployment | Base: "Application Deployment". File 2: create/expose/dry-run Deployment, edit, scale, Deployment `spec`/`strategy`, `--save-config`, rollout history and rollback, Helm. File 3: `k run` Pod YAML, NodePort expose. File 2: `k run -it --restart=Never -image=alpine temp-pod` (source typo `-image` → `--image`). | done | 3 |
 | 3 | Application Observability and Maintenance | Base: "Application Observability and Maintenance". File 3: admission controllers, K8s version, API groups/versions, `kubectl proxy`, probes, monitoring/Metrics Server, logs, events, `kubectl debug`. | review | 2 |
 | 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | review | 2 |
 | 5 | Services and Networking | Base: "Services and Networking" | done-with-open-points | 2 |
