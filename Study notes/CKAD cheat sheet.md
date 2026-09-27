@@ -287,7 +287,7 @@ roleRef:             # "roleRef" specifies the binding to a Role / ClusterRole
 
 ## Understand and Define Resource Requirements, Limits ands Quotas
 
-* `Requests` and `Limits` are set for each container of a Pod. If a container exceeds its memory limit, it gets killed (OOMKilled); a container exceeding its CPU limit is throttled, not killed.
+* `Requests` and `Limits` are set for each container of a Pod (`spec.containers[].resources`), or for the whole Pod (`spec.resources`: Pod-level resources, cpu/memory/hugepages; feature gate `PodLevelResources`, beta and enabled by default). If a container exceeds its memory limit, the kernel may kill it (OOMKilled); a container exceeding its CPU limit is throttled, not killed.
 * `Quotas` (ResourceQuota) are for `Namespaces`
 
 ## Understanding ConfigMaps
