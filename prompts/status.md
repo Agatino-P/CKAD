@@ -11,7 +11,7 @@ Codex review pass, defined in `prompts/codex-review.md` (Codex CLI, model `gpt-5
 
 ## Agent running
 
-Codex reviewers running: s1 r2, s3 r2, s4 r2, s6 r3 (outputs `prompts/tmp/codex_s<N>_r<round>.out`)
+Codex reviewers running: s1 r2, s3 r2, s4 r2 (outputs `prompts/tmp/codex_s<N>_r<round>.out`)
 
 ## Sections
 
@@ -23,7 +23,7 @@ Codex reviewers running: s1 r2, s3 r2, s4 r2, s6 r3 (outputs `prompts/tmp/codex_
 | 3 | Application Observability and Maintenance | Base: "Application Observability and Maintenance". File 3: admission controllers, K8s version, API groups/versions, `kubectl proxy`, probes, monitoring/Metrics Server, logs, events, `kubectl debug`. | review | 2 |
 | 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | review | 2 |
 | 5 | Services and Networking | Base: "Services and Networking" | done-with-open-points | 2 |
-| 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | review | 3 |
+| 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | done | 3 |
 | 7 | Final audit | All three sources against the whole new file (Codex reviewer in audit mode). | review | 1 |
 
 States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-open-points`.
