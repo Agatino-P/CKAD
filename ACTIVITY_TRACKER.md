@@ -71,3 +71,9 @@ Codex records useful decisions, constraints, preferences, research findings, and
 
 - **Result:** Codex (`gpt-5.6-sol`) reviewed sections 0–6 and ran the final audit of `Study notes/CKAD appunti.md`; Claude verified each finding and applied 23 fixes of wrong or missing content and rejected 1 finding (docs online plus checks on the local `kind-ckad` cluster). The final audit found no lost content.
 - **Lesson:** a fix proposed by Codex can itself be wrong (the round-1 "kubelet stats via CRI" wording was reversed in round 2: embedded cAdvisor is the default, CRI stats need an alpha feature gate); later rounds must re-check accepted fixes.
+
+### 2026-09-28 — CKAD cheat sheet created from the recap
+
+- **Result:** `Study notes/CKAD cheat sheet.md` starts from `Study notes/backup/CKAD appunti recap.md`: every recap item kept, wrong items corrected (checked against the v1.35 docs and the local `kind-ckad` cluster), nothing added (User's choice).
+- **Review:** three Claude reviewer-agent rounds (2 fixes: Helm pending releases, Pod-level resources), then Codex (`gpt-5.6-sol`), which found no wrong or missing content.
+- **Open:** the CKAD exam's Helm version is not verified; the cheat sheet gives `helm ls --pending` (Helm 3 and 4) and notes that `helm ls -a` exists only in Helm 3.
