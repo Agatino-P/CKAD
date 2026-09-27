@@ -224,7 +224,7 @@ Each outer creates the inner: Cronjob -> Job -> Pod -> Container
 * Jobs are about running a specific number of pods all the way through to completion.
 * If needed, Pods can be run in parallel, a given number at a time.
 * Jobs are managed by the Job Controller in the control plane that manages them through successful completion.
-* Jobs can offer intelligence (e.g.: Restart the Pod, Retries, Kill long-running, Clean-up).
+* Jobs can offer intelligence (e.g.: Retries, Kill long-running, Clean-up). On failure, with `restartPolicy: Never` the Job controller creates a replacement Pod; with `restartPolicy: OnFailure` the kubelet restarts the failed container inside the same Pod.
 * Deleting the Job also deletes the Pods it created.
 
 #### Yaml 
@@ -402,7 +402,8 @@ Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloa
 * As the storage is external to K8s, it can be visible to all nodes, regardless on what node it is.
 
 * Pod -> Persistent Volume Claim (PVC) -> Storage Class (SC)  
-  The PVC names a StorageClass; storage is then dynamically provisioned as a Persistent Volume (PV), bound to the PVC, and mounted into the pod.
+  The PVC names a StorageClass (or gets the default StorageClass if it names none); storage is then dynamically provisioned as a Persistent Volume (PV), bound to the PVC, and mounted into the pod.  
+  This is dynamic provisioning. With static provisioning, an administrator creates the PV in advance and the PVC binds to it: Pod -> PVC -> PV.
 
 ### Storage Classes 
 
@@ -549,7 +550,7 @@ spec:
 #...
 ```
 
-* a public service (e.g. Load Balancer, or node port) that directs traffic from an externally used port (e.g.: 443) to blue or green pods via a selector with
+* a public service (e.g. Load Balancer, or node port) that directs traffic from an externally used port to blue or green pods via a selector with the following (a LoadBalancer Service can expose e.g. port 443 externally; a NodePort Service is reached from outside at `<NodeIP>:<nodePort>`, with `nodePort` in the node port range, default 30000-32767)
 
 ```yaml
 spec:
@@ -692,7 +693,7 @@ strategy:
   This name is used for deploy (and therefore pods) and svc. At least in my test with bitnami/nginx.  
   It also shows up when you do `helm list`
 
-* `helm upgrade`  
+* `helm upgrade <release-name> <repo/chart>`  
   When doing upgrade, typically to a next version, you can also override some values
 
 * `helm status <release-name>`  
@@ -859,6 +860,8 @@ or
   * List all available versions for that specific API group.  
   `kubectl api-versions | grep <api-group>/`  
   `kubectl api-versions | grep apps/`
+  * These are the versions of the whole group: a given version may not serve that resource. Check a version for the resource with `kubectl explain <resource> --api-version=<group>/<version>` (it fails with `couldn't find resource` if that version does not serve it)  
+  `kubectl explain deployments --api-version=apps/v1`
 
 #### Preferred version for an API group
 
@@ -930,7 +933,7 @@ spec:
 
 * Defaults to Always, can be overwritten if needed (`Always`, `OnFailure`, `Never`). In a Deployment's Pod template, `Always` is the only allowed value.
 
-* A probe failure restarts the container, not the Pod: the Pod is not recreated.
+* A failed liveness or startup probe makes the kubelet kill the container, which is then restarted according to the restart policy; the Pod is not recreated. A failed readiness probe does not restart anything: the container is marked not ready and the Pod is removed from the Services' endpoints.
 
 ### Probe Types (mechanisms)
 
@@ -987,7 +990,7 @@ Only three types of result:
 
 #### How Metrics Server works
 
-* On each node there's a `kubelet` who gets input from `cAdvisor` (who gets it from `Container Runtimes, such as containerd`) and from pod data.
+* On each node there's a `kubelet` that gets container usage statistics from the container runtime (such as containerd) through the Container Runtime Interface (CRI); if the runtime does not provide them, the kubelet gets them directly using code from `cAdvisor`.
 * Kubelet is the communication mechanism between a node and the control plane.
 * Metrics Server gets input from kubelets via the kubelet `/metrics/resource` endpoint.
 * Kubectl can then connect to the Api Server, which serves the `Metrics Api` provided by Metrics Server.
@@ -1235,7 +1238,8 @@ limits:
 
 ### Resource Requests and Limits
 
-* Requests and limits are set for each container of a `Pod`; the Pod's request/limit for a resource is the sum of its containers' requests/limits.
+* Requests and limits are usually set for each container of a `Pod`; the Pod's request/limit for a resource is then the sum of its app containers' requests/limits (init and sidecar containers and Pod overhead change the calculation: see [sidecar resource sharing](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/#resource-sharing-within-containers)).
+* They can also be set for the whole Pod in `spec.resources` (cpu, memory, hugepages; feature gate `PodLevelResources`, beta and enabled by default): see [Pod-level resource specification](https://v1-35.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/#pod-level-resource-specification).
 
 * In the Pod yaml template there are 
   * `spec.containers[].resources.limits.cpu`
@@ -1458,6 +1462,8 @@ data:
 
 ### Creating a Service Account
 
+* Use separate namespaces to isolate access to mounted Secrets.
+
 * via yaml
 
 ```yaml
@@ -1483,7 +1489,7 @@ metadata:
 
 ### Using a service token
 
-* You need to bind it to a Role by a `RoleBinding` or a `ClusterRoleBinding`, depending if you are connecting to a `Role` or to a `ClusterRole`.
+* To give the ServiceAccount RBAC permissions, bind it with a `RoleBinding` (to a `Role`, or to a `ClusterRole`, granting its permissions only in the RoleBinding's namespace) or with a `ClusterRoleBinding` (to a `ClusterRole`, cluster-wide).
 * Within the RoleBinding yaml definition file the `subjects[n].kind` is defined as `ServiceAccount`, as it's not a user, together with the ServiceAccount's `namespace` (`kind: Service` is rejected: supported values are `ServiceAccount`, `User`, `Group`).
 
 ```yaml
@@ -1703,7 +1709,7 @@ spec:
 ## Provide and Troubleshoot Access to Applications via Services
 
 * A service is a stable network abstraction that sits in front of a set of pods
-* A Service's Name and IP Address don't change while it exists.
+* A Service's Name and IP Address don't change while it exists (the cluster IP can change only when the `type` is changed to or from `ExternalName`; a headless Service, `clusterIP: None`, has no IP).
 * The name gets automatically recorded in the cluster's internal DNS that all PODs have access to.
 
 ### ClusterIP
@@ -1776,7 +1782,7 @@ spec:
 ### DNS
 
 * There's a `kube-dns` Service in the kube-system namespace. The name stays `kube-dns` for compatibility, but the Pods behind the Service are normally CoreDNS Pods (label `k8s-app=kube-dns`).
-* Every pod (with the default `dnsPolicy: ClusterFirst`) gets the address of the dns service injected inside its configuration, in the `/etc/resolv.conf` file as `nameserver`
+* Every pod (with the default `dnsPolicy: ClusterFirst`) gets the address of the dns service injected inside its configuration, in the `/etc/resolv.conf` file as `nameserver`. Exception: a Pod with `hostNetwork: true` and `ClusterFirst` falls back to the node's DNS (policy `Default`); it needs `dnsPolicy: ClusterFirstWithHostNet` to use the cluster DNS.
 
 ## Use Ingress Rules to Expose Applications
 
@@ -1784,7 +1790,7 @@ spec:
 
 * Each LoadBalancer Service gets its own load balancer on the cloud, so if you need to expose more services, you need more load balancers in the cloud which means cost.
 
-* Ingress can expose many services, each of course with his own (behind the scenes) ClusterIP.
+* Ingress can expose many services (referenced by name and port), each normally with its own (behind the scenes) ClusterIP.
 * Ingress is only for HTTP and HTTPS
 * The Ingress controller is usually exposed through a single load balancer on ports 80 and 443. Then it uses host and/or path based routing to send traffic to backend services. 
 
@@ -1905,7 +1911,7 @@ When not specified, not a bad idea to switch to default namespace
 
 * Applies a configuration to a resource by file name or stdin. The resource name must be specified.
 * This resource will be created if it doesn’t exist yet.
-* If the resource already exists, this command will not error: the resource is updated.
+* If the resource already exists, this command does not fail because of that: the resource is updated. The update itself can still be rejected, e.g. when it changes an immutable field such as a Deployment's `spec.selector` (`field is immutable`).
 
 `kubectl create` is an imperative command.
 
@@ -1925,7 +1931,7 @@ When not specified, not a bad idea to switch to default namespace
 * The basic command is in Application Deployment. Variants:
 
 `k run -it --restart=Never --image=alpine temp-pod -- /bin/sh`     //apk add bash and then bash, if needed, same with curl  
-`k run -it mycurlpod --image=curlimages/curl -- sh`               //No bash  
+`k run -it mycurlpod --image=curlimages/curl --restart=Never -- sh`               //No bash  
 `k run -it al --image=alpine --restart=Never -- /bin/sh`
 
 * Flags such as `--restart=Never` go **before** `--`: everything after `--` is passed to the container as its command/args (`-- /bin/sh --restart=Never` makes `/bin/sh` fail with `bad option`, and the Pod keeps `restartPolicy: Always`).
@@ -1939,4 +1945,5 @@ When not specified, not a bad idea to switch to default namespace
 ## Clusters
 
 * List the available contexts (each context points to a cluster): `kubectl config get-contexts`
+* List the clusters defined in the kubeconfig: `kubectl config get-clusters`
 * Verify the active cluster: `kubectl cluster-info`
