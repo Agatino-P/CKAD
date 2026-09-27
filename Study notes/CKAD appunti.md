@@ -754,10 +754,11 @@ spec:
 
 * You need to sudo to be able to `cat` this
 
-* To access it in Docker Desktop:
+* To access it in Docker Desktop with the `kubeadm` provisioner (the node is the Docker Desktop VM):
   * `docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh`
   * `cd /etc/kubernetes/manifests`
   * `vi kube-apiserver.yaml`
+* With a `kind` cluster (including Docker Desktop with the `kind` provisioner), each node is a Docker container: find the control-plane container with `docker ps`, then `docker exec -it <control-plane-container> sh`; the file is at the same path inside that container.
 
 #### View admission controller plugins for kube-apiserver
 
