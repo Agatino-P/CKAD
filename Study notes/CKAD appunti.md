@@ -168,9 +168,10 @@ doesn't remove the old image name, and you can find two image names with the sam
 
 `docker image rm <image-name>`
 
-* Without `-f`, removal is refused if a container (running or stopped) uses the image.
-* By tag, with no container using the image: `docker image rm <name>:<tag>` removes that tag; the image is deleted too when that tag was its last one.
-* By tag with `-f`, when a container uses the image: only the tag is removed; the image stays (listed as `<none>`).
+* By tag, when the image has other tags: only that tag is removed, even while a container uses the image.
+* By its last tag, with no container using the image: the tag and the image are removed.
+* Without `-f`, removing the last tag or removing by ID is refused while a container (running or stopped) uses the image.
+* By last tag with `-f`, when a container uses the image: only the tag is removed; the image stays, shown as `<none>` by `docker image ls -a` (not by plain `docker image ls`).
 * By image ID: refused without `-f` if the image has more than one tag. With `-f`, all its tags are removed and the image is deleted, unless a running container uses it: then removal is refused even with `-f` ("cannot be forced"); stop and remove the container first.
 * More than one image can be removed at once: `docker image rm <image1> <image2>`
 
@@ -403,6 +404,12 @@ Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloa
 * Pod -> Persistent Volume Claim (PVC) -> Storage Class (SC)  
   The PVC names a StorageClass; storage is then dynamically provisioned as a Persistent Volume (PV), bound to the PVC, and mounted into the pod.
 
+### Storage Classes 
+
+* The normal pattern is to use a StorageClass to define a class of storage with all of the features that you want from the back‑end system.
+* Then, when you deploy your Pods, you reference a PersistentVolumeClaim that makes a reference to the class.
+* Storage on the back end then gets dynamically provisioned and attached to the Pod: when the PVC is created (`Immediate`) or when the Pod using it is created (`WaitForFirstConsumer`).
+
 ### Storage classes (SC)
 
 `kubectl get sc`
@@ -430,13 +437,6 @@ Are not referenced directly by the pod: `containers[].volumeMounts[].name` refer
 ### Persistent Volume Claims (PVC)
 
 Are referred inside the pod in `spec.volumes[].persistentVolumeClaim.claimName`. The PVC must be in the same namespace as the pod.
-
-### Storage Classes 
-<!-- REORDER: the Volumes headings (Storage classes (SC), PV, PVC, Storage Classes) need reordering; to be decided with User, see prompts/status.md 1.9 -->
-
-* The normal pattern is to use a StorageClass to define a class of storage with all of the features that you want from the back‑end system.
-* Then, when you deploy your Pods, you reference a PersistentVolumeClaim that makes a reference to the class.
-* Storage on the back end then gets dynamically provisioned and attached to the Pod: when the PVC is created (`Immediate`) or when the Pod using it is created (`WaitForFirstConsumer`).
 
 ### Ephemeral Volumes   
 
@@ -592,7 +592,7 @@ strategy:
 * Saves the configuration of the object in its annotations (`kubectl.kubernetes.io/last-applied-configuration`), so that `kubectl apply` can be used on the object later.
 * `--save-config` does not create rollout history (see below).
 
-### Deployment updates and rollout history
+### Deployment updates and change-cause
 
 * **Triggering a revision:** a rollout, and with it a new revision, is triggered only when the Pod template (`spec.template`) changes, for example its labels or container images. Other updates, such as scaling, do not trigger a rollout.
 * **Where history lives:** the revision history is stored in the old ReplicaSets that the Deployment keeps (how many: `revisionHistoryLimit`).
@@ -602,7 +602,7 @@ strategy:
 
 * `--overwrite` is needed when the annotation already exists; without it the command fails.
 
-### Get information about a Deployment
+### Rollout status
 
 * Check the current rollout status (watches the latest rollout until it is done):
 
@@ -673,7 +673,7 @@ strategy:
   - Searches the repositories that you have added to your local helm client (with `helm repo add`).
   - This search is done over local data, no public network needed.
   - Each chart is identified as `<repo_local_name>/<chart_name>`.
-  - Shows only the newest version of each chart; to see all versions use `--versions`.
+  - Shows only the latest stable version of each chart (`--devel` includes pre-release versions: alpha, beta, rc); to see all versions use `--versions`.
   - To search for a version (a semantic versioning constraint): `helm search repo <chart-name> --version=<version-number>`
   - To see all the options: `helm search repo --help`
 
@@ -762,7 +762,7 @@ spec:
 
 * `kubectl describe pod kube-apiserver -n kube-system` (`describe` also matches a name prefix)
 * `kubectl describe pod kube-apiserver -n kube-system | grep enable-admission-plugins`
-* This shows only the plugins enabled with the flag, in addition to the default enabled ones.
+* The flag lists only the plugins enabled on top of the defaults; the default plugins do not appear here (see "Using `kube-apiserver`").
 * Do a `k get pods -n kube-system` first to confirm the name of the apiserver pod: the static Pod name is suffixed with the node name (e.g. `kube-apiserver-cl1-control-plane`)
 * `KUBE_EDITOR=nano k edit pod kube-apiserver-cl1-control-plane -n kube-system` opens the Pod, but this is a mirror Pod of a static Pod: it is visible on the API server but cannot be controlled from there. Change the manifest file instead.
 
@@ -770,9 +770,8 @@ spec:
 
 * You can invoke the `kube-apiserver` executable inside the `kube-apiserver` pod in the `kube-system` namespace.
 * `kube-apiserver -h` gives information about the options available.
-* `kube-apiserver -h | grep enable-admission-plugins` shows the admission plugins enabled by default.
+* `kube-apiserver -h | grep enable-admission-plugins` prints two lines: the `--enable-admission-plugins` line lists the plugins enabled by default; the deprecated `--admission-control` line lists every plugin.
 * `k config set-context --current --namespace=kube-system`
-* `k get pods` to get the api-server pod
 * `k exec -it kube-apiserver-docker-desktop -- kube-apiserver -h` executes `kube-apiserver -h` inside the container. The double dashes end the `kubectl` command and start the command given to the container.
 * `k exec -it kube-apiserver-master -- sh` fails: the kube-apiserver image is distroless (built on the `go-runner` image) and has no shell. Run the binary directly as above.
 
@@ -791,7 +790,7 @@ or
 #### K8s version
 
 `k version -o yaml` major.minor.patch as usual
-* GA is for General availability = release
+* Stable (GA) versions: `v<number>`, e.g. `v1`
 * Otherwise `v<number>alpha<alpha number>` or `v<number>beta<beta number>`, e.g.: `coordination.k8s.io/v1alpha2`
 
 #### ApiGroups
@@ -839,7 +838,7 @@ or
 
 * Alpha. E.g: `v1alpha3`
 * Beta. E.g: `v1beta2`
-* Stable. E.g: `v2` //Also called GA General availability
+* Stable, also called GA (General Availability) = release. E.g: `v2`
 
 ##### Removal of API elements
 
@@ -931,7 +930,7 @@ spec:
 
 * Defaults to Always, can be overwritten if needed (`Always`, `OnFailure`, `Never`). In a Deployment's Pod template, `Always` is the only allowed value.
 
-* Failure of the Startup or Liveness probe causes the container to be killed and restarted according to the restart policy (the Pod is not recreated). Failure of the Readiness probe does not restart anything.
+* A probe failure restarts the container, not the Pod: the Pod is not recreated.
 
 ### Probe Types (mechanisms)
 
@@ -1787,7 +1786,7 @@ spec:
 
 * Ingress can expose many services, each of course with his own (behind the scenes) ClusterIP.
 * Ingress is only for HTTP and HTTPS
-* The Ingress controller is usually exposed through a single load balancer on port 80 or 443. Then it uses host and/or path based routing to send traffic to backend services. 
+* The Ingress controller is usually exposed through a single load balancer on ports 80 and 443. Then it uses host and/or path based routing to send traffic to backend services. 
 
 * Ingress are working via Ing Spec (defines the rules) and Ing Controller (implements the rules)
 * Kubernetes doesn't ship with a native controller, one has to be installed. In the exam, it's already installed.
@@ -1852,7 +1851,7 @@ spec:
 or  
 `k get deploy <deploy-name> -o json | jq '.metadata.annotations["kubernetes.io/change-cause"]'`
 
-* The key must be in double quotes because it contains `.`, `/` and `-`: without quotes jq fails to compile the filter.
+* The key must be in double quotes: unquoted, `/` and `-` are read as division and subtraction, so the filter fails to compile, and `.` splits the key into a nested path (`.kubernetes.io` returns the wrong value).
 * The quoted key must match exactly: a stray space, as in `." kubernetes.io/change-cause"`, silently returns `null`.
 
 ## Field selectors
