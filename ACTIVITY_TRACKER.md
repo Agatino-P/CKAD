@@ -51,3 +51,11 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Open — Killer Shell results:** `Study notes/Killer Shell - Exam Simulators - results.pdf` has not yet been compared with the topics covered by the notes.
 - **Open — practice findings destination:** Decide where new findings from practice tests go; likely candidates are the recap for quick reminders and the main file for longer explanations.
 - **Recap rebuild input:** Compared with the old files 2 and 3, the recap added OCI images and Dockerfiles; Jobs and CronJobs (including `sh -c` usage and `k logs job/<name>`); sidecars and storage scoping; CRDs; RBAC; quotas; ConfigMaps and `$(VAR)` in args; ServiceAccounts and their Secrets; security contexts; NetworkPolicies; service DNS names; Ingress; nano settings; and `helm ls -a`.
+
+### 2026-09-27 — CKAD appunti rebuild done
+
+- **Result:** `Study notes/CKAD appunti.md` is rebuilt from the three backup files (base, file 2, file 3) through the writer ↔ adversarial-reviewer loop; every section is reviewed, and the final audit found no lost content.
+- **Verification:** Claims were checked against the v1.35 docs online and, where possible, by running commands on the local `kind-ckad` cluster and Docker in throwaway namespaces and containers.
+- **User rules set during the run:** statements from User's own exam experience count as verified; an open point is recorded only when something is left to change or decide; Claude runs checks itself instead of asking User to run them.
+- **Open:** The remaining open points, including one blocking wording fix in "Remove an image", are in `prompts/status.md`.
+- **Next action:** Work through the open points with User; the recap (`Study notes/CKAD appunti recap.md`) gets its own goal later.
