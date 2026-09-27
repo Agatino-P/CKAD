@@ -93,7 +93,7 @@ h6:before {
 
 * Docker, Buildah or Podman are all build tools that create an OCI Image from a Dockerfile (Podman and Buildah also accept the name `Containerfile`). FYI other ways exist that don't use a Dockerfile (even Buildah can build an image with its own commands, without a Dockerfile).
 
-- They need in a Dockerfile: 
+- A typical app Dockerfile contains (only the `FROM` base image line is strictly required): 
   - Reference to base Image
   - Apps and dependencies (nugets, or packages in general)
   - Commands to install dependencies (e.g.: `dotnet build`, which also runs `dotnet restore` implicitly)
@@ -402,14 +402,14 @@ Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloa
 * As the storage is external to K8s, it can be visible to all nodes, regardless on what node it is.
 
 * Pod -> Persistent Volume Claim (PVC) -> Storage Class (SC)  
-  The PVC names a StorageClass (or gets the default StorageClass if it names none); storage is then dynamically provisioned as a Persistent Volume (PV), bound to the PVC, and mounted into the pod.  
+  The PVC names a StorageClass (or, if it names none, gets the cluster's default StorageClass, when one exists); storage is then dynamically provisioned as a Persistent Volume (PV), bound to the PVC, and mounted into the pod.  
   This is dynamic provisioning. With static provisioning, an administrator creates the PV in advance and the PVC binds to it: Pod -> PVC -> PV.
 
 ### Storage Classes 
 
 * The normal pattern is to use a StorageClass to define a class of storage with all of the features that you want from the back‑end system.
 * Then, when you deploy your Pods, you reference a PersistentVolumeClaim that makes a reference to the class.
-* Storage on the back end then gets dynamically provisioned and attached to the Pod: when the PVC is created (`Immediate`) or when the Pod using it is created (`WaitForFirstConsumer`).
+* Storage on the back end then gets dynamically provisioned and bound to the PVC: when the PVC is created (`Immediate`) or when a Pod using it is scheduled (`WaitForFirstConsumer`). The volume is mounted into the Pod when the Pod runs.
 
 ### Storage classes (SC)
 
@@ -990,7 +990,7 @@ Only three types of result:
 
 #### How Metrics Server works
 
-* On each node there's a `kubelet` that gets container usage statistics from the container runtime (such as containerd) through the Container Runtime Interface (CRI); if the runtime does not provide them, the kubelet gets them directly using code from `cAdvisor`.
+* On each node there's a `kubelet` that collects Pod and container usage statistics with its embedded `cAdvisor` (for the containers started by the container runtime, such as containerd). Only with the alpha feature gate `PodAndContainerStatsFromCRI` enabled (off by default) does the kubelet get them from the runtime through the Container Runtime Interface (CRI) instead.
 * Kubelet is the communication mechanism between a node and the control plane.
 * Metrics Server gets input from kubelets via the kubelet `/metrics/resource` endpoint.
 * Kubectl can then connect to the Api Server, which serves the `Metrics Api` provided by Metrics Server.
