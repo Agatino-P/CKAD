@@ -7,11 +7,11 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Section 6 (General Knowledge), write mode: the Writer is running. On completion, section 6 moves to `review`, round 1.
+Section 7 (Final audit), `review` round 1: the Reviewer is running in audit mode. On completion, apply the decision rule in `prompts/loop.md`.
 
 ## Agent running
 
-Writer — section 6 (General Knowledge), write mode.
+Reviewer — section 7 (Final audit), audit mode, round 1.
 
 ## Sections
 
@@ -23,8 +23,8 @@ Writer — section 6 (General Knowledge), write mode.
 | 3 | Application Observability and Maintenance | Base: "Application Observability and Maintenance". File 3: admission controllers, K8s version, API groups/versions, `kubectl proxy`, probes, monitoring/Metrics Server, logs, events, `kubectl debug`. | done | 2 |
 | 4 | Application Environment, Configuration and Security | Base: "Application Environment, Configuration and Security" | done | 2 |
 | 5 | Services and Networking | Base: "Services and Networking" | done | 2 |
-| 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | todo | 0 |
-| 7 | Final audit | All three sources against the whole new file (reviewer in audit mode). | todo | 0 |
+| 6 | General Knowledge | Base: "General Knowledge". File 2: general hints (spaces not tabs), tmux, alias, kubeconfig/context commands incl. `config unset`, namespace create/check/set/`-n`, `KUBE_EDITOR`, `k create -f ./`, jq. File 3: field selectors. Note: section 2 already holds "Modify a deployment from the command line" and the temp-pod item; merge the base General Knowledge copies there as duplicates (the extra `k run` variants carry the typo `--restar=never`). | done | 1 |
+| 7 | Final audit | All three sources against the whole new file (reviewer in audit mode). | review | 1 |
 
 States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-open-points`.
 
@@ -39,3 +39,4 @@ States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-
 - **3.4** — `user-decision` — "K8s version" / "Order of versions": GA is defined twice; merge into one.
 - **3.5** — `user-decision` — "View admission controller plugins for kube-apiserver" / "Using `kube-apiserver`": the step "run `k get pods` in kube-system to find the apiserver Pod name" appears in both; merge.
 - **5.1** — `user-decision` — "Use Ingress Rules to Expose Applications": "exposed through a single load balancer on port 80 or 443" reads as one port or the other; the controller normally serves both, so "80 and 443".
+- **6.1** — `user-decision` — "Using jq (example)": the reason for quoting the key is partly wrong — only `/` and `-` break compilation (read as division and subtraction); an unquoted `.` instead splits the key into a nested path and returns the wrong value (tested with jq 1.7.1).

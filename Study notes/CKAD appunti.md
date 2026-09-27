@@ -1824,3 +1824,120 @@ spec:
             port:
               number: 80
 ```
+
+# General Knowledge
+
+<mark>Exam: the environment is all Linux</mark>
+
+<mark>Exam: it's totally ok to copy paste examples from https://kubernetes.io/docs/ (the Kubernetes blog https://kubernetes.io/blog/ and the Helm docs https://helm.sh/docs/ are allowed too)</mark>
+
+* Use spaces when you edit YAML, not tabs: YAML forbids tab characters in indentation.
+
+## Setting alias for Kubectl
+
+* Powershell `set-alias k kubectl`
+* Linux `alias k=kubectl`
+
+## Change the editor for K8s commands edit (memorize this)
+
+* `KUBE_EDITOR="nano" k edit svc/<service-name>`
+* `alias ke="KUBE_EDITOR='nano' kubectl"` and then `ke edit pod nginx-6cf46f5666-mbbms`
+* Without `KUBE_EDITOR`, `kubectl edit` uses `EDITOR`, and falls back to `vi` on Linux.
+
+* The keyboard combination to display the current line number whilst you are using nano is CTRL+C (nano: "Report cursor position").
+
+## Using jq (example)
+
+`k get deploy <deploy-name> -o json | jq '.metadata.annotations."kubernetes.io/change-cause"'`  
+or  
+`k get deploy <deploy-name> -o json | jq '.metadata.annotations["kubernetes.io/change-cause"]'`
+
+* The key must be in double quotes because it contains `.`, `/` and `-`: without quotes jq fails to compile the filter.
+* The quoted key must match exactly: a stray space, as in `." kubernetes.io/change-cause"`, silently returns `null`.
+
+## Field selectors
+
+* Field selectors let you select Kubernetes objects based on the value of one or more resource fields. 
+* It even allows to get events for more than one "object" at once  
+`kubectl get events --field-selector type=Warning --all-namespaces`
+* The value is case-sensitive: the event type is `Warning` (or `Normal`); `type=warning` finds nothing.
+* Supports the operators `=`, `==` (same as `=`) and `!=`
+* example `kubectl get services --all-namespaces --field-selector metadata.namespace!=default`
+
+## Running multiple terminals using tmux
+
+https://github.com/tmux/tmux/wiki/Getting-Started
+
+* most important Ctrl-b ? for help (lists all key bindings; Ctrl-b is the default prefix key)
+
+## Imperatively make changes to kubeconfig
+
+* Create a cluster entry in kubeconfig, under the `clusters` section, called test-cluster and pointing to https://127.0.0.1:52807  
+`kubectl config set-cluster test-cluster --server=https://127.0.0.1:52807`
+* Create a new context entry in kubeconfig called test-context pointing to a cluster called test-cluster  
+`kubectl config set-context test-context --cluster=test-cluster`
+* Remove the namespace property setting from the docker-desktop context  
+`k config unset contexts.docker-desktop.namespace`
+
+## K8s Context
+
+* View current config `k config view`: for each context it also gives the namespace; if a context lists no namespace, that context uses `default`.
+* View in which context we are `k config current-context`
+* Change the current context (e.g. to test-context, just created above) `kubectl config use-context test-context`
+
+## K8s Namespace (memorize this)
+
+* Create `k create ns <namespace-name>`
+* Check `k get ns`
+* Set it as the namespace of the current context  
+` kubectl config set-context --current --namespace=<nameOfTheNamespace> `
+* ` alias kn='kubectl config set-context --current --namespace ' `
+* ` kn default ` 
+* Specify the namespace manually: the `-n <namespace-name>` option on the command line of each command
+
+When not specified, not a bad idea to switch to default namespace
+
+## Kubectl Apply vs. Kubectl Create 
+
+* Both accept JSON and YAML formats.
+* Both can work by file name or stdin
+
+`kubectl apply` is a declarative command.
+
+* Applies a configuration to a resource by file name or stdin. The resource name must be specified.
+* This resource will be created if it doesn’t exist yet.
+* If the resource already exists, this command will not error: the resource is updated.
+
+`kubectl create` is an imperative command.
+
+* Creates a resource from a file or from stdin.
+* If the resource already exists, kubectl create will error (`AlreadyExists`).
+* Create using all yaml files in current folder `k create -f ./` (only files ending in `.yaml`, `.yml` or `.json` are read)
+
+## redeploy once you fix a yaml file (e.g. Job, Cronjob)
+
+`kubectl apply -f <YamlFile.yaml>`
+
+* For a Job that already exists, the Pod template (`spec.template`) is immutable: `apply` of a changed template fails with `field is immutable`. Delete and recreate the Job instead:  
+`kubectl replace --force -f <YamlFile.yaml>` (deletes the Job, then creates it again)
+
+## Create a temporary pod as an interactive TTY using image alpine and set restart to Never, named temp-pod
+
+* The basic command is in Application Deployment. Variants:
+
+`k run -it --restart=Never --image=alpine temp-pod -- /bin/sh`     //apk add bash and then bash, if needed, same with curl  
+`k run -it mycurlpod --image=curlimages/curl -- sh`               //No bash  
+`k run -it al --image=alpine --restart=Never -- /bin/sh`
+
+* Flags such as `--restart=Never` go **before** `--`: everything after `--` is passed to the container as its command/args (`-- /bin/sh --restart=Never` makes `/bin/sh` fail with `bad option`, and the Pod keeps `restartPolicy: Always`).
+
+## K8 commands
+
+* `kubectl get jobs --watch`
+* `kubectl get pods --watch`
+* `kubectl get all` (`all` is a category: Pods, Services, Deployments, ReplicaSets, StatefulSets, DaemonSets, Jobs, CronJobs, HPAs, ReplicationControllers; ConfigMaps, Secrets, Ingresses etc. are not included. See the list with `kubectl api-resources --categories=all`)
+
+## Clusters
+
+* List the available contexts (each context points to a cluster): `kubectl config get-contexts`
+* Verify the active cluster: `kubectl cluster-info`
