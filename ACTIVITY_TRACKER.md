@@ -59,3 +59,10 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **User rules set during the run:** statements from User's own exam experience count as verified; an open point is recorded only when something is left to change or decide; Claude runs checks itself instead of asking User to run them.
 - **Open:** The remaining open points, including one blocking wording fix in "Remove an image", are in `prompts/status.md`.
 - **Next action:** Work through the open points with User; the recap (`Study notes/CKAD appunti recap.md`) gets its own goal later.
+
+### 2026-09-27 — Codex review pass of CKAD appunti started
+
+- **Decision (User):** A second adversarial loop reviews `Study notes/CKAD appunti.md` with the Codex CLI (`gpt-5.6-sol`) as reviewer, per section and then a final audit; scope is wrong or missing content only, cosmetic findings ignored; no writer subagent — Claude verifies each Codex finding and applies confirmed fixes directly.
+- **Protocol:** `prompts/codex-review.md` (run command, reviewer prompt template, rules); progress and disputed findings in `prompts/status.md`. Scratch files in `prompts/tmp/`, now gitignored.
+- **Codex constraint:** Codex runs stop at the ChatGPT plan's usage limit; a run that hits the limit does not count as a round and is rerun after the reset time printed in its log.
+- **Next action:** Run the pending reviews listed in `prompts/status.md`, then the final audit.

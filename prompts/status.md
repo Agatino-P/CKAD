@@ -7,11 +7,11 @@ Sources: `Study notes/backup/CKAD appunti.md` (base), `Study notes/backup/CKAD 2
 
 ## Current step
 
-Codex review pass: the rebuild is complete; a second adversarial loop now reviews each section with the Codex CLI (model `gpt-5.6-sol`) as reviewer. Scope: wrong or missing content only; cosmetic findings are ignored. Claude verifies each Codex finding and applies confirmed fixes directly (no writer subagent); rejected findings are dropped with evidence. Same 3-round limit, commit per section, push per main section and after the audit. Reviewer prompt: `prompts/tmp/codex_reviewer_prompt.md`.
+Codex review pass, defined in `prompts/codex-review.md` (Codex CLI, model `gpt-5.6-sol`, as reviewer; wrong or missing content only; Claude verifies each finding and applies confirmed fixes directly). Section 0 is done; every fix accepted so far is in the notes. Next: run the reviews shown in the table (State `review`, Round = the round to run next): section 1 round 2, section 2 round 3, section 3 round 2, section 4 round 2, section 5 round 2, section 6 round 3. Codex usage ran out; the earlier attempts at these runs failed on the limit and do not count as rounds.
 
 ## Agent running
 
-none — Codex hit its usage limit (resets 15:46). Reviews to rerun: section 1 round 2 (if its run failed), section 2 round 3, section 3 round 2, section 4 round 2, section 5 round 2, section 6 round 3; prompts in `prompts/tmp/codex_s<N>_r<round>.prompt`.
+none
 
 ## Sections
 
@@ -30,4 +30,4 @@ States: `todo` → `review` → `fix` → `review` … → `done` or `done-with-
 
 ## Open points
 
-None.
+- **5.2** · `disputed` · Services and Networking → "Provide and Troubleshoot Access to Applications via Services" · Codex asked to make Service DNS statements conditional on "if cluster DNS is enabled". Claude rejected the finding as a nitpick: the notes describe a standard cluster where the DNS add-on (CoreDNS) runs, and the real exception (a `hostNetwork` Pod with `dnsPolicy: ClusterFirst`) is now in the notes under "DNS". Ref: https://v1-35.docs.kubernetes.io/docs/concepts/services-networking/service/#dns
