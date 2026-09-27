@@ -69,6 +69,6 @@ Codex records useful decisions, constraints, preferences, research findings, and
 
 ### 2026-09-27 — Codex review pass of CKAD appunti done
 
-- **Result:** Codex (`gpt-5.6-sol`) reviewed sections 0–6 and ran the final audit of `Study notes/CKAD appunti.md`; Claude verified each finding and applied about 30 fixes of wrong or missing content (docs online plus checks on the local `kind-ckad` cluster). The final audit found no lost content.
+- **Result:** Codex (`gpt-5.6-sol`) reviewed sections 0–6 and ran the final audit of `Study notes/CKAD appunti.md`; Claude verified each finding and applied 23 fixes of wrong or missing content and rejected 1 finding (docs online plus checks on the local `kind-ckad` cluster). The final audit found no lost content.
 - **Lesson:** a fix proposed by Codex can itself be wrong (the round-1 "kubelet stats via CRI" wording was reversed in round 2: embedded cAdvisor is the default, CRI stats need an alpha feature gate); later rounds must re-check accepted fixes.
 - **Open:** disputed point 5.2 in `prompts/status.md` (whether Service DNS statements need an "if cluster DNS is enabled" caveat) is User's decision.
