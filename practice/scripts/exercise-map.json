@@ -1,0 +1,2907 @@
+{
+ "DGK-A-01": {
+  "domain": "Application Design and Build",
+  "topic": "Create a namespace and an nginx Pod in it with `kubectl run`.",
+  "lab": []
+ },
+ "DGK-A-02": {
+  "domain": "Application Design and Build",
+  "topic": "Generate the same Pod as YAML with a client dry run and create it.",
+  "lab": []
+ },
+ "DGK-A-03": {
+  "domain": "Application Design and Build",
+  "topic": "Run a busybox Pod that executes `env` and read its output.",
+  "lab": []
+ },
+ "DGK-A-04": {
+  "domain": "Application Design and Build",
+  "topic": "Define the `env` busybox Pod in YAML, apply it and read its logs.",
+  "lab": []
+ },
+ "DGK-A-05": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Print the YAML of a new namespace with a client dry run, without creating it.",
+  "lab": []
+ },
+ "DGK-A-06": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Print the YAML of a ResourceQuota with hard limits, without creating it.",
+  "lab": []
+ },
+ "DGK-A-07": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "List Pods across all namespaces.",
+  "lab": []
+ },
+ "DGK-A-08": {
+  "domain": "Application Design and Build",
+  "topic": "Run an nginx Pod that declares container port 80.",
+  "lab": []
+ },
+ "DGK-A-09": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Change a running Pod's image and observe the container restart in its events.",
+  "lab": []
+ },
+ "DGK-A-10": {
+  "domain": "Services and Networking",
+  "topic": "Find the Pod address and fetch its root page from a temporary busybox Pod.",
+  "lab": []
+ },
+ "DGK-A-11": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Print a Pod's YAML.",
+  "lab": []
+ },
+ "DGK-A-12": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Describe a Pod to find details and possible start problems.",
+  "lab": []
+ },
+ "DGK-A-13": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Read a Pod's logs.",
+  "lab": []
+ },
+ "DGK-A-14": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Read the logs of a Pod's previous container instance.",
+  "lab": []
+ },
+ "DGK-A-15": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Open an interactive shell in the nginx Pod.",
+  "lab": []
+ },
+ "DGK-A-16": {
+  "domain": "Application Design and Build",
+  "topic": "Run a busybox Pod that echoes a message and exits.",
+  "lab": []
+ },
+ "DGK-A-17": {
+  "domain": "Application Design and Build",
+  "topic": "Run the same Pod so that it is deleted automatically on completion.",
+  "lab": []
+ },
+ "DGK-A-18": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Run an nginx Pod with an environment variable and check it inside the container.",
+  "lab": []
+ },
+ "DGK-B-01": {
+  "domain": "Application Design and Build",
+  "topic": "Create a two-container busybox Pod and run a command in the second container.",
+  "lab": []
+ },
+ "DGK-B-02": {
+  "domain": "Application Design and Build",
+  "topic": "Init container writes a page into a shared emptyDir that nginx serves, then fetch it.",
+  "lab": []
+ },
+ "DGK-C-01": {
+  "domain": "Application Design and Build",
+  "topic": "Create three nginx Pods carrying the label `app=v1`.",
+  "lab": []
+ },
+ "DGK-C-02": {
+  "domain": "Application Design and Build",
+  "topic": "Show the labels of all Pods.",
+  "lab": []
+ },
+ "DGK-C-03": {
+  "domain": "Application Design and Build",
+  "topic": "Overwrite the `app` label of one Pod.",
+  "lab": []
+ },
+ "DGK-C-04": {
+  "domain": "Application Design and Build",
+  "topic": "Show the `app` label as a column when listing Pods.",
+  "lab": []
+ },
+ "DGK-C-05": {
+  "domain": "Application Design and Build",
+  "topic": "List only the Pods with label `app=v2`.",
+  "lab": []
+ },
+ "DGK-C-06": {
+  "domain": "Application Design and Build",
+  "topic": "List Pods with `app=v2` and without `tier=frontend`.",
+  "lab": []
+ },
+ "DGK-C-07": {
+  "domain": "Application Design and Build",
+  "topic": "Add a label to every Pod whose `app` label is `v1` or `v2`.",
+  "lab": []
+ },
+ "DGK-C-08": {
+  "domain": "Application Design and Build",
+  "topic": "Annotate every Pod with label `app=v2`.",
+  "lab": []
+ },
+ "DGK-C-09": {
+  "domain": "Application Design and Build",
+  "topic": "Remove the `app` label from the three Pods.",
+  "lab": []
+ },
+ "DGK-C-10": {
+  "domain": "Application Design and Build",
+  "topic": "Annotate three named Pods with a description.",
+  "lab": []
+ },
+ "DGK-C-11": {
+  "domain": "Application Design and Build",
+  "topic": "Show the annotations of one Pod.",
+  "lab": []
+ },
+ "DGK-C-12": {
+  "domain": "Application Design and Build",
+  "topic": "Remove the annotations from the three Pods.",
+  "lab": []
+ },
+ "DGK-C-13": {
+  "domain": "Application Design and Build",
+  "topic": "Delete the three Pods.",
+  "lab": []
+ },
+ "DGK-C-14": {
+  "domain": "Application Design and Build",
+  "topic": "Schedule a Pod onto a node with a given label using `nodeSelector` or node affinity.",
+  "lab": []
+ },
+ "DGK-C-15": {
+  "domain": "Application Design and Build",
+  "topic": "Bind a Pod to a named node with `nodeName`.",
+  "lab": []
+ },
+ "DGK-C-16": {
+  "domain": "Application Design and Build",
+  "topic": "Taint a node and create a Pod that tolerates the taint.",
+  "lab": []
+ },
+ "DGK-C-17": {
+  "domain": "Application Design and Build",
+  "topic": "Place a Pod on the control plane node with `nodeSelector` and a toleration.",
+  "lab": []
+ },
+ "DGK-C-18": {
+  "domain": "Application Deployment",
+  "topic": "Create a two-replica nginx Deployment that declares container port 80.",
+  "lab": []
+ },
+ "DGK-C-19": {
+  "domain": "Application Deployment",
+  "topic": "Print the Deployment's YAML.",
+  "lab": []
+ },
+ "DGK-C-20": {
+  "domain": "Application Deployment",
+  "topic": "Find and print the YAML of the Deployment's ReplicaSet.",
+  "lab": []
+ },
+ "DGK-C-21": {
+  "domain": "Application Deployment",
+  "topic": "Print the YAML of one Pod of the Deployment.",
+  "lab": []
+ },
+ "DGK-C-22": {
+  "domain": "Application Deployment",
+  "topic": "Check the rollout status of the Deployment.",
+  "lab": []
+ },
+ "DGK-C-23": {
+  "domain": "Application Deployment",
+  "topic": "Update the Deployment's image with `kubectl set image`.",
+  "lab": []
+ },
+ "DGK-C-24": {
+  "domain": "Application Deployment",
+  "topic": "Inspect the rollout history and confirm the replicas.",
+  "lab": []
+ },
+ "DGK-C-25": {
+  "domain": "Application Deployment",
+  "topic": "Undo the latest rollout and verify the Pods run the old image.",
+  "lab": []
+ },
+ "DGK-C-26": {
+  "domain": "Application Deployment",
+  "topic": "Update the Deployment with a wrong image on purpose.",
+  "lab": []
+ },
+ "DGK-C-27": {
+  "domain": "Application Deployment",
+  "topic": "Detect the failed rollout from the rollout status and Pod states.",
+  "lab": []
+ },
+ "DGK-C-28": {
+  "domain": "Application Deployment",
+  "topic": "Roll back to revision 2 and verify the image.",
+  "lab": []
+ },
+ "DGK-C-29": {
+  "domain": "Application Deployment",
+  "topic": "Show the details of revision 4.",
+  "lab": []
+ },
+ "DGK-C-30": {
+  "domain": "Application Deployment",
+  "topic": "Scale the Deployment to 5 replicas.",
+  "lab": []
+ },
+ "DGK-C-31": {
+  "domain": "Application Deployment",
+  "topic": "Create a HorizontalPodAutoscaler with 5 to 10 replicas at 80% `cpu` utilization.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DGK-C-32": {
+  "domain": "Application Deployment",
+  "topic": "Pause the Deployment's rollout.",
+  "lab": []
+ },
+ "DGK-C-33": {
+  "domain": "Application Deployment",
+  "topic": "Update the image while paused and confirm no new revision appears.",
+  "lab": []
+ },
+ "DGK-C-34": {
+  "domain": "Application Deployment",
+  "topic": "Resume the rollout and confirm the new image is applied.",
+  "lab": []
+ },
+ "DGK-C-35": {
+  "domain": "Application Deployment",
+  "topic": "Delete the Deployment and its HorizontalPodAutoscaler.",
+  "lab": []
+ },
+ "DGK-C-36": {
+  "domain": "Application Deployment",
+  "topic": "Run two labelled nginx versions behind one Service at a 3 to 1 replica ratio.",
+  "lab": []
+ },
+ "DGK-C-37": {
+  "domain": "Application Design and Build",
+  "topic": "Create a Job with the perl image that prints digits of pi.",
+  "lab": []
+ },
+ "DGK-C-38": {
+  "domain": "Application Design and Build",
+  "topic": "Wait for the Job to complete and read its output.",
+  "lab": []
+ },
+ "DGK-C-39": {
+  "domain": "Application Design and Build",
+  "topic": "Create a busybox Job that echoes, sleeps 30 seconds and echoes again.",
+  "lab": []
+ },
+ "DGK-C-40": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Follow the logs of the Job's Pod while it runs.",
+  "lab": []
+ },
+ "DGK-C-41": {
+  "domain": "Application Design and Build",
+  "topic": "Show the Job status, describe it and read its logs.",
+  "lab": []
+ },
+ "DGK-C-42": {
+  "domain": "Application Design and Build",
+  "topic": "Delete the Job.",
+  "lab": []
+ },
+ "DGK-C-43": {
+  "domain": "Application Design and Build",
+  "topic": "Recreate the Job with 5 sequential completions in Indexed mode, verify, delete.",
+  "lab": []
+ },
+ "DGK-C-44": {
+  "domain": "Application Design and Build",
+  "topic": "Recreate the Job with parallelism 5.",
+  "lab": []
+ },
+ "DGK-C-45": {
+  "domain": "Application Design and Build",
+  "topic": "Create a Job that is terminated after 30 seconds by `activeDeadlineSeconds`.",
+  "lab": []
+ },
+ "DGK-C-46": {
+  "domain": "Application Design and Build",
+  "topic": "Create a busybox CronJob that runs every minute and prints the date.",
+  "lab": []
+ },
+ "DGK-C-47": {
+  "domain": "Application Design and Build",
+  "topic": "Read the CronJob's Pod logs and delete the CronJob.",
+  "lab": []
+ },
+ "DGK-C-48": {
+  "domain": "Application Design and Build",
+  "topic": "Recreate the CronJob, watch the Jobs it creates, read a log, delete it.",
+  "lab": []
+ },
+ "DGK-C-49": {
+  "domain": "Application Design and Build",
+  "topic": "Create a CronJob with a 17 second `startingDeadlineSeconds`.",
+  "lab": []
+ },
+ "DGK-C-50": {
+  "domain": "Application Design and Build",
+  "topic": "Create a CronJob whose Jobs are stopped after 12 seconds by `activeDeadlineSeconds`.",
+  "lab": []
+ },
+ "DGK-C-51": {
+  "domain": "Application Design and Build",
+  "topic": "Set a CronJob's successful and failed Jobs history limits.",
+  "lab": []
+ },
+ "DGK-C-52": {
+  "domain": "Application Design and Build",
+  "topic": "Create a Job manually from an existing CronJob.",
+  "lab": []
+ },
+ "DGK-D-01": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ConfigMap from two literal values.",
+  "lab": []
+ },
+ "DGK-D-02": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Display a ConfigMap's values.",
+  "lab": []
+ },
+ "DGK-D-03": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ConfigMap from a file and display it.",
+  "lab": []
+ },
+ "DGK-D-04": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ConfigMap from an env file and display it.",
+  "lab": []
+ },
+ "DGK-D-05": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ConfigMap from a file under a chosen key.",
+  "lab": []
+ },
+ "DGK-D-06": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Inject one ConfigMap key into a Pod as an environment variable.",
+  "lab": []
+ },
+ "DGK-D-07": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Load all keys of a ConfigMap into a Pod with `envFrom`.",
+  "lab": []
+ },
+ "DGK-D-08": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Mount a ConfigMap as a volume and list its files inside the Pod.",
+  "lab": []
+ },
+ "DGK-D-09": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Write the YAML of a Pod that runs as user 101.",
+  "lab": []
+ },
+ "DGK-D-10": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Write the YAML of a Pod whose container adds the `NET_ADMIN` and `SYS_TIME` capabilities.",
+  "lab": []
+ },
+ "DGK-D-11": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Pod with `cpu` and memory requests and limits.",
+  "lab": []
+ },
+ "DGK-D-12": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a namespace with a LimitRange bounding Pod memory between 100Mi and 500Mi.",
+  "lab": []
+ },
+ "DGK-D-13": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Describe the LimitRange in its namespace.",
+  "lab": []
+ },
+ "DGK-D-14": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Pod requesting 250Mi of memory inside the LimitRange namespace.",
+  "lab": []
+ },
+ "DGK-D-15": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ResourceQuota with hard request and limit totals in a namespace.",
+  "lab": []
+ },
+ "DGK-D-16": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Attempt to create a Pod that exceeds the ResourceQuota and read the error.",
+  "lab": []
+ },
+ "DGK-D-17": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Pod that fits the ResourceQuota and show the quota usage.",
+  "lab": []
+ },
+ "DGK-D-18": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a generic Secret from a literal value.",
+  "lab": []
+ },
+ "DGK-D-19": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Secret from a file.",
+  "lab": []
+ },
+ "DGK-D-20": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Read and decode a Secret's value.",
+  "lab": []
+ },
+ "DGK-D-21": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Mount a Secret as a volume in an nginx Pod.",
+  "lab": []
+ },
+ "DGK-D-22": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Inject one Secret key into a Pod as an environment variable.",
+  "lab": []
+ },
+ "DGK-D-23": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Secret with a literal API key in a given namespace.",
+  "lab": []
+ },
+ "DGK-D-24": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Consume the Secret as an environment variable and print the Pod's environment.",
+  "lab": []
+ },
+ "DGK-D-25": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Secret of type `kubernetes.io/ssh-auth` from a private key file.",
+  "lab": []
+ },
+ "DGK-D-26": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Mount the Secret read-only at a path and print its file inside the Pod.",
+  "lab": []
+ },
+ "DGK-D-27": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "List the ServiceAccounts of all namespaces.",
+  "lab": []
+ },
+ "DGK-D-28": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ServiceAccount.",
+  "lab": []
+ },
+ "DGK-D-29": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Run a Pod under a named ServiceAccount.",
+  "lab": []
+ },
+ "DGK-D-30": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Generate an API token for a ServiceAccount with `kubectl create token`.",
+  "lab": []
+ },
+ "DGK-E-01": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Create a Pod with an `exec` liveness probe, check the probe, delete it.",
+  "lab": []
+ },
+ "DGK-E-02": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Set the liveness probe's initial delay and period to 5 seconds.",
+  "lab": []
+ },
+ "DGK-E-03": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Create a Pod with an HTTP readiness probe on port 80.",
+  "lab": []
+ },
+ "DGK-E-04": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "List every Pod across namespaces whose liveness probe failed, from events.",
+  "lab": []
+ },
+ "DGK-E-05": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Run a busybox Pod that logs a counter every second and follow its logs.",
+  "lab": []
+ },
+ "DGK-E-06": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Run a Pod with a failing command and find the error in logs and describe.",
+  "lab": []
+ },
+ "DGK-E-07": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Run a Pod with a missing binary, find the error, force delete it.",
+  "lab": []
+ },
+ "DGK-E-08": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Show node `cpu` and memory usage with `kubectl top nodes`.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DGK-F-01": {
+  "domain": "Services and Networking",
+  "topic": "Run an nginx Pod and expose it as a Service in one command.",
+  "lab": []
+ },
+ "DGK-F-02": {
+  "domain": "Services and Networking",
+  "topic": "Confirm the ClusterIP Service exists and check its endpoints.",
+  "lab": []
+ },
+ "DGK-F-03": {
+  "domain": "Services and Networking",
+  "topic": "Reach the Service's cluster address with wget from a temporary Pod.",
+  "lab": []
+ },
+ "DGK-F-04": {
+  "domain": "Services and Networking",
+  "topic": "Change the Service to NodePort, reach it through a node address, clean up.",
+  "lab": []
+ },
+ "DGK-F-05": {
+  "domain": "Application Deployment",
+  "topic": "Create a three-replica Deployment declaring container port 8080, without a Service.",
+  "lab": []
+ },
+ "DGK-F-06": {
+  "domain": "Services and Networking",
+  "topic": "Reach each Pod's address on port 8080 from a temporary busybox Pod.",
+  "lab": []
+ },
+ "DGK-F-07": {
+  "domain": "Services and Networking",
+  "topic": "Expose the Deployment on port 6262 and check the endpoints.",
+  "lab": []
+ },
+ "DGK-F-08": {
+  "domain": "Services and Networking",
+  "topic": "Reach the Service by name from a temporary Pod and observe different hostnames.",
+  "lab": []
+ },
+ "DGK-F-09": {
+  "domain": "Services and Networking",
+  "topic": "Create a NetworkPolicy so only Pods labelled `access=granted` reach the Deployment.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DGK-F-10": {
+  "domain": "Services and Networking",
+  "topic": "Create an Ingress that routes an HTTP path to an existing Service.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DGK-G-01": {
+  "domain": "Application Design and Build",
+  "topic": "Two busybox containers share an emptyDir, written by one and read by the other.",
+  "lab": []
+ },
+ "DGK-G-02": {
+  "domain": "Application Design and Build",
+  "topic": "Create a 10Gi hostPath PersistentVolume with two access modes and list it.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DGK-G-03": {
+  "domain": "Application Design and Build",
+  "topic": "Create a 4Gi PersistentVolumeClaim bound to that volume and list both.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DGK-G-04": {
+  "domain": "Application Design and Build",
+  "topic": "Mount the PersistentVolumeClaim in a Pod and copy a file into it.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DGK-G-05": {
+  "domain": "Application Design and Build",
+  "topic": "Create an identical second Pod and check whether the file is visible.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DGK-G-06": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Copy a file from a Pod to the local machine with `kubectl cp`.",
+  "lab": []
+ },
+ "DGK-H-01": {
+  "domain": "Application Deployment",
+  "topic": "Scaffold a new chart with `helm create`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-02": {
+  "domain": "Application Deployment",
+  "topic": "Install a chart with a values file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-03": {
+  "domain": "Application Deployment",
+  "topic": "List pending releases across all namespaces.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-04": {
+  "domain": "Application Deployment",
+  "topic": "Uninstall a release from a namespace.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-05": {
+  "domain": "Application Deployment",
+  "topic": "Upgrade a release with values files.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-06": {
+  "domain": "Application Deployment",
+  "topic": "Add, list, update, remove and index chart repositories.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-07": {
+  "domain": "Application Deployment",
+  "topic": "Download a chart from a repository without installing it.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-08": {
+  "domain": "Application Deployment",
+  "topic": "Add the Bitnami chart repository.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-09": {
+  "domain": "Application Deployment",
+  "topic": "Print the default values of the `bitnami/node` chart.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-H-10": {
+  "domain": "Application Deployment",
+  "topic": "Install the `bitnami/node` chart with the replica count set to 5.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DGK-I-01": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Write a CRD manifest with a schema, scope and names for an `Operator` kind.",
+  "lab": []
+ },
+ "DGK-I-02": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Apply the CRD to the cluster.",
+  "lab": []
+ },
+ "DGK-I-03": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a custom object of the new kind.",
+  "lab": [
+   "crd"
+  ]
+ },
+ "DGK-I-04": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "List the custom objects by plural, singular and short name.",
+  "lab": [
+   "crd"
+  ]
+ },
+ "DGK-J-01": {
+  "domain": "Application Design and Build",
+  "topic": "Write a Dockerfile for an Apache server with a custom index page.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-02": {
+  "domain": "Application Design and Build",
+  "topic": "Build the image and inspect its layers.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-03": {
+  "domain": "Application Design and Build",
+  "topic": "Run the image locally, inspect status and logs, test the page.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-04": {
+  "domain": "Application Design and Build",
+  "topic": "Run a command inside the running container to print the page.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-05": {
+  "domain": "Application Design and Build",
+  "topic": "Tag the image for a private registry and push it.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DGK-J-06": {
+  "domain": "Application Design and Build",
+  "topic": "Create a container without starting it.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-07": {
+  "domain": "Application Design and Build",
+  "topic": "Export a container to a tar file.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-08": {
+  "domain": "Application Design and Build",
+  "topic": "Run a Pod from the image in the registry.",
+  "lab": [
+   "registry"
+  ]
+ },
+ "DGK-J-09": {
+  "domain": "Application Design and Build",
+  "topic": "Log in to a remote registry and read the stored credentials file.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DGK-J-10": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a registry Secret from the credentials file and from CLI flags.",
+  "lab": []
+ },
+ "DGK-J-11": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Write a Pod manifest that uses the Secret as `imagePullSecrets`.",
+  "lab": []
+ },
+ "DGK-J-12": {
+  "domain": "Application Design and Build",
+  "topic": "Remove all local containers and images.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "BM-01": {
+  "domain": "Application Design and Build",
+  "topic": "Build an image from a Dockerfile, run it, call it, read logs, save to tar.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "BM-02": {
+  "domain": "Application Design and Build",
+  "topic": "Create a Pod with a bad image tag, diagnose and fix the image, exec, wget.",
+  "lab": []
+ },
+ "BM-03": {
+  "domain": "Application Design and Build",
+  "topic": "Create a Job with parallelism 2 and 5 completions, then inspect its Pods and output.",
+  "lab": []
+ },
+ "BM-04": {
+  "domain": "Application Design and Build",
+  "topic": "Create a CronJob that prints the date every minute and inspect its runs.",
+  "lab": []
+ },
+ "BM-05": {
+  "domain": "Application Design and Build",
+  "topic": "Create an nginx Pod with three emptyDir volumes on writable paths.",
+  "lab": []
+ },
+ "BM-06": {
+  "domain": "Application Design and Build",
+  "topic": "Create a PersistentVolume, bind a claim and mount it in a Pod.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "BM-07": {
+  "domain": "Application Design and Build",
+  "topic": "Init container downloads a config file into a shared emptyDir for the app.",
+  "lab": []
+ },
+ "BM-08": {
+  "domain": "Application Design and Build",
+  "topic": "Adapter container reformats an application log file through a shared emptyDir.",
+  "lab": []
+ },
+ "BM-09": {
+  "domain": "Application Design and Build",
+  "topic": "Ambassador container rate-limits outbound calls made by the application container.",
+  "lab": []
+ },
+ "BM-10": {
+  "domain": "Application Design and Build",
+  "topic": "Label and annotate Pods, query them with selectors, remove a label.",
+  "lab": []
+ },
+ "BM-11": {
+  "domain": "Application Deployment",
+  "topic": "Create a Deployment, update its image, record a cause, scale, roll back.",
+  "lab": []
+ },
+ "BM-12": {
+  "domain": "Application Deployment",
+  "topic": "Create a HorizontalPodAutoscaler on `cpu` and memory utilization and inspect it.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "BM-13": {
+  "domain": "Application Deployment",
+  "topic": "Blue-green switch by changing a Service selector between two Deployments.",
+  "lab": []
+ },
+ "BM-14": {
+  "domain": "Application Deployment",
+  "topic": "Add a chart repository, install `kube-prometheus-stack`, port-forward, uninstall.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "BM-15": {
+  "domain": "Application Deployment",
+  "topic": "Write a chart with values and templates, package, install with an override.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "BM-16": {
+  "domain": "Application Deployment",
+  "topic": "Kustomize generates a Secret and patches a Deployment to consume it.",
+  "lab": []
+ },
+ "BM-17": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Update manifests written for Kubernetes 1.8 so they apply on 1.26.",
+  "lab": []
+ },
+ "BM-18": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Add HTTP readiness and liveness probes on a named port to a Pod.",
+  "lab": []
+ },
+ "BM-19": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Create three Pods and find the highest memory consumer with metrics.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "BM-20": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Diagnose a misconfigured Pod from its status, logs and a shell.",
+  "lab": []
+ },
+ "BM-21": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a CRD, a custom object, and retrieve both.",
+  "lab": []
+ },
+ "BM-22": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Grant a ServiceAccount the API permission a Pod's `curl` loop needs via RBAC.",
+  "lab": []
+ },
+ "BM-23": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Define resource requests and limits with ephemeral storage on a Pod.",
+  "lab": []
+ },
+ "BM-24": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Pod that exceeds a ResourceQuota, then one that fits.",
+  "lab": []
+ },
+ "BM-25": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Observe how a LimitRange defaults and rejects Pod resource settings.",
+  "lab": []
+ },
+ "BM-26": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ConfigMap from a file and mount it as a volume.",
+  "lab": []
+ },
+ "BM-27": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Secret from literals and consume it as an environment variable.",
+  "lab": []
+ },
+ "BM-28": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Run a Pod with user, group and filesystem group settings, no privilege escalation.",
+  "lab": []
+ },
+ "BM-29": {
+  "domain": "Services and Networking",
+  "topic": "Expose a Deployment as ClusterIP, then change it to NodePort and call it.",
+  "lab": []
+ },
+ "BM-30": {
+  "domain": "Services and Networking",
+  "topic": "Find why a Service is unreachable from inside the cluster and fix it.",
+  "lab": []
+ },
+ "BM-31": {
+  "domain": "Services and Networking",
+  "topic": "Expose a Service through an Ingress host and call it.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "BM-32": {
+  "domain": "Services and Networking",
+  "topic": "Allow ingress from one namespace's Pods to an nginx Pod under a deny-all policy.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "KS-01": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Save the list of all namespaces to a file.",
+  "lab": []
+ },
+ "KS-02": {
+  "domain": "Application Design and Build",
+  "topic": "Create a Pod with a named container and write a status command to a file.",
+  "lab": []
+ },
+ "KS-03": {
+  "domain": "Application Design and Build",
+  "topic": "Write a Job template with 3 completions, parallelism 2 and a Pod label.",
+  "lab": []
+ },
+ "KS-04": {
+  "domain": "Application Deployment",
+  "topic": "Uninstall, upgrade and install releases, then remove a pending release.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "KS-05": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Find the Secret of a ServiceAccount and write its decoded token to a file.",
+  "lab": []
+ },
+ "KS-06": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Create a Pod with an `exec` readiness probe that checks a file.",
+  "lab": []
+ },
+ "KS-07": {
+  "domain": "Application Design and Build",
+  "topic": "Find a Pod by an annotation and move it to another namespace.",
+  "lab": []
+ },
+ "KS-08": {
+  "domain": "Application Deployment",
+  "topic": "Find a working revision in the rollout history, roll back, report the error.",
+  "lab": []
+ },
+ "KS-09": {
+  "domain": "Application Deployment",
+  "topic": "Convert a Pod into a three-replica Deployment with a hardened securityContext.",
+  "lab": []
+ },
+ "KS-10": {
+  "domain": "Services and Networking",
+  "topic": "Create a Pod and ClusterIP Service, call it, save the response and logs.",
+  "lab": []
+ },
+ "KS-11": {
+  "domain": "Application Design and Build",
+  "topic": "Edit a Dockerfile, build and push with docker and podman, run and log.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "KS-12": {
+  "domain": "Application Design and Build",
+  "topic": "Create a PersistentVolume and claim and mount the claim in a Deployment.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "KS-13": {
+  "domain": "Application Design and Build",
+  "topic": "Create a StorageClass and a claim on it, record the pending event message.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "KS-14": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Add a Secret as environment variables and another as a volume to a Pod.",
+  "lab": []
+ },
+ "KS-15": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a ConfigMap from a file under a chosen key for an nginx Deployment.",
+  "lab": []
+ },
+ "KS-16": {
+  "domain": "Application Design and Build",
+  "topic": "Add a logging sidecar that tails a shared log file to standard output.",
+  "lab": []
+ },
+ "KS-17": {
+  "domain": "Application Design and Build",
+  "topic": "Add an init container that writes an index page into a shared volume.",
+  "lab": []
+ },
+ "KS-18": {
+  "domain": "Services and Networking",
+  "topic": "Find and fix the misconfiguration of a ClusterIP Service.",
+  "lab": []
+ },
+ "KS-19": {
+  "domain": "Services and Networking",
+  "topic": "Change a ClusterIP Service to NodePort on port 30100 and test it.",
+  "lab": []
+ },
+ "KS-20": {
+  "domain": "Services and Networking",
+  "topic": "Restrict a Deployment's egress to another Deployment and DNS with a NetworkPolicy.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "KS-21": {
+  "domain": "Application Environment, Configuration and Security",
+  "topic": "Create a Deployment with memory requests and limits under a ServiceAccount.",
+  "lab": []
+ },
+ "KS-22": {
+  "domain": "Application Design and Build",
+  "topic": "Add a label to Pods selected by label, then annotate the labelled Pods.",
+  "lab": []
+ },
+ "KS-P1": {
+  "domain": "Application Observability and Maintenance",
+  "topic": "Add a `tcpSocket` liveness probe with delay and period to a Deployment.",
+  "lab": []
+ },
+ "KS-P2": {
+  "domain": "Application Deployment",
+  "topic": "Create a Deployment under a ServiceAccount, expose it, write a status command.",
+  "lab": []
+ },
+ "KS-P3": {
+  "domain": "Services and Networking",
+  "topic": "Find the broken Service after a rollout, fix its readiness probe port, record the cause.",
+  "lab": []
+ },
+ "DOJO-01-Q01": {
+  "topic": "List all API resources with names, short names, group and scope to a file.",
+  "lab": []
+ },
+ "DOJO-01-Q02": {
+  "topic": "Create a three-replica Deployment that uses the `Recreate` strategy.",
+  "lab": []
+ },
+ "DOJO-01-Q03": {
+  "topic": "Add a 60 second `activeDeadlineSeconds` and a backoff limit to a Job template.",
+  "lab": []
+ },
+ "DOJO-01-Q04": {
+  "topic": "Render an installed release's manifests with `helm template` to a file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-01-Q05": {
+  "topic": "Find and fix the container command that keeps a Pod in `CrashLoopBackOff`.",
+  "lab": []
+ },
+ "DOJO-01-Q06": {
+  "topic": "Mount only two chosen keys of a ConfigMap as files in a Pod.",
+  "lab": []
+ },
+ "DOJO-01-Q07": {
+  "topic": "Write a password file and create a Secret from it under a chosen key.",
+  "lab": []
+ },
+ "DOJO-01-Q08": {
+  "topic": "Create a headless Service with `clusterIP: None` selecting labelled Pods.",
+  "lab": []
+ },
+ "DOJO-01-Q09": {
+  "topic": "Add a one-replica canary Deployment behind a shared Service selector.",
+  "lab": []
+ },
+ "DOJO-01-Q10": {
+  "topic": "Producer and sidecar containers exchange a log through an emptyDir volume.",
+  "lab": []
+ },
+ "DOJO-01-Q11": {
+  "topic": "Allow ingress on port 80 only from Pods in another namespace.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-01-Q12": {
+  "topic": "Add `ARG` and `LABEL` to a Dockerfile, build with a build argument, push.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DOJO-01-Q13": {
+  "topic": "Install a `bitnami/nginx` release from a values file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-01-Q14": {
+  "topic": "Add a `postStart` hook that writes a timestamp file in the container.",
+  "lab": []
+ },
+ "DOJO-01-Q15": {
+  "topic": "Create a Pod whose resources give it the `Guaranteed` quality of service class.",
+  "lab": []
+ },
+ "DOJO-01-Q16": {
+  "topic": "Mount a ServiceAccount token through a projected volume with an expiry.",
+  "lab": []
+ },
+ "DOJO-01-Q17": {
+  "topic": "Add a `tcpSocket` liveness probe with an initial delay and period.",
+  "lab": []
+ },
+ "DOJO-01-Q18": {
+  "topic": "Create a Service whose two ports target named container ports.",
+  "lab": []
+ },
+ "DOJO-01-Q19": {
+  "topic": "Spread a four-replica Deployment across nodes with `topologySpreadConstraints`.",
+  "lab": []
+ },
+ "DOJO-01-Q20": {
+  "topic": "List running Pods cluster-wide with a field selector and save their names.",
+  "lab": []
+ },
+ "DOJO-01-Q21": {
+  "topic": "Write a `kubectl drain` command with the required flags to a file.",
+  "lab": []
+ },
+ "DOJO-02-Q01": {
+  "topic": "Create a Pod with preferred anti-affinity against Pods of the same label.",
+  "lab": []
+ },
+ "DOJO-02-Q02": {
+  "topic": "Create a ConfigMap from literals and mount it as a volume in a Pod.",
+  "lab": []
+ },
+ "DOJO-02-Q03": {
+  "topic": "Create an ExternalName Service pointing at an external hostname.",
+  "lab": []
+ },
+ "DOJO-02-Q04": {
+  "topic": "Create a LimitRange with default container requests and limits, then a Pod.",
+  "lab": []
+ },
+ "DOJO-02-Q05": {
+  "topic": "Run nginx with a read-only root filesystem and writable emptyDir mounts.",
+  "lab": []
+ },
+ "DOJO-02-Q06": {
+  "topic": "Create a Pod with two init containers that prepare a shared file.",
+  "lab": []
+ },
+ "DOJO-02-Q07": {
+  "topic": "Update a Deployment's image, pause the rollout, save the rollout status.",
+  "lab": []
+ },
+ "DOJO-02-Q08": {
+  "topic": "Add an envoy proxy sidecar next to an nginx container in one Pod.",
+  "lab": []
+ },
+ "DOJO-02-Q09": {
+  "topic": "Create a failing Job with backoff limit 3 and restart policy `Never`.",
+  "lab": []
+ },
+ "DOJO-02-Q10": {
+  "topic": "Create a `docker-registry` Secret and use it as an `imagePullSecret`.",
+  "lab": []
+ },
+ "DOJO-02-Q11": {
+  "topic": "Adapter container tails and prefixes the application's log through a shared volume.",
+  "lab": []
+ },
+ "DOJO-02-Q12": {
+  "topic": "Restrict egress to a labelled Pod's port and an address block's port.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-02-Q13": {
+  "topic": "Create a ServiceAccount, a Role on Deployments and Pods, and a RoleBinding.",
+  "lab": []
+ },
+ "DOJO-02-Q14": {
+  "topic": "Create a Deployment with `maxSurge` 25% and `maxUnavailable` 1.",
+  "lab": []
+ },
+ "DOJO-02-Q15": {
+  "topic": "Create an Ingress routing two `Prefix` paths to two Services.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-02-Q16": {
+  "topic": "Project a ServiceAccount token with an audience and expiry into a volume.",
+  "lab": []
+ },
+ "DOJO-02-Q17": {
+  "topic": "Create a CronJob with `Forbid` concurrency and job history limits.",
+  "lab": []
+ },
+ "DOJO-02-Q18": {
+  "topic": "Create a PodDisruptionBudget keeping at least two labelled Pods available.",
+  "lab": []
+ },
+ "DOJO-02-Q19": {
+  "topic": "Create a Deployment with an annotation on it and one on its Pod template.",
+  "lab": []
+ },
+ "DOJO-02-Q20": {
+  "topic": "Create a two-container Pod with `shareProcessNamespace` enabled.",
+  "lab": []
+ },
+ "DOJO-03-Q01": {
+  "topic": "Save the `kubectl explain` output for `pod.spec.containers.resources` to a file.",
+  "lab": []
+ },
+ "DOJO-03-Q02": {
+  "topic": "Create a Deployment with required anti-affinity spreading Pods across nodes.",
+  "lab": []
+ },
+ "DOJO-03-Q03": {
+  "topic": "Create the green Deployment and switch the Service selector to it.",
+  "lab": []
+ },
+ "DOJO-03-Q04": {
+  "topic": "Suspend a CronJob, set its starting deadline and concurrency policy, resume it.",
+  "lab": []
+ },
+ "DOJO-03-Q05": {
+  "topic": "Create an immutable ConfigMap with three keys.",
+  "lab": []
+ },
+ "DOJO-03-Q06": {
+  "topic": "Project a ServiceAccount token and a ConfigMap into one volume.",
+  "lab": []
+ },
+ "DOJO-03-Q07": {
+  "topic": "Create a PodDisruptionBudget with `minAvailable` 3 for a Deployment's Pods.",
+  "lab": []
+ },
+ "DOJO-03-Q08": {
+  "topic": "Create an ExternalName Service pointing at an external hostname.",
+  "lab": []
+ },
+ "DOJO-03-Q09": {
+  "topic": "Create a LimitRange with container defaults and minimum and maximum bounds.",
+  "lab": []
+ },
+ "DOJO-03-Q10": {
+  "topic": "Create a Pod with user, group and filesystem group settings and a read-only root filesystem.",
+  "lab": []
+ },
+ "DOJO-03-Q11": {
+  "topic": "Pause a rollout, change the image and history limit, resume, verify.",
+  "lab": []
+ },
+ "DOJO-03-Q12": {
+  "topic": "Read a file inside a container with `kubectl exec` and call its port.",
+  "lab": []
+ },
+ "DOJO-03-Q13": {
+  "topic": "Save `kubectl top` output for a namespace and name the top `cpu` Pod.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-03-Q14": {
+  "topic": "Expose Pod name, namespace, address and node as environment variables via the Downward API.",
+  "lab": []
+ },
+ "DOJO-03-Q15": {
+  "topic": "Create a Job that deletes itself 60 seconds after finishing.",
+  "lab": []
+ },
+ "DOJO-03-Q16": {
+  "topic": "Drop all capabilities, add `NET_BIND_SERVICE`, run nginx as non-root user 101.",
+  "lab": []
+ },
+ "DOJO-03-Q17": {
+  "topic": "Enable `ClientIP` session affinity with a one hour timeout on a Service.",
+  "lab": []
+ },
+ "DOJO-03-Q18": {
+  "topic": "Set `minReadySeconds` and `progressDeadlineSeconds`, then update the image.",
+  "lab": []
+ },
+ "DOJO-03-Q19": {
+  "topic": "Add a `preStop` hook and a termination grace period to an nginx Pod.",
+  "lab": []
+ },
+ "DOJO-03-Q20": {
+  "topic": "Create a default deny policy plus an allow rule from frontend Pods and DNS egress.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-04-Q01": {
+  "topic": "Move hard-coded credentials from a Deployment into a Secret referenced with `secretKeyRef`.",
+  "lab": []
+ },
+ "DOJO-04-Q02": {
+  "topic": "Create a CronJob with a schedule, history limits and an active deadline.",
+  "lab": []
+ },
+ "DOJO-04-Q03": {
+  "topic": "Create a ServiceAccount, Role and RoleBinding so a Pod can list Pods.",
+  "lab": []
+ },
+ "DOJO-04-Q04": {
+  "topic": "Find which existing ServiceAccount has the right RoleBinding and assign it to a Pod.",
+  "lab": []
+ },
+ "DOJO-04-Q05": {
+  "topic": "Build an image with docker and save it as a tar archive.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DOJO-04-Q06": {
+  "topic": "Scale the stable Deployment and add a canary Deployment behind one Service.",
+  "lab": []
+ },
+ "DOJO-04-Q07": {
+  "topic": "Relabel Pods so existing NetworkPolicies allow the frontend to backend to database chain.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-04-Q08": {
+  "topic": "Fix a Deployment manifest's API version and selector, then apply it.",
+  "lab": []
+ },
+ "DOJO-04-Q09": {
+  "topic": "Update a Deployment's image, roll back, save the current revision number.",
+  "lab": []
+ },
+ "DOJO-04-Q10": {
+  "topic": "Add an HTTP readiness probe with delay and period to a Deployment.",
+  "lab": []
+ },
+ "DOJO-04-Q11": {
+  "topic": "Set a Pod-level user and add the `NET_ADMIN` capability on a Deployment's container.",
+  "lab": []
+ },
+ "DOJO-04-Q12": {
+  "topic": "Correct a Service selector so it matches the Deployment's Pods.",
+  "lab": []
+ },
+ "DOJO-04-Q13": {
+  "topic": "Create a NodePort Service mapping port 80 to target port 9090.",
+  "lab": []
+ },
+ "DOJO-04-Q14": {
+  "topic": "Create an Ingress for a host and path backed by an existing Service.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-04-Q15": {
+  "topic": "Fix an invalid `pathType` in an Ingress manifest and apply it.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-04-Q16": {
+  "topic": "Create a Pod whose limits are half of the namespace ResourceQuota.",
+  "lab": []
+ },
+ "DOJO-04-Q17": {
+  "topic": "Create a Pod with a `DoNotSchedule` topology spread constraint across nodes.",
+  "lab": []
+ },
+ "DOJO-05-Q01": {
+  "topic": "Create a ResourceQuota bounding Pods, requests, limits, ConfigMaps and Secrets.",
+  "lab": []
+ },
+ "DOJO-05-Q02": {
+  "topic": "Create a HorizontalPodAutoscaler for a Deployment with 2 to 10 replicas at 70% `cpu`.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-05-Q03": {
+  "topic": "Create a three-replica StatefulSet with a volume claim template and a headless Service.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-05-Q04": {
+  "topic": "Create a DaemonSet with a Downward API node name and a control plane toleration.",
+  "lab": []
+ },
+ "DOJO-05-Q05": {
+  "topic": "Create a PriorityClass and a Pod that uses it.",
+  "lab": []
+ },
+ "DOJO-05-Q06": {
+  "topic": "Add a startup probe with a high failure threshold plus a liveness probe.",
+  "lab": []
+ },
+ "DOJO-05-Q07": {
+  "topic": "Create a Deployment with preferred pod affinity towards cache Pods.",
+  "lab": []
+ },
+ "DOJO-05-Q08": {
+  "topic": "Create an Ingress routing two paths to two Services with an ingress class.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-05-Q09": {
+  "topic": "Create a Job with 6 completions, parallelism 3 and a backoff limit.",
+  "lab": []
+ },
+ "DOJO-05-Q10": {
+  "topic": "Attach an ephemeral debug container with `kubectl debug` and save a listing.",
+  "lab": []
+ },
+ "DOJO-05-Q11": {
+  "topic": "List and describe a Service's EndpointSlices and record their endpoints.",
+  "lab": []
+ },
+ "DOJO-05-Q12": {
+  "topic": "Set `internalTrafficPolicy: Local` on a Service.",
+  "lab": []
+ },
+ "DOJO-05-Q13": {
+  "topic": "Add a memory-backed emptyDir volume with a 100Mi size limit to a Pod.",
+  "lab": []
+ },
+ "DOJO-05-Q14": {
+  "topic": "Create an immutable Secret with `stringData` and mount it in a Pod.",
+  "lab": []
+ },
+ "DOJO-05-Q15": {
+  "topic": "Apply a strategic merge patch and two `json` patches to a Deployment.",
+  "lab": []
+ },
+ "DOJO-05-Q16": {
+  "topic": "Create a NetworkPolicy with `ipBlock` and `except` on ingress and DNS egress.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-05-Q17": {
+  "topic": "Create a Pod with `hostNetwork` and `hostPID` for network diagnostics.",
+  "lab": []
+ },
+ "DOJO-05-Q18": {
+  "topic": "Create a ServiceAccount, a ClusterRole on nodes and namespaces, and a ClusterRoleBinding.",
+  "lab": []
+ },
+ "DOJO-05-Q19": {
+  "topic": "Check a ServiceAccount's permissions with `kubectl auth can-i` and record them.",
+  "lab": []
+ },
+ "DOJO-05-Q20": {
+  "topic": "Three containers share an emptyDir in a producer, consumer and monitor pattern.",
+  "lab": []
+ },
+ "DOJO-06-Q01": {
+  "topic": "Create a namespace and an nginx Pod with restart policy `Never` in it.",
+  "lab": []
+ },
+ "DOJO-06-Q02": {
+  "topic": "Run a busybox Pod that prints its environment including a given variable.",
+  "lab": []
+ },
+ "DOJO-06-Q03": {
+  "topic": "Create a ResourceQuota with `kubectl create quota`.",
+  "lab": []
+ },
+ "DOJO-06-Q04": {
+  "topic": "Create three labelled Pods, change one label, add a label by selector.",
+  "lab": []
+ },
+ "DOJO-06-Q05": {
+  "topic": "Create a two-replica Deployment with container port 80 and no Service.",
+  "lab": []
+ },
+ "DOJO-06-Q06": {
+  "topic": "Update the Deployment's image, verify the rollout, check its history.",
+  "lab": []
+ },
+ "DOJO-06-Q07": {
+  "topic": "Detect a failed rollout with a wrong image and roll back.",
+  "lab": []
+ },
+ "DOJO-06-Q08": {
+  "topic": "Create a Job that completes five times sequentially.",
+  "lab": []
+ },
+ "DOJO-06-Q09": {
+  "topic": "Create a CronJob that prints the date every minute.",
+  "lab": []
+ },
+ "DOJO-06-Q10": {
+  "topic": "Create a Pod with two busybox containers running the same command.",
+  "lab": []
+ },
+ "DOJO-06-Q11": {
+  "topic": "Init container writes an index page into an emptyDir served by nginx.",
+  "lab": []
+ },
+ "DOJO-06-Q12": {
+  "topic": "Create a ConfigMap from two literals.",
+  "lab": []
+ },
+ "DOJO-06-Q13": {
+  "topic": "Load one ConfigMap key into a Pod environment variable.",
+  "lab": []
+ },
+ "DOJO-06-Q14": {
+  "topic": "Mount a ConfigMap as a volume in a Pod.",
+  "lab": []
+ },
+ "DOJO-06-Q15": {
+  "topic": "Create a Secret and mount it as a volume in a Pod.",
+  "lab": []
+ },
+ "DOJO-06-Q16": {
+  "topic": "Run a Pod as user 101 with `securityContext.runAsUser`.",
+  "lab": []
+ },
+ "DOJO-06-Q17": {
+  "topic": "Create a Pod with `cpu` and memory requests and limits.",
+  "lab": []
+ },
+ "DOJO-06-Q18": {
+  "topic": "Add an `exec` liveness probe with a 5 second delay and period.",
+  "lab": []
+ },
+ "DOJO-06-Q19": {
+  "topic": "Expose a Deployment through a Service and allow ingress only from labelled Pods.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-06-Q20": {
+  "topic": "Create a PersistentVolume, a claim and a Pod that mounts the claim.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-07-Q01": {
+  "topic": "Run an nginx Pod and create its ClusterIP Service with `--expose`.",
+  "lab": []
+ },
+ "DOJO-07-Q02": {
+  "topic": "Save a Pod's address to a file and reach it from a temporary Pod.",
+  "lab": []
+ },
+ "DOJO-07-Q03": {
+  "topic": "Run a Pod that logs a counter and save the first ten log lines.",
+  "lab": []
+ },
+ "DOJO-07-Q04": {
+  "topic": "Run a Pod with a failing command and save its error output from the logs.",
+  "lab": []
+ },
+ "DOJO-07-Q05": {
+  "topic": "Schedule a Pod onto a node with a given label using `nodeSelector`.",
+  "lab": []
+ },
+ "DOJO-07-Q06": {
+  "topic": "Create a Pod that tolerates a `NoSchedule` taint.",
+  "lab": []
+ },
+ "DOJO-07-Q07": {
+  "topic": "Create a three-replica Deployment with a label and container port, no Service.",
+  "lab": []
+ },
+ "DOJO-07-Q08": {
+  "topic": "Scale a Deployment to 5 replicas.",
+  "lab": []
+ },
+ "DOJO-07-Q09": {
+  "topic": "Create a HorizontalPodAutoscaler with 5 to 10 replicas at 80% `cpu`.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-07-Q10": {
+  "topic": "Pause a rollout, change the image, confirm no revision, resume, verify.",
+  "lab": []
+ },
+ "DOJO-07-Q11": {
+  "topic": "Create a Job that runs five Pods in parallel.",
+  "lab": []
+ },
+ "DOJO-07-Q12": {
+  "topic": "Create a Job that is terminated after 30 seconds by `activeDeadlineSeconds`.",
+  "lab": []
+ },
+ "DOJO-07-Q13": {
+  "topic": "Create a CronJob with a 17 second `startingDeadlineSeconds`.",
+  "lab": []
+ },
+ "DOJO-07-Q14": {
+  "topic": "Create a CronJob and then a Job from it with `--from`.",
+  "lab": []
+ },
+ "DOJO-07-Q15": {
+  "topic": "Write a key-value file and create a ConfigMap from it.",
+  "lab": []
+ },
+ "DOJO-07-Q16": {
+  "topic": "Load all keys of a ConfigMap into a Pod with `envFrom`.",
+  "lab": []
+ },
+ "DOJO-07-Q17": {
+  "topic": "Write a file and create a Secret from it.",
+  "lab": []
+ },
+ "DOJO-07-Q18": {
+  "topic": "Load a Secret key into a Pod environment variable with `secretKeyRef`.",
+  "lab": []
+ },
+ "DOJO-07-Q19": {
+  "topic": "Create a ServiceAccount and a Pod that runs under it.",
+  "lab": []
+ },
+ "DOJO-07-Q20": {
+  "topic": "Copy a file out of a Pod with `kubectl cp`.",
+  "lab": []
+ },
+ "DOJO-08-Q01": {
+  "topic": "Create a Pod and a ClusterIP Service for it, then check the endpoints.",
+  "lab": []
+ },
+ "DOJO-08-Q02": {
+  "topic": "Change an existing ClusterIP Service to NodePort.",
+  "lab": []
+ },
+ "DOJO-08-Q03": {
+  "topic": "Create a three-replica Deployment and a Service mapping port 6262 to 8080.",
+  "lab": []
+ },
+ "DOJO-08-Q04": {
+  "topic": "Create a Pod with an HTTP readiness probe on port 80.",
+  "lab": []
+ },
+ "DOJO-08-Q05": {
+  "topic": "Add an `exec` liveness probe with a 5 second delay and 10 second period.",
+  "lab": []
+ },
+ "DOJO-08-Q06": {
+  "topic": "Create a LimitRange bounding Pod memory between 100Mi and 500Mi.",
+  "lab": []
+ },
+ "DOJO-08-Q07": {
+  "topic": "Create a ResourceQuota with hard request and limit totals.",
+  "lab": []
+ },
+ "DOJO-08-Q08": {
+  "topic": "Create a Pod with requests and limits inside a quota-bound namespace.",
+  "lab": []
+ },
+ "DOJO-08-Q09": {
+  "topic": "Add the `NET_ADMIN` and `SYS_TIME` capabilities to a Pod's container.",
+  "lab": []
+ },
+ "DOJO-08-Q10": {
+  "topic": "Two containers share a named emptyDir volume at the same path.",
+  "lab": []
+ },
+ "DOJO-08-Q11": {
+  "topic": "Create a Pod and add an annotation to it.",
+  "lab": []
+ },
+ "DOJO-08-Q12": {
+  "topic": "Create three Pods, label them, list the `env=prod` ones to a file.",
+  "lab": []
+ },
+ "DOJO-08-Q13": {
+  "topic": "Add the Bitnami chart repository with `helm repo add`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-08-Q14": {
+  "topic": "Save the first 50 lines of a chart's default values to a file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-08-Q15": {
+  "topic": "List releases across all namespaces to a file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-08-Q16": {
+  "topic": "Run two versions of a Deployment at a 3 to 1 ratio behind one Service.",
+  "lab": []
+ },
+ "DOJO-08-Q17": {
+  "topic": "Two containers mount the same emptyDir volume for data sharing.",
+  "lab": []
+ },
+ "DOJO-08-Q18": {
+  "topic": "Resolve a Service's DNS name from a temporary Pod and save the address.",
+  "lab": []
+ },
+ "DOJO-08-Q19": {
+  "topic": "Allow ingress to database Pods only from Pods labelled `access=true`.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-08-Q20": {
+  "topic": "Create a ServiceAccount and save an API token for it to a file.",
+  "lab": []
+ },
+ "DOJO-09-Q01": {
+  "topic": "Scaffold a chart with `helm create` in a given directory.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-09-Q02": {
+  "topic": "Install `bitnami/nginx` with `--set replicaCount=2`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-09-Q03": {
+  "topic": "Upgrade the release to `replicaCount=3`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-09-Q04": {
+  "topic": "Roll a release back to revision 1 with `helm rollback`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-09-Q05": {
+  "topic": "Create a 5Gi hostPath PersistentVolume with a `manual` storage class.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-09-Q06": {
+  "topic": "Create a 2Gi claim that binds to that PersistentVolume.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-09-Q07": {
+  "topic": "Create a Pod that mounts the claim at `/data`.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-09-Q08": {
+  "topic": "Create a Pod bound to the first cluster node with `nodeName`.",
+  "lab": []
+ },
+ "DOJO-09-Q09": {
+  "topic": "Run a Pod that echoes a message and exits.",
+  "lab": []
+ },
+ "DOJO-09-Q10": {
+  "topic": "Create a Pod and export its YAML to a file.",
+  "lab": []
+ },
+ "DOJO-09-Q11": {
+  "topic": "Describe a broken Pod and save its events section to a file.",
+  "lab": []
+ },
+ "DOJO-09-Q12": {
+  "topic": "Run `hostname` inside a Pod with `kubectl exec` and save the output.",
+  "lab": []
+ },
+ "DOJO-09-Q13": {
+  "topic": "Save the logs of a Pod's previous container instance with `--previous`.",
+  "lab": []
+ },
+ "DOJO-09-Q14": {
+  "topic": "Save node `cpu` and memory usage from `kubectl top nodes` to a file.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-09-Q15": {
+  "topic": "Write an env file and create a ConfigMap from it with `--from-env-file`.",
+  "lab": []
+ },
+ "DOJO-09-Q16": {
+  "topic": "Roll a Deployment back to revision 2 with `--to-revision`.",
+  "lab": []
+ },
+ "DOJO-09-Q17": {
+  "topic": "Save the details of a Deployment's revision 3 to a file.",
+  "lab": []
+ },
+ "DOJO-09-Q18": {
+  "topic": "Create a Job with the perl image that prints 100 digits of pi.",
+  "lab": []
+ },
+ "DOJO-09-Q19": {
+  "topic": "Sidecar container tails the application log through a shared emptyDir.",
+  "lab": []
+ },
+ "DOJO-09-Q20": {
+  "topic": "Save `cpu` and memory usage of a namespace's Pods to a file.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-10-Q01": {
+  "topic": "Replace a Pod's hard-coded credentials with `secretKeyRef` references to a new Secret.",
+  "lab": []
+ },
+ "DOJO-10-Q02": {
+  "topic": "Find and fix several errors in an Ingress so traffic reaches the Service.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-10-Q03": {
+  "topic": "Create an Ingress for a host and `Prefix` path backed by an existing Service.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-10-Q04": {
+  "topic": "Label Pods so the existing NetworkPolicies allow the required communication chain.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-10-Q05": {
+  "topic": "Set requests and limits, limits being double the requests, on a Deployment.",
+  "lab": []
+ },
+ "DOJO-10-Q06": {
+  "topic": "Reduce a Deployment's requests so its Pods fit within the namespace ResourceQuota.",
+  "lab": []
+ },
+ "DOJO-10-Q07": {
+  "topic": "Build an image, save it as a tar archive, push it to the local registry.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DOJO-10-Q08": {
+  "topic": "Add a one-replica canary Deployment sharing the stable Deployment's Service label.",
+  "lab": []
+ },
+ "DOJO-10-Q09": {
+  "topic": "Fix a Service selector that matches no Pods and verify the endpoints.",
+  "lab": []
+ },
+ "DOJO-10-Q10": {
+  "topic": "Create a CronJob with `activeDeadlineSeconds` set in the Job template.",
+  "lab": []
+ },
+ "DOJO-10-Q11": {
+  "topic": "Add `runAsUser` to a securityContext without removing its existing settings.",
+  "lab": []
+ },
+ "DOJO-10-Q12": {
+  "topic": "Create the Role and RoleBinding a ServiceAccount needs to list Pods.",
+  "lab": []
+ },
+ "DOJO-10-Q13": {
+  "topic": "Roll a Deployment back to its last working revision and save the history.",
+  "lab": []
+ },
+ "DOJO-10-Q14": {
+  "topic": "Migrate a Deployment manifest from `extensions/v1beta1` to `apps/v1`.",
+  "lab": []
+ },
+ "DOJO-10-Q15": {
+  "topic": "Find why a Deployment's Pods crash loop, fix it, record the root cause.",
+  "lab": []
+ },
+ "DOJO-10-Q16": {
+  "topic": "Create a ConfigMap and load all its keys into a Pod with `envFrom`.",
+  "lab": []
+ },
+ "DOJO-10-Q17": {
+  "topic": "Create a ClusterIP Service for a Deployment and verify the endpoints.",
+  "lab": []
+ },
+ "DOJO-10-Q18": {
+  "topic": "Create a Job with 6 completions and parallelism 2.",
+  "lab": []
+ },
+ "DOJO-10-Q19": {
+  "topic": "Set a `RollingUpdate` strategy with `maxSurge` 1 and `maxUnavailable` 0.",
+  "lab": []
+ },
+ "DOJO-10-Q20": {
+  "topic": "Add a log-reading sidecar to a Pod template through a shared emptyDir.",
+  "lab": []
+ },
+ "DOJO-11-Q01": {
+  "topic": "Build an image with docker and save it as a tar archive.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DOJO-11-Q02": {
+  "topic": "Create a Deployment with Pod labels, a container port and a change-cause annotation.",
+  "lab": []
+ },
+ "DOJO-11-Q03": {
+  "topic": "Sidecar container tails the nginx access log through a shared emptyDir.",
+  "lab": []
+ },
+ "DOJO-11-Q04": {
+  "topic": "Create a claim on an existing PersistentVolume and mount it in a Pod.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-11-Q05": {
+  "topic": "Create the green Deployment, switch the Service selector, scale blue to zero.",
+  "lab": []
+ },
+ "DOJO-11-Q06": {
+  "topic": "Set `maxSurge` 1 and `maxUnavailable` 0, then update the image.",
+  "lab": []
+ },
+ "DOJO-11-Q07": {
+  "topic": "Write a kustomization with a name prefix and a replica patch, apply it.",
+  "lab": []
+ },
+ "DOJO-11-Q08": {
+  "topic": "Inspect release values and upgrade with `--set` and `--reuse-values`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-11-Q09": {
+  "topic": "Add an HTTP startup probe with a 30 failure threshold to a Deployment.",
+  "lab": []
+ },
+ "DOJO-11-Q10": {
+  "topic": "Find the `nodeSelector` key that keeps a Pod pending and fix the Pod.",
+  "lab": []
+ },
+ "DOJO-11-Q11": {
+  "topic": "Save the last 20 log lines of a named container in a multi-container Pod.",
+  "lab": []
+ },
+ "DOJO-11-Q12": {
+  "topic": "Discover an installed CRD, record its group, create a custom object.",
+  "lab": [
+   "crd"
+  ]
+ },
+ "DOJO-11-Q13": {
+  "topic": "Create a `tls` type Secret from a certificate and key file.",
+  "lab": []
+ },
+ "DOJO-11-Q14": {
+  "topic": "Set `runAsNonRoot`, a read-only root filesystem and drop all capabilities on a Deployment.",
+  "lab": []
+ },
+ "DOJO-11-Q15": {
+  "topic": "Create a ServiceAccount, Role and RoleBinding, verify with `kubectl auth can-i`.",
+  "lab": []
+ },
+ "DOJO-11-Q16": {
+  "topic": "Create a ConfigMap from an env file and consume it with `envFrom`.",
+  "lab": []
+ },
+ "DOJO-11-Q17": {
+  "topic": "Create a `docker-registry` Secret with server, username and password.",
+  "lab": []
+ },
+ "DOJO-11-Q18": {
+  "topic": "Allow ingress to API Pods from a label selector and an `ipBlock` on port 80.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-11-Q19": {
+  "topic": "Create an Ingress with a `tls` section using an existing certificate Secret.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-11-Q20": {
+  "topic": "Fix a Service selector and save an `nslookup` of its DNS name.",
+  "lab": []
+ },
+ "DOJO-12-Q01": {
+  "topic": "Build an image, save it, load it back under a new tag, run it.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DOJO-12-Q02": {
+  "topic": "Update a ConfigMap key mounted with `subPath` and make the Pod see it.",
+  "lab": []
+ },
+ "DOJO-12-Q03": {
+  "topic": "Create a daily CronJob with `Forbid` concurrency and trigger one Job manually.",
+  "lab": []
+ },
+ "DOJO-12-Q04": {
+  "topic": "Sidecar container streams the application's log file to its standard output.",
+  "lab": []
+ },
+ "DOJO-12-Q05": {
+  "topic": "Roll a release back to revision 1 with `helm rollback`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-12-Q06": {
+  "topic": "Create a Deployment with `maxSurge` 1, `maxUnavailable` 0 and `minReadySeconds` 20.",
+  "lab": []
+ },
+ "DOJO-12-Q07": {
+  "topic": "Capture the ReplicaSets before, during and after a paused image change.",
+  "lab": []
+ },
+ "DOJO-12-Q08": {
+  "topic": "Write a `json` patch adding an environment variable and reference it in the kustomization.",
+  "lab": []
+ },
+ "DOJO-12-Q09": {
+  "topic": "Find from the events why a Pod fails to start and fix it.",
+  "lab": []
+ },
+ "DOJO-12-Q10": {
+  "topic": "Write the name of the top `cpu` Pod in `kube-system` to a file.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-12-Q11": {
+  "topic": "Fix a Deployment manifest so it applies and its readiness probe passes.",
+  "lab": []
+ },
+ "DOJO-12-Q12": {
+  "topic": "Mount a Secret in a Pod and write its decoded password to a file.",
+  "lab": []
+ },
+ "DOJO-12-Q13": {
+  "topic": "Recreate a Pod running as user 2000 with only the `NET_ADMIN` capability.",
+  "lab": []
+ },
+ "DOJO-12-Q14": {
+  "topic": "Create a Pod with a fixed user, no privilege escalation and a read-only root filesystem.",
+  "lab": []
+ },
+ "DOJO-12-Q15": {
+  "topic": "Update a mounted Secret, recreate the Pod, capture the value before and after.",
+  "lab": []
+ },
+ "DOJO-12-Q16": {
+  "topic": "Create a ResourceQuota limiting Pods, `cpu` requests and memory limits.",
+  "lab": []
+ },
+ "DOJO-12-Q17": {
+  "topic": "Allow ingress to frontend Pods only from backend Pods, leaving egress open.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-12-Q18": {
+  "topic": "Create an Ingress routing two `Prefix` paths of one host to two Services.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-12-Q19": {
+  "topic": "Create an ExternalName Service mapping to an external database name.",
+  "lab": []
+ },
+ "DOJO-12-Q20": {
+  "topic": "Add a canary Deployment whose Pods the existing Service also selects.",
+  "lab": []
+ },
+ "DOJO-13-Q01": {
+  "topic": "Build an image from a Dockerfile and push it to the local registry.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DOJO-13-Q02": {
+  "topic": "Add an adapter container that tails and prefixes the application log.",
+  "lab": []
+ },
+ "DOJO-13-Q03": {
+  "topic": "Create a Job with 6 completions and parallelism 3.",
+  "lab": []
+ },
+ "DOJO-13-Q04": {
+  "topic": "Copy a Deployment's Pod template into a standalone debug Pod with a sleep command.",
+  "lab": []
+ },
+ "DOJO-13-Q05": {
+  "topic": "Upgrade a release from a local chart overriding replicas and image tag.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-13-Q06": {
+  "topic": "Set `revisionHistoryLimit` to 2 and roll out a new image.",
+  "lab": []
+ },
+ "DOJO-13-Q07": {
+  "topic": "Switch a Service selector from the blue to the green Deployment.",
+  "lab": []
+ },
+ "DOJO-13-Q08": {
+  "topic": "Write a kustomization with a resource and a `configMapGenerator`, apply it.",
+  "lab": []
+ },
+ "DOJO-13-Q09": {
+  "topic": "Raise the memory limit of a container that is `OOMKilled`.",
+  "lab": []
+ },
+ "DOJO-13-Q10": {
+  "topic": "Write the names of the three highest memory Pods in a namespace to a file.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-13-Q11": {
+  "topic": "Create a Pod with an `exec` readiness probe with delay and period.",
+  "lab": []
+ },
+ "DOJO-13-Q12": {
+  "topic": "Mount one Secret key at a path with `subPath` in a Pod.",
+  "lab": []
+ },
+ "DOJO-13-Q13": {
+  "topic": "Create a Role on `apps` group resources and bind it to a ServiceAccount.",
+  "lab": []
+ },
+ "DOJO-13-Q14": {
+  "topic": "Create a Pod with `fsGroup` 2000 in its security context.",
+  "lab": []
+ },
+ "DOJO-13-Q15": {
+  "topic": "Create a LimitRange with Pod memory bounds and container `cpu` defaults.",
+  "lab": []
+ },
+ "DOJO-13-Q16": {
+  "topic": "Recreate a Pod with `automountServiceAccountToken` disabled.",
+  "lab": []
+ },
+ "DOJO-13-Q17": {
+  "topic": "Allow egress only to port 53 on both transport protocols for labelled Pods.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-13-Q18": {
+  "topic": "Create an Ingress routing two `Prefix` paths of one host to two Services.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-13-Q19": {
+  "topic": "Create a headless Service for a StatefulSet on port 3306.",
+  "lab": []
+ },
+ "DOJO-13-Q20": {
+  "topic": "Find the injected environment variable holding a Service's address in a Pod.",
+  "lab": []
+ },
+ "DOJO-14-Q01": {
+  "topic": "Write a Dockerfile with a `HEALTHCHECK` instruction and its timing options.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DOJO-14-Q02": {
+  "topic": "Sidecar container tails a shared log and prints only `ERROR` lines.",
+  "lab": []
+ },
+ "DOJO-14-Q03": {
+  "topic": "Create a CronJob with a starting deadline and a successful jobs history limit.",
+  "lab": []
+ },
+ "DOJO-14-Q04": {
+  "topic": "Init container loops until a Service is resolvable before the main container starts.",
+  "lab": []
+ },
+ "DOJO-14-Q05": {
+  "topic": "Render a local chart with `helm template` and value overrides to a file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-14-Q06": {
+  "topic": "Roll a Deployment back to revision 1 and verify it runs.",
+  "lab": []
+ },
+ "DOJO-14-Q07": {
+  "topic": "Add a one-replica canary Deployment behind a Service at a 4 to 1 split.",
+  "lab": []
+ },
+ "DOJO-14-Q08": {
+  "topic": "Write a kustomization with a strategic merge patch adding an environment variable.",
+  "lab": []
+ },
+ "DOJO-14-Q09": {
+  "topic": "Find why a Pod crash loops, port or probe misconfiguration, and fix it.",
+  "lab": []
+ },
+ "DOJO-14-Q10": {
+  "topic": "Save a namespace's events sorted by creation timestamp to a file.",
+  "lab": []
+ },
+ "DOJO-14-Q11": {
+  "topic": "Configure startup, liveness and readiness probes with given timings on a Pod.",
+  "lab": []
+ },
+ "DOJO-14-Q12": {
+  "topic": "Inject the Pod name and namespace as environment variables via the Downward API.",
+  "lab": []
+ },
+ "DOJO-14-Q13": {
+  "topic": "Drop all capabilities and add `NET_ADMIN` on a Pod's container.",
+  "lab": []
+ },
+ "DOJO-14-Q14": {
+  "topic": "Create a Secret manifest using `stringData` and apply it.",
+  "lab": []
+ },
+ "DOJO-14-Q15": {
+  "topic": "Pass a ConfigMap value to a container's `args` through an environment variable.",
+  "lab": []
+ },
+ "DOJO-14-Q16": {
+  "topic": "Create a ClusterRole on Secrets and bind it to a ServiceAccount cluster-wide.",
+  "lab": []
+ },
+ "DOJO-14-Q17": {
+  "topic": "Allow ingress only from Pods matching both a Pod label and a namespace label.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-14-Q18": {
+  "topic": "Create an Ingress with only a `defaultBackend` and no rules.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-14-Q19": {
+  "topic": "Create a Service with `ClientIP` session affinity and a three hour timeout.",
+  "lab": []
+ },
+ "DOJO-14-Q20": {
+  "topic": "Port-forward to a Pod, fetch a status page, save the response, stop forwarding.",
+  "lab": []
+ },
+ "DOJO-15-Q01": {
+  "topic": "Convert a single-stage Dockerfile into a two-stage build with a named builder.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DOJO-15-Q02": {
+  "topic": "Sidecar container tails a log written by the main container through an emptyDir.",
+  "lab": []
+ },
+ "DOJO-15-Q03": {
+  "topic": "Create a suspended CronJob with a failed jobs history limit.",
+  "lab": []
+ },
+ "DOJO-15-Q04": {
+  "topic": "Create a Pod with a failing command and restart policy `OnFailure`.",
+  "lab": []
+ },
+ "DOJO-15-Q05": {
+  "topic": "Uninstall a release and purge its history.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-15-Q06": {
+  "topic": "Create a Deployment with `maxSurge` 50% and `maxUnavailable` 25%.",
+  "lab": []
+ },
+ "DOJO-15-Q07": {
+  "topic": "Record two image rollouts, then roll back to the revision with the first image.",
+  "lab": []
+ },
+ "DOJO-15-Q08": {
+  "topic": "Write a kustomization with `commonLabels` and `commonAnnotations`, apply it.",
+  "lab": []
+ },
+ "DOJO-15-Q09": {
+  "topic": "Fix a Pod in `ImagePullBackOff` that points at the wrong registry.",
+  "lab": []
+ },
+ "DOJO-15-Q10": {
+  "topic": "Save all `Warning` events of a namespace to a file.",
+  "lab": []
+ },
+ "DOJO-15-Q11": {
+  "topic": "Configure a `grpc` liveness probe with delay and period on a Pod.",
+  "lab": []
+ },
+ "DOJO-15-Q12": {
+  "topic": "Create a ConfigMap from a directory and mount it in a Pod.",
+  "lab": []
+ },
+ "DOJO-15-Q13": {
+  "topic": "Create a Secret and expose two keys as environment variables in a Pod.",
+  "lab": []
+ },
+ "DOJO-15-Q14": {
+  "topic": "Create a Pod with user and group settings and a NetworkPolicy denying its ingress.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-15-Q15": {
+  "topic": "Attach an ephemeral debug container to a running Pod.",
+  "lab": []
+ },
+ "DOJO-15-Q16": {
+  "topic": "Create a Deployment and a PodDisruptionBudget with `minAvailable` 2.",
+  "lab": []
+ },
+ "DOJO-15-Q17": {
+  "topic": "Create a deny-all NetworkPolicy and one allowing port 80 ingress to web Pods.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-15-Q18": {
+  "topic": "Fix a Service selector so it matches the intended Pod's label.",
+  "lab": []
+ },
+ "DOJO-15-Q19": {
+  "topic": "Create a Service exposing two named ports with different protocols and target ports.",
+  "lab": []
+ },
+ "DOJO-15-Q20": {
+  "topic": "Create an Ingress with a regex path and a rewrite-target annotation.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-16-Q01": {
+  "topic": "Write a Dockerfile copying static content, build, push, run a Pod from it.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DOJO-16-Q02": {
+  "topic": "Add an haproxy ambassador container with its configuration mounted from a ConfigMap.",
+  "lab": []
+ },
+ "DOJO-16-Q03": {
+  "topic": "Create a Job that deletes itself 10 seconds after finishing.",
+  "lab": []
+ },
+ "DOJO-16-Q04": {
+  "topic": "Create a two-container Pod with `shareProcessNamespace` enabled.",
+  "lab": []
+ },
+ "DOJO-16-Q05": {
+  "topic": "Update chart dependencies and install with a values file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-16-Q06": {
+  "topic": "Create a Deployment with 40% `maxSurge` and 20% `maxUnavailable`, then update the image.",
+  "lab": []
+ },
+ "DOJO-16-Q07": {
+  "topic": "Roll a Deployment back to exactly revision 2.",
+  "lab": []
+ },
+ "DOJO-16-Q08": {
+  "topic": "Write a production overlay changing namespace, label and replicas, apply it.",
+  "lab": []
+ },
+ "DOJO-16-Q09": {
+  "topic": "Create the missing ConfigMap that keeps a Pod in `ContainerCreating`.",
+  "lab": []
+ },
+ "DOJO-16-Q10": {
+  "topic": "Query the metrics API through `kubectl get --raw` and record a Pod's memory usage.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-16-Q11": {
+  "topic": "Configure HTTP liveness and readiness probes with different delays and periods.",
+  "lab": []
+ },
+ "DOJO-16-Q12": {
+  "topic": "Project Downward API labels, a ConfigMap and a Secret into one volume.",
+  "lab": []
+ },
+ "DOJO-16-Q13": {
+  "topic": "Create a ConfigMap holding a binary file.",
+  "lab": []
+ },
+ "DOJO-16-Q14": {
+  "topic": "Set SELinux options in a Pod's security context.",
+  "lab": []
+ },
+ "DOJO-16-Q15": {
+  "topic": "Create a ServiceAccount and save a one hour token for it to a file.",
+  "lab": []
+ },
+ "DOJO-16-Q16": {
+  "topic": "Allow ingress on a port range from any Pod in the namespace.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-16-Q17": {
+  "topic": "Allow egress to an address block with an `except` exclusion.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-16-Q18": {
+  "topic": "Create an Ingress for two hosts with a certificate Secret for each.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-16-Q19": {
+  "topic": "Extract the addresses from a Service's EndpointSlice to a file.",
+  "lab": []
+ },
+ "DOJO-16-Q20": {
+  "topic": "Create a NodePort Service with `externalTrafficPolicy: Local` for a Deployment.",
+  "lab": []
+ },
+ "DOJO-17-Q01": {
+  "topic": "Override a container's entrypoint and command with `command` and `args`.",
+  "lab": []
+ },
+ "DOJO-17-Q02": {
+  "topic": "Init container runs a script mounted from a ConfigMap into a shared volume.",
+  "lab": []
+ },
+ "DOJO-17-Q03": {
+  "topic": "Create a CronJob with a half-hourly schedule in the `Asia/Tokyo` time zone.",
+  "lab": []
+ },
+ "DOJO-17-Q04": {
+  "topic": "Create a Pod with `shareProcessNamespace` and a container listing processes.",
+  "lab": []
+ },
+ "DOJO-17-Q05": {
+  "topic": "Upgrade a release with `--atomic`, a one minute timeout and a value override.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-17-Q06": {
+  "topic": "Create a Deployment with `progressDeadlineSeconds` set to 15.",
+  "lab": []
+ },
+ "DOJO-17-Q07": {
+  "topic": "Create the green Deployment and repoint the Service selector to it.",
+  "lab": []
+ },
+ "DOJO-17-Q08": {
+  "topic": "Override an image and patch replicas in a kustomization, save the build output.",
+  "lab": []
+ },
+ "DOJO-17-Q09": {
+  "topic": "Recreate an `OOMKilled` Pod with a higher memory limit.",
+  "lab": []
+ },
+ "DOJO-17-Q10": {
+  "topic": "Add an ephemeral debug container that keeps running to a distroless Pod.",
+  "lab": []
+ },
+ "DOJO-17-Q11": {
+  "topic": "Adjust a Deployment's requests so three replicas fit within a ResourceQuota.",
+  "lab": []
+ },
+ "DOJO-17-Q12": {
+  "topic": "Expose a container's `cpu` request and memory limit via the Downward API.",
+  "lab": []
+ },
+ "DOJO-17-Q13": {
+  "topic": "Disable token automount and mount a ServiceAccount token manually.",
+  "lab": []
+ },
+ "DOJO-17-Q14": {
+  "topic": "Set the `RuntimeDefault` seccomp profile and run as a non-root user.",
+  "lab": []
+ },
+ "DOJO-17-Q15": {
+  "topic": "Mount only the `password` key of a Secret under a chosen file name.",
+  "lab": []
+ },
+ "DOJO-17-Q16": {
+  "topic": "Create a LimitRange with default requests and limits, then a Pod inheriting them.",
+  "lab": []
+ },
+ "DOJO-17-Q17": {
+  "topic": "Allow ingress on a port from a Pod label and from a whole namespace.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-17-Q18": {
+  "topic": "Create a canary Ingress sending 20% of a host's traffic to another Service.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-17-Q19": {
+  "topic": "Create a selector-less Service with a manually created Endpoints object.",
+  "lab": []
+ },
+ "DOJO-17-Q20": {
+  "topic": "Add a `rewrite` rule to the CoreDNS Corefile ConfigMap and save a copy.",
+  "lab": []
+ },
+ "DOJO-18-Q01": {
+  "topic": "Add a non-root user to a Dockerfile, build, push, run a Pod from the image.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DOJO-18-Q02": {
+  "topic": "Adapter container rewrites the application log into a second file through a shared volume.",
+  "lab": []
+ },
+ "DOJO-18-Q03": {
+  "topic": "Create an Indexed Job with 5 completions and parallelism 2.",
+  "lab": []
+ },
+ "DOJO-18-Q04": {
+  "topic": "Add a `preStop` hook and a 45 second termination grace period to a Pod.",
+  "lab": []
+ },
+ "DOJO-18-Q05": {
+  "topic": "Upgrade a release changing one value with `--reuse-values`.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-18-Q06": {
+  "topic": "Create a Deployment and a PodDisruptionBudget with `minAvailable` 75%.",
+  "lab": []
+ },
+ "DOJO-18-Q07": {
+  "topic": "Update an image with a recorded change cause and set `maxSurge` 2, `maxUnavailable` 0.",
+  "lab": []
+ },
+ "DOJO-18-Q08": {
+  "topic": "Add a `secretGenerator` without a name suffix hash to a kustomization.",
+  "lab": []
+ },
+ "DOJO-18-Q09": {
+  "topic": "Find why an init container fails and fix the Pod.",
+  "lab": []
+ },
+ "DOJO-18-Q10": {
+  "topic": "Export a namespace's events with custom columns to a file.",
+  "lab": []
+ },
+ "DOJO-18-Q11": {
+  "topic": "Write a script that port-forwards to a Service, fetches a health page, stops.",
+  "lab": []
+ },
+ "DOJO-18-Q12": {
+  "topic": "Project a Secret key, a ConfigMap, labels and a token into one volume.",
+  "lab": []
+ },
+ "DOJO-18-Q13": {
+  "topic": "Create an immutable Secret from a literal.",
+  "lab": []
+ },
+ "DOJO-18-Q14": {
+  "topic": "Create a Pod running non-root with read-only root filesystem and no capabilities.",
+  "lab": []
+ },
+ "DOJO-18-Q15": {
+  "topic": "Create an aggregated ClusterRole that inherits rules from a labelled ClusterRole.",
+  "lab": []
+ },
+ "DOJO-18-Q16": {
+  "topic": "Create a ResourceQuota scoped to Pods of a given PriorityClass.",
+  "lab": []
+ },
+ "DOJO-18-Q17": {
+  "topic": "Allow ingress on a named container port from labelled Pods in the namespace.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-18-Q18": {
+  "topic": "Set `ingressClassName` on an existing Ingress and check its rule.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-18-Q19": {
+  "topic": "Write the fully qualified DNS name for reaching a Service in another namespace.",
+  "lab": []
+ },
+ "DOJO-18-Q20": {
+  "topic": "Allow ingress only from Pods in the same namespace, leaving egress open.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-19-Q01": {
+  "topic": "Write a two-stage Dockerfile with a named builder stage and create a test Pod.",
+  "lab": [
+   "image-build"
+  ]
+ },
+ "DOJO-19-Q02": {
+  "topic": "Sidecar container tails a shared log, with different resources on each container.",
+  "lab": []
+ },
+ "DOJO-19-Q03": {
+  "topic": "Suspend a CronJob and trigger one Job from it manually.",
+  "lab": []
+ },
+ "DOJO-19-Q04": {
+  "topic": "Three init containers write files in sequence into a shared emptyDir.",
+  "lab": []
+ },
+ "DOJO-19-Q05": {
+  "topic": "Download a release's values, edit replicas and tag, upgrade with the new file.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-19-Q06": {
+  "topic": "Remove a Deployment's fixed replicas and fix its HorizontalPodAutoscaler target.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-19-Q07": {
+  "topic": "Update two container images with a recorded cause, then undo the rollout.",
+  "lab": []
+ },
+ "DOJO-19-Q08": {
+  "topic": "Write a kustomization with a replica patch and apply it.",
+  "lab": []
+ },
+ "DOJO-19-Q09": {
+  "topic": "Fix a Deployment's misspelled image, missing Secret and wrong container port.",
+  "lab": []
+ },
+ "DOJO-19-Q10": {
+  "topic": "Find the highest `cpu` Pod with a given label and record its name.",
+  "lab": [
+   "metrics"
+  ]
+ },
+ "DOJO-19-Q11": {
+  "topic": "Configure startup, readiness and liveness probes with given timings on a Pod.",
+  "lab": []
+ },
+ "DOJO-19-Q12": {
+  "topic": "Create a ConfigMap with a multi-line key and mount it as a file.",
+  "lab": []
+ },
+ "DOJO-19-Q13": {
+  "topic": "Create a ServiceAccount and save a 24 hour token for it.",
+  "lab": []
+ },
+ "DOJO-19-Q14": {
+  "topic": "Set user and group at Pod level and stricter settings at container level.",
+  "lab": []
+ },
+ "DOJO-19-Q15": {
+  "topic": "Create a Role restricted to two named ConfigMaps and bind it to a user.",
+  "lab": []
+ },
+ "DOJO-19-Q16": {
+  "topic": "Label a namespace with Pod Security Admission `enforce` and `warn` levels.",
+  "lab": []
+ },
+ "DOJO-19-Q17": {
+  "topic": "Allow ingress from backend Pods and egress to one address block, deny the rest.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-19-Q18": {
+  "topic": "Create an Ingress with regex paths using the ingress-nginx `use-regex` annotation.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-19-Q19": {
+  "topic": "Create a Service with the topology-aware routing annotation.",
+  "lab": []
+ },
+ "DOJO-19-Q20": {
+  "topic": "Deny all ingress and egress for Pods with a given label.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-20-Q01": {
+  "topic": "Write a two-stage non-root Go Dockerfile, then run a Pod from the built image.",
+  "lab": [
+   "image-build",
+   "registry"
+  ]
+ },
+ "DOJO-20-Q02": {
+  "topic": "Three containers share a volume as main, sidecar writer and adapter reader.",
+  "lab": []
+ },
+ "DOJO-20-Q03": {
+  "topic": "Create a perl pi Job with 3 completions and parallelism 2.",
+  "lab": []
+ },
+ "DOJO-20-Q04": {
+  "topic": "Create a CronJob keeping 3 successful and 1 failed Jobs.",
+  "lab": []
+ },
+ "DOJO-20-Q05": {
+  "topic": "Scaffold a chart, write a values file, install it into a namespace.",
+  "lab": [
+   "helm"
+  ]
+ },
+ "DOJO-20-Q06": {
+  "topic": "Update an image with a recorded cause, roll back, scale to 5.",
+  "lab": []
+ },
+ "DOJO-20-Q07": {
+  "topic": "Add a one-replica canary Deployment sharing the label the Service selects.",
+  "lab": []
+ },
+ "DOJO-20-Q08": {
+  "topic": "Write a production overlay adding a label and changing replicas, apply it.",
+  "lab": []
+ },
+ "DOJO-20-Q09": {
+  "topic": "Diagnose and fix three broken Pods in one namespace.",
+  "lab": []
+ },
+ "DOJO-20-Q10": {
+  "topic": "Save only the `ERROR` lines of a Pod's logs to a file.",
+  "lab": []
+ },
+ "DOJO-20-Q11": {
+  "topic": "Attach an ephemeral busybox container and run `nslookup` from it.",
+  "lab": []
+ },
+ "DOJO-20-Q12": {
+  "topic": "Set user, no privilege escalation, drop all capabilities, add `NET_BIND_SERVICE`.",
+  "lab": []
+ },
+ "DOJO-20-Q13": {
+  "topic": "Create a ServiceAccount, a Role on Pods and ConfigMaps, and a RoleBinding.",
+  "lab": []
+ },
+ "DOJO-20-Q14": {
+  "topic": "Consume a ConfigMap as environment variables and a Secret as a volume in one Pod.",
+  "lab": []
+ },
+ "DOJO-20-Q15": {
+  "topic": "Create a LimitRange with `cpu` defaults and a ResourceQuota in one namespace.",
+  "lab": []
+ },
+ "DOJO-20-Q16": {
+  "topic": "Create a hostPath PersistentVolume, a claim and a Pod mounting it.",
+  "lab": [
+   "storage"
+  ]
+ },
+ "DOJO-20-Q17": {
+  "topic": "Create a deny-all policy and one allowing port 80 ingress from API Pods.",
+  "lab": [
+   "netpol"
+  ]
+ },
+ "DOJO-20-Q18": {
+  "topic": "Create an Ingress routing two `Prefix` paths of one host to two Services.",
+  "lab": [
+   "ingress"
+  ]
+ },
+ "DOJO-20-Q19": {
+  "topic": "Create a NodePort Service with a fixed node port 30080.",
+  "lab": []
+ },
+ "DOJO-20-Q20": {
+  "topic": "Look up the `SRV` record of the `kubernetes.default` Service from a Pod.",
+  "lab": []
+ }
+}

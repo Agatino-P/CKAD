@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# ckad-dojo's scripts refuse to run when no `docker` command exists, even with --skip-registry.
+# This machine has podman, whose CLI accepts the same subcommands the scripts use.
+# practice/scripts/dojo.sh prepends this directory to PATH; nothing else should.
+exec podman "$@"

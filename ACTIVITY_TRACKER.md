@@ -8,7 +8,10 @@ Codex records useful decisions, constraints, preferences, research findings, and
 
 - User is preparing for another CKAD exam.
 - The official CKAD environment was Kubernetes v1.35 on 2026-09-20; Codex must verify the version again near the exam date.
-- User wants a later study plan built around a local `kind` cluster.
+- User wants a later study plan built around a local `kind` cluster, defined inside this repository.
+- User asked on 2026-09-29 to ignore the sibling repository `~/GitLocalCopy/CKAD-LF`.
+- User holds the exam voucher and targets early November 2026 for the exam, stated on 2026-09-29.
+- User does not want to be asked about weekly schedule or available hours, and does not want a timeline planned. When phases and sessions run is User's own call.
 - User wants free, reliable, selective practice material rather than large unverified resource lists.
 - User does not want low-quality or unverified Udemy exam simulators.
 - User intends the study notes to remain a short record of concepts and exam mechanics that were not obvious, not a complete CKAD syllabus.
@@ -77,3 +80,20 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Result:** `Study notes/CKAD cheat sheet.md` starts from `Study notes/backup/CKAD appunti recap.md`: every recap item kept, wrong items corrected (checked against the v1.35 docs and the local `kind-ckad` cluster), nothing added (User's choice).
 - **Review:** three Claude reviewer-agent rounds (2 fixes: Helm pending releases, Pod-level resources), then Codex (`gpt-5.6-sol`), which found no wrong or missing content.
 - **Open:** the CKAD exam's Helm version is not verified; the cheat sheet gives `helm ls --pending` (Helm 3 and 4) and notes that `helm ls -a` exists only in Helm 3.
+
+### 2026-09-29 — Practice program planning
+
+- **User request:** Build one exercise pool from all usable sources, run each exercise as a graded attempt with Claude as teacher and evaluator, rate performance, classify gaps, track results, and bring failed exercises back after study. Planning only in this session.
+- **Machine state, on the Mac named CH-LAM-WS052:** kind v0.33.0 on podman, kubectl v1.37.0, uv and jq present, helm missing. A stopped kind cluster `ckad` and a stale context `kind-kind` are left over.
+- **Findings:** The Killer Shell PDF in the study notes is a 22-question simulator archive on Kubernetes 1.31, not a score sheet. `TiPunchLabs/ckad-dojo` ships setup manifests, solutions and kubectl-based scoring for 398 questions and is the only source with automatic grading. The Killercoda CKAD course is now paid.
+- **Proposed, pending User:** submodules under `practice/sources/`, a lab definition under `practice/lab/`, an exercise index and an attempt ledger, a four-value result scale, the four gap classes, a retry rule, and three phases from baseline mock to killer.sh rehearsal.
+- **Artifacts:** `practice/PRACTICE_PLAN.md` drafted. `practice/PRACTICE_RESOURCES.md` re-verified and rewritten in place.
+- **Answered by User the same day:** voucher bought, exam in early November 2026. Scheduling stays with User and is not part of the plan.
+- **Decided by User the same day:** practice, not exam simulation, so no mocks, phases or exam conditions. All practice files live under `practice/`, never in the repository root. Mastery per exercise (one success from scratch, or two successes after a failure), everything in English, gotchas go to the cheat sheet `Study notes/CKAD cheat sheet.md`.
+- **Claude's defaults adopted without objection:** submodules under `practice/sources/`, ckad-dojo used for its per-question setup manifests and scoring scripts.
+- **Setup done the same day, on CH-LAM-WS052:** helm installed, version 4.3.0 from Homebrew. Cluster `ckad` created from `practice/lab/` on the v1.35 node image, with metrics-server and ingress-nginx. Checked on the cluster: the `standard` StorageClass exists, `kubectl top` answers, kindnet blocks traffic under a deny-all NetworkPolicy, and an Ingress answers on `http://localhost:8080`. The leftover cluster, the stale `kind-kind` context and the old `kind` network were deleted. Submodules added under `practice/sources/`. `practice/RESULTS_LEDGER.md` created empty.
+- **ckad-dojo on the lab:** its scripts refuse to start without a `docker` command, so `practice/scripts/shim/docker` forwards to podman when prepended to PATH. With the shim and `--skip-registry`, the simulation 1 setup and cleanup scripts ran, and its per-question scoring script works on its own.
+- **User direction:** Track everything done, and script it, because the setup may have to be repeated on another machine.
+- **Scripted, all under `practice/scripts/`:** `setup.sh` (tools, submodules, cluster, checks), `lab-up.sh`, `lab-check.sh` (the five lab checks), `lab-down.sh`, `dojo.sh` (ckad-dojo setup, score, cleanup with the shim), and `build-index.py` for the index. Any machine-specific state recorded in this file names the machine, because the file is shared through git.
+- **Index built:** `practice/EXERCISE_INDEX.md`, regenerated byte for byte by `practice/scripts/build-index.py` from the submodules, the Killer Shell PDF and the hand-written `practice/scripts/exercise-map.json`. Row counts per source are in the index's Counts section. Two source anomalies are unindexed: a plain-line item at the end of dgkanatsios `j.podman.md`, and a stray task block before the title of ckad-dojo simulation 12.
+- **Next action:** Start the loop in `practice/PRACTICE_PLAN.md` with the first exercise.

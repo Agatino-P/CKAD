@@ -1,0 +1,12 @@
+[submodule "sources/dgkanatsios-ckad-exercises"]
+	path = practice/sources/dgkanatsios-ckad-exercises
+	url = https://github.com/dgkanatsios/CKAD-exercises.git
+	branch = main
+[submodule "sources/bmuschko-ckad-crash-course"]
+	path = practice/sources/bmuschko-ckad-crash-course
+	url = https://github.com/bmuschko/ckad-crash-course.git
+	branch = master
+[submodule "sources/tipunchlabs-ckad-dojo"]
+	path = practice/sources/tipunchlabs-ckad-dojo
+	url = https://github.com/TiPunchLabs/ckad-dojo.git
+	branch = main
