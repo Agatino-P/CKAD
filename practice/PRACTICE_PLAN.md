@@ -12,8 +12,8 @@ A failed exercise comes back until it is mastered.
 
 ## Facts
 
-- The exam runs on Kubernetes v1.35 and lasts 2 hours: [Linux Foundation CKAD page](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/), read on 2026-09-29.
-- The five domains and their weights are in `CKAD_Curriculum_v1.35.pdf` in [cncf/curriculum](https://github.com/cncf/curriculum).
+- The exam runs on Kubernetes v1.37 and lasts 2 hours: [Linux Foundation CKAD page](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/), read on 2026-09-30.
+- The five domains and their weights are in `CKAD_Curriculum_v1.35.pdf` in [cncf/curriculum](https://github.com/cncf/curriculum), still the newest CKAD curriculum file there on 2026-09-30.
 - Agatino Pesce holds the exam voucher and targets early November 2026. When he practises is his own business.
 
 ## Files
@@ -46,7 +46,7 @@ Detail, links and caveats are in `practice/PRACTICE_RESOURCES.md`.
 One exercise at a time.
 
 1. **Pick.** Retry queue first. Otherwise a new exercise from the domain with the most failures in the ledger, or the next domain in curriculum order while there are no failures yet.
-2. **Prepare.** Claude applies the setup manifest if there is one, runs the reference solution once to confirm it works on v1.35, resets the lab, writes the acceptance criteria down before the attempt, and states the time budget.
+2. **Prepare.** Claude applies the setup manifest if there is one, runs the reference solution once to confirm it works on v1.37, resets the lab, writes the acceptance criteria down before the attempt, and states the time budget.
 3. **Attempt.** Agatino Pesce works in his own terminal on the lab cluster and says "start", then "done", "skip" or "hint". A hint caps the result at partial.
 4. **Grade.** Claude inspects the cluster state with kubectl against the written criteria, or runs the ckad-dojo scoring function when one exists, and reports the result, the failed criteria, and the reference solution.
 5. **Classify a miss** as knowledge, recall, speed or environment.

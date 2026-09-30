@@ -103,7 +103,7 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Exam baseline:** The official Linux Foundation CKAD page now lists Kubernetes v1.37.
 - **Cluster direction:** Rebuild the reproducible practice cluster from the digest-pinned `kindest/node:v1.37.0` image supplied by `kind` v0.33.0.
 - **Required capabilities:** Keep a multi-node topology, default dynamic storage, Metrics Server, NetworkPolicy enforcement through the default `kindnet`, and a maintained Ingress implementation.
-- **Next action:** Create and verify the version-controlled cluster configuration and lifecycle scripts after User approves replacing the existing practice cluster.
+- **Next action:** Done in the entry "Practice lab moved to Kubernetes v1.37" below.
 
 ### 2026-09-30 — Kubernetes v1.37 notes-impact review
 
@@ -113,3 +113,12 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Cheat sheet:** No existing statement in `Study notes/CKAD cheat sheet.md` required a Kubernetes v1.37 correction.
 - **No affected content:** The v1.36 and v1.37 API removals, `kubectl run -f` deprecation, static-Pod API-reference restriction, and Service `externalIPs` deprecation do not occur in the current notes.
 - **Optional additions:** The stable `metrics.k8s.io/v1` API, stable image volumes, and stable `kubectl get -o kyaml` are current features but do not make existing note content wrong.
+
+### 2026-09-30 — Practice lab moved to Kubernetes v1.37
+
+- **User decision:** Replace the practice cluster with one on Kubernetes v1.37.
+- **Lab:** `practice/lab/kind-cluster.yaml` pins both nodes to `kindest/node:v1.37.0@sha256:a1ed56cf…580ae5`, the digest in the kind v0.33.0 release notes. The existing lifecycle scripts in `practice/scripts/` were kept unchanged.
+- **Verified:** `lab-down.sh` then `setup.sh` rebuilt the cluster on v1.37.0 with metrics-server and ingress-nginx, and all five `lab-check.sh` checks passed.
+- **Version references:** `practice/PRACTICE_PLAN.md` and `practice/PRACTICE_RESOURCES.md` now say v1.37 for the exam and for solution checks. The CKAD curriculum file in cncf/curriculum was still `CKAD_Curriculum_v1.35.pdf` on 2026-09-30, so that reference stays; recheck for a newer file near the exam date.
+- **kubectl skew:** kubectl is supported within one minor version of the API server, so a v1.36 client works with the v1.37 lab; a v1.35 client does not.
+- **Next action:** Start the loop in `practice/PRACTICE_PLAN.md` with the first exercise.
