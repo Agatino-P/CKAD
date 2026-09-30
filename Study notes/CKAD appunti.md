@@ -79,9 +79,9 @@ h6:before {
 
 </style>
 
-> **AUDIT BASELINE — 2026-09-26**
-> CKAD currently uses Kubernetes v1.35; recheck near exam day because the exam environment is aligned with the newest Kubernetes minor release within approximately 4 to 8 weeks of that release.
-> Ref: [CKAD FAQ](https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks) · [v1.35 docs](https://v1-35.docs.kubernetes.io/docs/)
+> **AUDIT BASELINE — 2026-09-30**
+> CKAD currently uses Kubernetes v1.37; recheck near exam day because the exam environment is aligned with the newest Kubernetes minor release within approximately 4 to 8 weeks of that release.
+> Ref: [CKAD exam page](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) · [current Kubernetes docs](https://kubernetes.io/docs/)
 
 # Application Design and Build
 
@@ -285,7 +285,7 @@ args:
 Without `.spec.timeZone`, the schedule is interpreted in the local time zone of the kube-controller-manager.  
 Set `.spec.timeZone` to a valid time zone name to fix it, for example `timeZone: "Etc/UTC"`.
 
-Ref: [CronJob time zones](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones)
+Ref: [CronJob time zones](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones)
 
 #### Cronjob Controller 
 
@@ -360,7 +360,7 @@ spec:
     emptyDir: {}
 ```
 
-Ref: [Sidecar containers](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
+Ref: [Sidecar containers](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
 
 #### Ambassador pattern
 
@@ -991,7 +991,10 @@ Only three types of result:
 
 #### How Metrics Server works
 
-* On each node there's a `kubelet` that collects Pod and container usage statistics with its embedded `cAdvisor` (for the containers started by the container runtime, such as containerd). Only with the alpha feature gate `PodAndContainerStatsFromCRI` enabled (off by default) does the kubelet get them from the runtime through the Container Runtime Interface (CRI) instead.
+* On each node, the `kubelet` collects Pod and container usage statistics with its embedded `cAdvisor` by default.
+* With the beta feature gate `PodAndContainerStatsFromCRI` enabled (off by default), the kubelet gets those statistics from a compatible container runtime through the Container Runtime Interface (CRI) instead.
+* As of Kubernetes v1.37, cAdvisor-based Pod and container metrics collection in the kubelet is deprecated but remains the default.
+* Node-level and image-filesystem statistics still come from cAdvisor when `PodAndContainerStatsFromCRI` is enabled.
 * Kubelet is the communication mechanism between a node and the control plane.
 * Metrics Server gets input from kubelets via the kubelet `/metrics/resource` endpoint.
 * Kubectl can then connect to the Api Server, which serves the `Metrics Api` provided by Metrics Server.
@@ -1039,6 +1042,9 @@ Retrieves logs for a **restarted container** (e.g., during a `CrashLoopBackOff`)
 ### `kubectl debug`
 
 Create an ephemeral debug container and even make a copy of a pod adding some debug utilities for debugging purposes.
+
+* In `kubectl` v1.36 and later, `general` is the default debugging profile.
+* Use `--profile=baseline`, `--profile=restricted`, `--profile=netadmin` or `--profile=sysadmin` when a task needs a different security profile.
 
 * Ephemeral container in the running pod: `kubectl debug -it <pod-name> --image=busybox:1.28 --target=<container-name>`
 
@@ -1239,8 +1245,8 @@ limits:
 
 ### Resource Requests and Limits
 
-* Requests and limits are usually set for each container of a `Pod`; the Pod's request/limit for a resource is then the sum of its app containers' requests/limits (init and sidecar containers and Pod overhead change the calculation: see [sidecar resource sharing](https://v1-35.docs.kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/#resource-sharing-within-containers)).
-* They can also be set for the whole Pod in `spec.resources` (cpu, memory, hugepages; feature gate `PodLevelResources`, beta and enabled by default): see [Pod-level resource specification](https://v1-35.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/#pod-level-resource-specification).
+* Requests and limits are usually set for each container of a `Pod`; the Pod's request/limit for a resource is then the sum of its app containers' requests/limits (init and sidecar containers and Pod overhead change the calculation: see [sidecar resource sharing](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/#resource-sharing-within-containers)).
+* They can also be set for the whole Pod in `spec.resources` (cpu, memory, hugepages; feature gate `PodLevelResources`, beta and enabled by default): see [Pod-level resource specification](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#pod-level-resource-specification).
 
 * In the Pod yaml template there are 
   * `spec.containers[].resources.limits.cpu`
