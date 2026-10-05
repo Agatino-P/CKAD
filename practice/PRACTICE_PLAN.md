@@ -45,7 +45,7 @@ Detail, links and caveats are in `practice/PRACTICE_RESOURCES.md`.
 
 One exercise at a time.
 
-1. **Pick.** A new exercise while any exercise in the index has no attempt yet: from the domain with the most failures in the ledger, or the next domain in curriculum order while there are no failures yet. Once every exercise has had a first attempt, the retry queue.
+1. **Pick.** A new exercise while any exercise in the index has no attempt yet: from the domain with the most failures in the ledger, or the next domain in curriculum order while there are no failures yet. Once every exercise has had a first attempt, the retry queue. In the first pass the domain rule holds even when an exercise builds on the one before it, and the "Prepare" step recreates the state it needs. In the retry rounds, a chain of exercises that build on each other is taken in source order.
 2. **Prepare.** Claude applies the setup manifest if there is one, runs the reference solution once to confirm it works on v1.37, records that version as `verified` in the exercise's entry in `practice/scripts/exercise-map.json` and regenerates the index, resets the lab, writes the acceptance criteria down before the attempt, and states the time budget while budgets are in use.
 3. **Attempt.** Agatino Pesce works in his own terminal on the lab cluster and says "start", then "done", "skip" or "hint". A hint caps the result at partial.
 4. **Grade.** Claude inspects the cluster state with kubectl against the written criteria, or runs the ckad-dojo scoring function when one exists, and reports the result, the failed criteria, and the reference solution.

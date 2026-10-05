@@ -82,7 +82,8 @@
  "DGK-A-16": {
   "domain": "Application Design and Build",
   "topic": "Run a busybox Pod that echoes a message and exits.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-17": {
   "domain": "Application Design and Build",
