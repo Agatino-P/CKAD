@@ -41,7 +41,8 @@
  "DGK-A-08": {
   "domain": "Application Design and Build",
   "topic": "Run an nginx Pod that declares container port 80.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-09": {
   "domain": "Application Observability and Maintenance",
