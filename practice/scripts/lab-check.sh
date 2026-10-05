@@ -52,6 +52,21 @@ done
 kc delete namespace ingress-check --wait=false >/dev/null
 [[ "$title" == *nginx* ]] || fail "Ingress did not answer on localhost:8080 (${title:-no response})"
 
+echo "-- NodePort 30080 reachable from the host on port 9080, reserved for a gateway"
+kc delete namespace nodeport-check --ignore-not-found --wait=true >/dev/null
+kc create namespace nodeport-check >/dev/null
+kc -n nodeport-check create deployment web --image=nginx:alpine --port=80 >/dev/null
+kc -n nodeport-check create service nodeport web --tcp=80:80 --node-port=30080 >/dev/null
+kc -n nodeport-check rollout status deployment/web --timeout=120s >/dev/null
+title=""
+for _ in $(seq 1 20); do
+  title=$(curl -s -m 3 http://localhost:9080/ | grep -o '<title>.*</title>' || true)
+  [[ "$title" == *nginx* ]] && break
+  sleep 2
+done
+kc delete namespace nodeport-check --wait=false >/dev/null
+[[ "$title" == *nginx* ]] || fail "NodePort 30080 did not answer on localhost:9080 (${title:-no response})"
+
 echo "-- helm talks to the cluster"
 helm --kube-context kind-ckad list -A >/dev/null || fail "helm cannot list releases"
 

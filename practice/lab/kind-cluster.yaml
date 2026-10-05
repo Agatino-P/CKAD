@@ -22,5 +22,16 @@ nodes:
       - containerPort: 443
         hostPort: 8443
         protocol: TCP
+      # Reserved for a Gateway API implementation, which cannot share 80 and 443 with ingress-nginx.
+      # kind sets port mappings only at cluster creation, so they are reserved before they are needed.
+      # A Service of type NodePort on 30080 or 30443 is reachable here from any node through kube-proxy.
+      - containerPort: 30080
+        hostPort: 9080
+        protocol: TCP
+      - containerPort: 30443
+        hostPort: 9443
+        protocol: TCP
+  - role: worker
+    image: kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
   - role: worker
     image: kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5

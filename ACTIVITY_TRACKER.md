@@ -118,7 +118,19 @@ Codex records useful decisions, constraints, preferences, research findings, and
 
 - **User decision:** Replace the practice cluster with one on Kubernetes v1.37.
 - **Lab:** `practice/lab/kind-cluster.yaml` pins both nodes to `kindest/node:v1.37.0@sha256:a1ed56cf…580ae5`, the digest in the kind v0.33.0 release notes. The existing lifecycle scripts in `practice/scripts/` were kept unchanged.
-- **Verified:** `lab-down.sh` then `setup.sh` rebuilt the cluster on v1.37.0 with metrics-server and ingress-nginx, and all five `lab-check.sh` checks passed.
+- **Verified:** `lab-down.sh` then `setup.sh` rebuilt the cluster on v1.37.0 with metrics-server and ingress-nginx, and every `lab-check.sh` check passed.
 - **Version references:** `practice/PRACTICE_PLAN.md` and `practice/PRACTICE_RESOURCES.md` now say v1.37 for the exam and for solution checks. The CKAD curriculum file in cncf/curriculum was still `CKAD_Curriculum_v1.35.pdf` on 2026-09-30, so that reference stays; recheck for a newer file near the exam date.
 - **kubectl skew:** kubectl is supported within one minor version of the API server, so a v1.36 client works with the v1.37 lab; a v1.35 client does not.
 - **Next action:** Start the loop in `practice/PRACTICE_PLAN.md` with the first exercise.
+
+### 2026-10-05 — Podman machine and lab rebuilt after a macOS reinstall, on CH-LAM-WS052
+
+- **Found:** On CH-LAM-WS052 the `ckad` cluster still ran Kubernetes v1.35.8, from a node image created on 2026-09-29, so the v1.37 rebuild above had not reached this machine. The podman client was 6.1.1 while the podman machine ran 5.8.2, and `podman machine os upgrade` cannot cross that major version.
+- **User decision:** Start clean. Removing the podman machine is acceptable, because User recreates the other containers from compose files.
+- **Done:** Homebrew upgraded podman and kubectl. The podman machine was removed and recreated with 8 CPUs, 16 GiB of memory and a 100 GiB disk, so the client and the machine run the same podman version. `practice/scripts/lab-down.sh` then `practice/scripts/setup.sh` built the cluster on the pinned v1.37.0 digest, and every `lab-check.sh` check passed.
+- **Not enabled:** Rosetta is installed on the Mac, but the new machine reports `"Rosetta": false` and runs amd64 images through qemu. The lab's node image is arm64, so the lab does not need Rosetta.
+- **Not installed:** `podman-mac-helper`, which provides the default Docker socket. The lab does not use that socket, because `practice/scripts/shim/docker` calls podman directly.
+- **Lesson:** `practice/scripts/lab-up.sh` fails at its node wait when it runs right after stopped kind containers are started, because the API server is not ready yet. A second run succeeds.
+- **User decision, same day:** Add a second worker now rather than rebuild later, so exercises that spread Pods across nodes have two schedulable nodes. `practice/lab/kind-cluster.yaml` now defines one control plane and two workers. After a rebuild, every lab check passed.
+- **Gateway ports reserved, same day:** ingress-nginx is retired upstream (confirmed by User), and kind sets port mappings only at cluster creation. User asked to reserve ports now for a Gateway API implementation: `localhost:9080` and `localhost:9443` map to NodePorts 30080 and 30443 on the control plane node. `practice/scripts/lab-check.sh` gained a check that NodePort 30080 answers on `localhost:9080`.
+- **Open:** Choose a maintained replacement for ingress-nginx and a Gateway API implementation for the lab.

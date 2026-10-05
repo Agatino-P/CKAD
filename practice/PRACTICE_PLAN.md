@@ -86,7 +86,8 @@ practice/scripts/setup.sh
 
 The script needs Homebrew and a container engine, either Docker Desktop or podman with a running machine.\
 It installs kind, kubectl and helm when missing, pulls the submodules, creates the cluster from `practice/lab/kind-cluster.yaml` with metrics-server and ingress-nginx, and runs `practice/scripts/lab-check.sh`.\
-The checks prove the `standard` StorageClass, `kubectl top`, NetworkPolicy enforcement by kindnet, an Ingress reachable on port 8080 of localhost, and helm.\
+The checks prove the `standard` StorageClass, `kubectl top`, NetworkPolicy enforcement by kindnet, an Ingress reachable on port 8080 of localhost, NodePort 30080 reachable on port 9080 of localhost, and helm.\
+Ports 9080 and 9443 of localhost map to NodePorts 30080 and 30443, reserved for a Gateway API implementation.\
 Every step checks before acting, so the script can be re-run after a failure.
 
 ckad-dojo's scripts run through `practice/scripts/dojo.sh`, which puts a docker-to-podman shim on PATH and skips the project's image registry.\
