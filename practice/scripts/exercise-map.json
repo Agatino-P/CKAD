@@ -88,7 +88,8 @@
  "DGK-A-17": {
   "domain": "Application Design and Build",
   "topic": "Run the same Pod so that it is deleted automatically on completion.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-18": {
   "domain": "Application Environment, Configuration and Security",
