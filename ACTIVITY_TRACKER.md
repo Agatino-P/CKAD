@@ -143,3 +143,10 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Learned:** The dgkanatsios solutions still pass `--restart=Never` to `kubectl run` for long-running Pods. The flag only sets the Pod's `restartPolicy`, so an exercise that does not ask for it is not graded on it.
 - **Verification state:** An entry in `practice/scripts/exercise-map.json` now carries `verified`, the Kubernetes minor version its reference solution was run on. `practice/scripts/build-index.py` shows it as "verified on v1.37" in `practice/EXERCISE_INDEX.md`, and every other row stays "unverified". The "Prepare" step in `practice/PRACTICE_PLAN.md` records it.
 - **User decision:** In the first pass, the pick follows the domain rule strictly, even for exercises that build on the previous one, such as DGK-A-09 to DGK-A-15 on the `nginx` Pod. In the retry rounds, such a chain is taken in source order. Recorded in the "Pick" step of `practice/PRACTICE_PLAN.md`.
+
+### 2026-10-05 — Study pause: running commands with args in Docker and K8s
+
+- **Why:** DGK-A-17 failed on recall, and User asked to pause the practice and study how a container's command and arguments are passed. User noted that several questions in the previous CKAD exam were about this.
+- **Files:** `practice/study/STUDY_PLAN.md` lists the bites and their state. `practice/study/LESSONS.md` holds the current lesson, corrected in place and checked on the lab.
+- **Done:** Seven bites taught and checked, from `ENTRYPOINT` and `CMD` to the YAML forms.
+- **Next action:** Teach the two remaining bites in `practice/study/STUDY_PLAN.md`: `$(VAR)` versus `$VAR`, and `--rm` on `kubectl run`. Then move the lesson into `Study notes/CKAD appunti.md` under the title "Running commands with args in Docker and K8s", decide with User what happens to the "When to Use `sh -c`" section of `Study notes/CKAD cheat sheet.md`, and resume the practice loop.
