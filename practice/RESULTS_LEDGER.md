@@ -9,4 +9,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | --- | --- | --- | --- | --- | --- |
 | 2026-10-05 | DGK-A-01 | partial | — | slip | Pod named `ngnix` instead of `nginx`. Namespace, image and Running state were correct. |
 | 2026-10-05 | DGK-A-02 | pass | — | — | Pod created with `kubectl apply -f` from a generated manifest. |
-| 2026-10-05 | DGK-A-03 | pass | — | — | Command was `sh -c env` rather than `env`, and the Pod was created through `kubectl apply`. Output and completion were correct. |
+| 2026-10-05 | DGK-A-03 | pass | — | — | Created with `kubectl apply` from a manifest, running `env` through `sh -c`. |

@@ -20,7 +20,8 @@
  "DGK-A-04": {
   "domain": "Application Design and Build",
   "topic": "Define the `env` busybox Pod in YAML, apply it and read its logs.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-05": {
   "domain": "Application Observability and Maintenance",
