@@ -14,7 +14,8 @@
  "DGK-A-03": {
   "domain": "Application Design and Build",
   "topic": "Run a busybox Pod that executes `env` and read its output.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-04": {
   "domain": "Application Design and Build",
