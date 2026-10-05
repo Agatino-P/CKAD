@@ -3,7 +3,7 @@
 One row is one exercise, holding its id, its exam domain, a one-sentence topic, the pointer to the question in its source, what the lab must provide, and its verification state.\
 The three repository sources are git submodules under `practice/sources/`, and every row points at the commit its submodule pins.\
 The Killer Shell rows point at the results archive under `Study notes/`.\
-`practice/scripts/build-index.py` regenerates this file from the sources and from `practice/scripts/exercise-map.json`, which holds the hand-written domain, topic and lab needs per id.
+`practice/scripts/build-index.py` regenerates this file from the sources and from `practice/scripts/exercise-map.json`, which holds the hand-written domain, topic and lab needs per id, and the Kubernetes version each reference solution was verified on.
 
 An id is the source prefix followed by the exercise's position in that source: `DGK-<file letter>-<ordinal in that file>`, `BM-<exercise number>`, `DOJO-<simulation number>-Q<question number>`, and `KS-<question number>` or `KS-P<preview question number>`.
 
@@ -11,8 +11,8 @@ An id is the source prefix followed by the exercise's position in that source: `
 
 | Id | Domain | Topic | Source | Lab needs | State |
 | --- | --- | --- | --- | --- | --- |
-| DGK-A-01 | Application Design and Build | Create a namespace and an nginx Pod in it with `kubectl run`. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Create a namespace called 'mynamespace' and a pod with image... | none | unverified |
-| DGK-A-02 | Application Design and Build | Generate the same Pod as YAML with a client dry run and create it. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Create the pod that was just described using YAML | none | unverified |
+| DGK-A-01 | Application Design and Build | Create a namespace and an nginx Pod in it with `kubectl run`. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Create a namespace called 'mynamespace' and a pod with image... | none | verified on v1.37 |
+| DGK-A-02 | Application Design and Build | Generate the same Pod as YAML with a client dry run and create it. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Create the pod that was just described using YAML | none | verified on v1.37 |
 | DGK-A-03 | Application Design and Build | Run a busybox Pod that executes `env` and read its output. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Create a busybox pod (using kubectl command) that runs the c... | none | unverified |
 | DGK-A-04 | Application Design and Build | Define the `env` busybox Pod in YAML, apply it and read its logs. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Create a busybox pod (using YAML) that runs the command "env... | none | unverified |
 | DGK-A-05 | Application Observability and Maintenance | Print the YAML of a new namespace with a client dry run, without creating it. | practice/sources/dgkanatsios-ckad-exercises/a.core_concepts.md § Get the YAML for a new namespace called 'myns' without creat... | none | unverified |

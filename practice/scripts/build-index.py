@@ -7,6 +7,8 @@ archive under "Study notes/".
 The mechanical part, listing the exercises, is done here.
 The hand-written part, one domain, topic and lab-needs entry per exercise id, lives in
 exercise-map.json beside this script, so that a re-run reproduces the same index.
+An entry also carries "verified", the Kubernetes minor version its reference solution was run on,
+once the "Prepare" step of practice/PRACTICE_PLAN.md has run it.
 ckad-dojo questions carry their domain in the source, so their map entries hold no domain.
 """
 import json
@@ -60,7 +62,7 @@ DOJO_DOMAIN_SPELLINGS = {
 LAB_NEEDS = {"ingress", "metrics", "storage", "netpol", "helm", "image-build", "registry", "crd"}
 
 HEADING_LIMIT = 60
-STATE = "unverified"
+VERSION = re.compile(r"^v\d+\.\d+$")
 
 SOURCES = [
     ("dgk", "dgkanatsios/CKAD-exercises"),
@@ -203,6 +205,9 @@ def merge(rows, mapping, domain_from_source):
         unknown = set(lab) - LAB_NEEDS
         if unknown:
             raise SystemExit(f"{row['id']}: unknown lab needs {sorted(unknown)}")
+        verified = entry.get("verified")
+        if verified is not None and not VERSION.match(verified):
+            raise SystemExit(f"{row['id']}: verified must be a Kubernetes minor version such as v1.37")
         merged.append(
             {
                 "id": row["id"],
@@ -210,7 +215,7 @@ def merge(rows, mapping, domain_from_source):
                 "topic": topic,
                 "source": row["source"],
                 "lab": ", ".join(lab) if lab else "none",
-                "state": STATE,
+                "state": f"verified on {verified}" if verified else "unverified",
             }
         )
     return merged
@@ -240,7 +245,8 @@ def render(sections):
         "and every row points at the commit its submodule pins.\\",
         "The Killer Shell rows point at the results archive under `Study notes/`.\\",
         "`practice/scripts/build-index.py` regenerates this file from the sources and from "
-        "`practice/scripts/exercise-map.json`, which holds the hand-written domain, topic and lab needs per id.",
+        "`practice/scripts/exercise-map.json`, which holds the hand-written domain, topic and lab needs per id, "
+        "and the Kubernetes version each reference solution was verified on.",
         "",
         "An id is the source prefix followed by the exercise's position in that source: "
         "`DGK-<file letter>-<ordinal in that file>`, `BM-<exercise number>`, "

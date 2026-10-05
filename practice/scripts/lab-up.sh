@@ -10,6 +10,11 @@ else
   kind create cluster --config kind-cluster.yaml
 fi
 kubectl config use-context kind-ckad
+# After stopped node containers are started again, the API server needs a moment before kubectl wait can find nodes.
+for _ in $(seq 1 60); do
+  kubectl get --raw /readyz >/dev/null 2>&1 && break
+  sleep 2
+done
 kubectl wait --for=condition=Ready nodes --all --timeout=180s
 
 kubectl apply -k addons/metrics-server

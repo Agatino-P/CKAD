@@ -2,12 +2,14 @@
  "DGK-A-01": {
   "domain": "Application Design and Build",
   "topic": "Create a namespace and an nginx Pod in it with `kubectl run`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-02": {
   "domain": "Application Design and Build",
   "topic": "Generate the same Pod as YAML with a client dry run and create it.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-A-03": {
   "domain": "Application Design and Build",

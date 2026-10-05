@@ -7,3 +7,5 @@ The retry queue is derived from this table by the mastery rule and is never stor
 
 | Date | Id | Result | Minutes | Gap | Note |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-05 | DGK-A-01 | partial | — | slip | Pod named `ngnix` instead of `nginx`. Namespace, image and Running state were correct. |
+| 2026-10-05 | DGK-A-02 | pass | — | — | Pod created with `kubectl apply -f` from a generated manifest. |

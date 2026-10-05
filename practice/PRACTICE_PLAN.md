@@ -45,11 +45,11 @@ Detail, links and caveats are in `practice/PRACTICE_RESOURCES.md`.
 
 One exercise at a time.
 
-1. **Pick.** Retry queue first. Otherwise a new exercise from the domain with the most failures in the ledger, or the next domain in curriculum order while there are no failures yet.
-2. **Prepare.** Claude applies the setup manifest if there is one, runs the reference solution once to confirm it works on v1.37, resets the lab, writes the acceptance criteria down before the attempt, and states the time budget.
+1. **Pick.** A new exercise while any exercise in the index has no attempt yet: from the domain with the most failures in the ledger, or the next domain in curriculum order while there are no failures yet. Once every exercise has had a first attempt, the retry queue.
+2. **Prepare.** Claude applies the setup manifest if there is one, runs the reference solution once to confirm it works on v1.37, records that version as `verified` in the exercise's entry in `practice/scripts/exercise-map.json` and regenerates the index, resets the lab, writes the acceptance criteria down before the attempt, and states the time budget while budgets are in use.
 3. **Attempt.** Agatino Pesce works in his own terminal on the lab cluster and says "start", then "done", "skip" or "hint". A hint caps the result at partial.
 4. **Grade.** Claude inspects the cluster state with kubectl against the written criteria, or runs the ckad-dojo scoring function when one exists, and reports the result, the failed criteria, and the reference solution.
-5. **Classify a miss** as knowledge, recall, speed or environment.
+5. **Classify a miss** as knowledge, recall, speed, environment or slip.
 6. **Teach** when the class is knowledge or recall: one bite as the interactive-teaching guideline describes, then stop and wait.
 7. **Record** the ledger row, and add a line to the cheat sheet only when the miss revealed a gotcha.
 8. **Clean up** the exercise's namespaces. The cluster stays up.
@@ -69,13 +69,18 @@ Gap classes:
 - **recall**: the concept was known but the command, flag or field could not be recalled.
 - **speed**: known and done, but too slowly.
 - **environment**: the editor, shell or tooling got in the way.
+- **slip**: the concept and the command were right, but a name or a value was mistyped or misread.
 
 Mastery rule, set by Agatino Pesce: an exercise is done after one success at the first attempt, or after two successes following a failure.\
 A success is a pass.\
 Pass-slow, partial and fail count as failures, Claude's reading, because the exam is timed.\
-The retry queue is derived from the ledger and never stored separately.
+The retry queue is derived from the ledger and never stored separately.\
+Retries start only after every exercise in the index has had its first attempt, set by Agatino Pesce on 2026-10-05, so that a retry tests the concept rather than the memory of the exercise.\
+The retry queue is then worked through in rounds, with one attempt per exercise per round, so the two successes after a failure fall in different rounds.
 
-Time budget: Claude states one before each attempt, from the size of the task.
+Time budget: Claude states one before each attempt, from the size of the task.\
+Agatino Pesce suspended time budgets on 2026-10-05.\
+While they are suspended, Claude states no budget, an attempt that meets every criterion is a pass, and pass-slow does not apply.
 
 ## Setup, on any machine
 
