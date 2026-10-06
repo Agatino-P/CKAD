@@ -165,7 +165,8 @@
  "DGK-C-10": {
   "domain": "Application Design and Build",
   "topic": "Annotate three named Pods with a description.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-11": {
   "domain": "Application Design and Build",
