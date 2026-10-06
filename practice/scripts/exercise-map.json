@@ -171,7 +171,8 @@
  "DGK-C-11": {
   "domain": "Application Design and Build",
   "topic": "Show the annotations of one Pod.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-12": {
   "domain": "Application Design and Build",
