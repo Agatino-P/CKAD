@@ -191,25 +191,25 @@
   "topic": "Schedule a Pod onto a node with a given label using `nodeSelector` or node affinity.",
   "lab": [],
   "verified": "v1.37",
-  "outside_curriculum": true
+  "deferred": true
  },
  "DGK-C-15": {
   "domain": "Application Design and Build",
   "topic": "Bind a Pod to a named node with `nodeName`.",
   "lab": [],
-  "outside_curriculum": true
+  "deferred": true
  },
  "DGK-C-16": {
   "domain": "Application Design and Build",
   "topic": "Taint a node and create a Pod that tolerates the taint.",
   "lab": [],
-  "outside_curriculum": true
+  "deferred": true
  },
  "DGK-C-17": {
   "domain": "Application Design and Build",
   "topic": "Place a Pod on the control plane node with `nodeSelector` and a toleration.",
   "lab": [],
-  "outside_curriculum": true
+  "deferred": true
  },
  "DGK-C-18": {
   "domain": "Application Deployment",
@@ -311,7 +311,8 @@
  "DGK-C-37": {
   "domain": "Application Design and Build",
   "topic": "Create a Job with the perl image that prints digits of pi.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-38": {
   "domain": "Application Design and Build",

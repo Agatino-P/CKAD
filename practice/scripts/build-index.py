@@ -8,8 +8,8 @@ The mechanical part, listing the exercises, is done here.
 The hand-written part, one domain, topic and lab-needs entry per exercise id, lives in
 exercise-map.json beside this script, so that a re-run reproduces the same index.
 An entry also carries "verified", the Kubernetes minor version its reference solution was run on,
-once the "Prepare" step of practice/PRACTICE_PLAN.md has run it, and "outside_curriculum" set to true
-for an exercise whose topic the CKAD curriculum does not name, which the pick rule passes over.
+once the "Prepare" step of practice/PRACTICE_PLAN.md has run it, and "deferred" set to true
+for an exercise skipped for now, which the pick rule passes over until the end.
 ckad-dojo questions carry their domain in the source, so their map entries hold no domain.
 """
 import json
@@ -209,12 +209,12 @@ def merge(rows, mapping, domain_from_source):
         verified = entry.get("verified")
         if verified is not None and not VERSION.match(verified):
             raise SystemExit(f"{row['id']}: verified must be a Kubernetes minor version such as v1.37")
-        outside = entry.get("outside_curriculum", False)
-        if not isinstance(outside, bool):
-            raise SystemExit(f"{row['id']}: outside_curriculum must be true or false")
+        deferred = entry.get("deferred", False)
+        if not isinstance(deferred, bool):
+            raise SystemExit(f"{row['id']}: deferred must be true or false")
         state = f"verified on {verified}" if verified else "unverified"
-        if outside:
-            state = f"outside curriculum, {state}"
+        if deferred:
+            state = f"deferred, {state}"
         merged.append(
             {
                 "id": row["id"],
@@ -254,7 +254,7 @@ def render(sections):
         "`practice/scripts/build-index.py` regenerates this file from the sources and from "
         "`practice/scripts/exercise-map.json`, which holds the hand-written domain, topic and lab needs per id, "
         "the Kubernetes version each reference solution was verified on, "
-        "and whether the exercise's topic is outside the CKAD curriculum.",
+        "and whether the exercise is deferred.",
         "",
         "An id is the source prefix followed by the exercise's position in that source: "
         "`DGK-<file letter>-<ordinal in that file>`, `BM-<exercise number>`, "
