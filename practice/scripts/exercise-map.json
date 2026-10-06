@@ -123,7 +123,8 @@
  "DGK-C-03": {
   "domain": "Application Design and Build",
   "topic": "Overwrite the `app` label of one Pod.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-04": {
   "domain": "Application Design and Build",

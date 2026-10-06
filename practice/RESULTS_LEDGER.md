@@ -17,3 +17,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-06 | DGK-B-01 | pass | — | — | Two containers with `args: ["sh", "-c", "echo hello; sleep 3600"]`, `ls` run with `kubectl exec -c`. |
 | 2026-10-06 | DGK-B-02 | pass | — | — | Init container wrote the page into an `emptyDir`, and `wget` from a busybox Pod returned `Test`. |
 | 2026-10-06 | DGK-C-01 | pass | — | — | Three nginx Pods with label `app=v1`. |
+| 2026-10-06 | DGK-C-02 | pass | — | — | `kubectl get pod --show-labels`. |
