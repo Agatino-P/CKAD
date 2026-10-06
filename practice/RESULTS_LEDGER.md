@@ -20,3 +20,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-06 | DGK-C-02 | pass | — | — | `kubectl get pod --show-labels`. |
 | 2026-10-06 | DGK-C-03 | pass | — | — | `nginx2` relabelled to `app=v2`. |
 | 2026-10-06 | DGK-C-04 | pass | — | — | `kubectl get pod -L app`. |
+| 2026-10-06 | DGK-C-05 | pass | — | — | `kubectl get pod -l app=v2`. |

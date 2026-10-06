@@ -141,7 +141,8 @@
  "DGK-C-06": {
   "domain": "Application Design and Build",
   "topic": "List Pods with `app=v2` and without `tier=frontend`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-07": {
   "domain": "Application Design and Build",
