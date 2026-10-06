@@ -129,7 +129,8 @@
  "DGK-C-04": {
   "domain": "Application Design and Build",
   "topic": "Show the `app` label as a column when listing Pods.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-05": {
   "domain": "Application Design and Build",
