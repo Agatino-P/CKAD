@@ -190,22 +190,26 @@
   "domain": "Application Design and Build",
   "topic": "Schedule a Pod onto a node with a given label using `nodeSelector` or node affinity.",
   "lab": [],
-  "verified": "v1.37"
+  "verified": "v1.37",
+  "outside_curriculum": true
  },
  "DGK-C-15": {
   "domain": "Application Design and Build",
   "topic": "Bind a Pod to a named node with `nodeName`.",
-  "lab": []
+  "lab": [],
+  "outside_curriculum": true
  },
  "DGK-C-16": {
   "domain": "Application Design and Build",
   "topic": "Taint a node and create a Pod that tolerates the taint.",
-  "lab": []
+  "lab": [],
+  "outside_curriculum": true
  },
  "DGK-C-17": {
   "domain": "Application Design and Build",
   "topic": "Place a Pod on the control plane node with `nodeSelector` and a toleration.",
-  "lab": []
+  "lab": [],
+  "outside_curriculum": true
  },
  "DGK-C-18": {
   "domain": "Application Deployment",
