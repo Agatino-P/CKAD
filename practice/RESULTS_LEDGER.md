@@ -26,3 +26,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-06 | DGK-C-08 | pass | — | — | `owner=marketing` on `nginx2` only. |
 | 2026-10-06 | DGK-C-09 | pass | — | — | `app` label removed from the three Pods. |
 | 2026-10-06 | DGK-C-10 | pass | — | — | `description` annotation on the three Pods. |
+| 2026-10-06 | DGK-C-11 | pass | — | — | `kubectl describe pod nginx1 \| grep -i description`. |
