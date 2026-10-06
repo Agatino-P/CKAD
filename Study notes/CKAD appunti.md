@@ -681,6 +681,18 @@ As an alternative to writing yaml, `kubectl create` builds a resource directly f
   `kubectl set image deployment/nginx nginx=nginx:1.16.1`
 * Modify a deployment from the command line (for example if you created it without a yaml): `kubectl edit deploy/<deploy-name>` opens the deployment in the configured editor (see "Change the editor for K8s commands edit" in General Knowledge)
 
+### Labels with `kubectl label`
+
+`kubectl set` has no labels subcommand: labels have their own command, `kubectl label`.\
+Changing the value of an existing key needs `--overwrite`.
+
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `kubectl label pod nginx2 tier=web` | adds `tier=web` | a new key |
+| `kubectl label pod nginx2 app=v2` | refused: `'app' already has a value (v1), and --overwrite is false` | the key exists |
+| `kubectl label pod nginx2 app=v2 --overwrite` | `app` becomes `v2` | |
+| `kubectl label pod nginx2 tier-` | removes `tier` | a trailing dash removes the key |
+
 ### Imperatively changing the selector on a service
 
 `kubectl set selector svc <svc-name> 'role=green'`

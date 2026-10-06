@@ -129,6 +129,10 @@ set tabstospaces
 
 `kubectl run <pod-name> --image=nginx:alpine --dry-run=client -o yaml > pod.yaml`
 
+### Change an existing label
+
+`kubectl label pod nginx2 app=v2 --overwrite` (without `--overwrite`, an existing key is refused)
+
 ### Imperatively Create a service for a deployment
 
 * E.g.: `kubectl expose deploy <deploy-name> --port=<desired port> --target-port=<pod's port> --type=NodePort [--name=<service-desired-name>]`
