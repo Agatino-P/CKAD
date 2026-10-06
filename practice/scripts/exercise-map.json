@@ -159,7 +159,8 @@
  "DGK-C-09": {
   "domain": "Application Design and Build",
   "topic": "Remove the `app` label from the three Pods.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-10": {
   "domain": "Application Design and Build",
