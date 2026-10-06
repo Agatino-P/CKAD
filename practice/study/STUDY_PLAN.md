@@ -8,7 +8,7 @@ Gotchas go to `Study notes/CKAD cheat sheet.md`.
 ## Running commands with args in Docker and K8s
 
 Opened on 2026-10-05 after exercise DGK-A-17 in `practice/RESULTS_LEDGER.md`.\
-When every bite is checked, the lesson moves into `Study notes/CKAD appunti.md` under this title, as Agatino Pesce asked.\
+Every bite is checked, and the lesson moved on 2026-10-06 into `Study notes/CKAD appunti.md`, section "Running commands with args in Docker and K8s", as Agatino Pesce asked.\
 Agatino Pesce asked for: passing a command with several arguments on the `kubectl run` command line, when to use `args`, when a multi-line script, and when `sh -c` is needed.
 
 | Bite | Content | State |

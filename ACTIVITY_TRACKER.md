@@ -151,3 +151,5 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Done:** Seven bites taught and checked, from `ENTRYPOINT` and `CMD` to the YAML forms.
 - **Next action:** Teach the two remaining bites in `practice/study/STUDY_PLAN.md`: `$(VAR)` versus `$VAR`, and `--rm` on `kubectl run`. Then move the lesson into `Study notes/CKAD appunti.md` under the title "Running commands with args in Docker and K8s", decide with User what happens to the "When to Use `sh -c`" section of `Study notes/CKAD cheat sheet.md`, and resume the practice loop.
 - **User decisions, 2026-10-06:** All nine bites are checked, and the lesson in `practice/study/LESSONS.md` is reviewed, with examples one per table row and no record of how things were tested. Cheat sheet lines for this topic are added during practice, when a miss shows what actually trips User, not up front.
+- **Moved:** The lesson is now the section "Running commands with args in Docker and K8s" of `Study notes/CKAD appunti.md`, under "Application Design and Build", and `practice/study/LESSONS.md` points to it.
+- **Next action:** Resume the practice loop in `practice/PRACTICE_PLAN.md`.
