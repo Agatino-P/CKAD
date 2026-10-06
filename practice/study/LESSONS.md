@@ -1,96 +1,37 @@
 # Lessons
 
-Condensed lessons, one section per topic in `practice/study/STUDY_PLAN.md`.\
-Every behaviour stated here was checked on the lab cluster, on Kubernetes v1.37.
+Condensed lessons, one section per topic in `practice/study/STUDY_PLAN.md`.
 
 ## Running commands with args in Docker and K8s
 
 ### ENTRYPOINT and CMD in an image
 
-Shape: process = `ENTRYPOINT` words + `CMD` words, and any words after the image name in `docker run` take the place of the `CMD` words.\
-Example: image `demo-ep`, built `FROM busybox` with `ENTRYPOINT ["echo"]` and `CMD ["hello"]`, prints `hello` on `docker run demo-ep`, and `bye` on `docker run demo-ep bye`.
+The process is the `ENTRYPOINT` words followed by the `CMD` words.\
+Words typed after the image name in `docker run` take the place of the `CMD` words, and the `ENTRYPOINT` words stay.
 
-Checked with podman on two images built for the test, `demo-ep` and `demo-cmd`, both `FROM busybox`:
+Image `demo-ep` is `FROM busybox` with `ENTRYPOINT ["echo"]` and `CMD ["hello"]`.\
+Image `demo-cmd` is `FROM busybox` with only `CMD ["echo", "hello"]`.
 
-| Dockerfile | Run | Process | Output |
-| --- | --- | --- | --- |
-| `ENTRYPOINT ["echo"]`, `CMD ["hello"]` | no arguments | `echo hello` | `hello` |
-| `ENTRYPOINT ["echo"]`, `CMD ["hello"]` | argument `bye` | `echo bye` | `bye` |
-| `ENTRYPOINT ["echo"]`, `CMD ["hello"]` | `--entrypoint date` | `date` | the date |
-| `CMD ["echo", "hello"]` only | no arguments | `echo hello` | `hello` |
-| `CMD ["echo", "hello"]` only | arguments `echo bye` | `echo bye` | `bye` |
-| `CMD ["echo", "hello"]` only | argument `bye` | `bye` | fails: executable file `bye` not found |
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `docker run demo-ep` | prints `hello` | runs `echo hello` |
+| `docker run demo-ep bye` | prints `bye` | `bye` replaces the `CMD` words |
+| `docker run --entrypoint date demo-ep` | prints the date | `--entrypoint` replaces `ENTRYPOINT` and drops `CMD` |
+| `docker run demo-cmd` | prints `hello` | no `ENTRYPOINT`, so `CMD` is the whole process |
+| `docker run demo-cmd echo bye` | prints `bye` | the typed words are the whole process |
+| `docker run demo-cmd bye` | fails: executable file `bye` not found | the typed words must start with a program |
 
-- The process is the two lists joined: `ENTRYPOINT` words first, then `CMD` words.
-- Words typed after the image name take the place of the `CMD` words, and the `ENTRYPOINT` words stay.
-- With no `ENTRYPOINT`, `CMD` is the whole process, program included, and run arguments must then start with a program.
-- `--entrypoint` replaces `ENTRYPOINT` and drops `CMD` as well.
-- `ENTRYPOINT` and `CMD` are lists in the exec form, `ENTRYPOINT ["sh"]`.\
-  The shell form `ENTRYPOINT sh` is stored as `["/bin/sh", "-c", "sh"]`, and the `CMD` words then never reach the inner `sh`.\
-  Checked: with `CMD ["-c", "echo hello world"]`, the exec form prints `hello world`, and the shell form prints nothing.
+- Write `ENTRYPOINT` and `CMD` as lists, as in `ENTRYPOINT ["sh"]`.\
+  The plain-string form `ENTRYPOINT sh` is wrapped as `/bin/sh -c sh`, and the `CMD` words then never reach the program.
 
-The mapping, for the same process `sh -c "echo hello world"`:
+### command and args in a Pod
+
+`command` replaces the image `ENTRYPOINT`, and `args` replaces the image `CMD`.
 
 | Docker | Kubernetes | Example |
 | --- | --- | --- |
 | `ENTRYPOINT` | `command` | `["sh"]` |
 | `CMD` | `args` | `["-c", "echo hello world"]` |
-
-- `command` and `args` accept only a list of strings.\
-  Checked: `command: sh` is rejected with `cannot unmarshal string into ... of type []string`, and `args: [sleep, 3600]` with `cannot unmarshal number into ... of type string`, so a number must be quoted, as in `"3600"`.
-- In a YAML flow list the comma is the separator.\
-  Checked: `args: [-c "echo hello world"]`, without the comma, is one element, and `sh` fails with `sh: illegal option -`.
-
-### command and args in a Pod
-
-Shape: the process = (`command`, or else the image `ENTRYPOINT`) followed by (`args`, or else the image `CMD`).\
-Example: image `nginx` has `ENTRYPOINT ["/docker-entrypoint.sh"]` and `CMD ["nginx", "-g", "daemon off;"]`, so `args: ["echo", "hi"]` runs `/docker-entrypoint.sh echo hi` and prints `hi`.
-
-- `command` replaces the image `ENTRYPOINT`, and `args` replaces the image `CMD`.
-- Setting `command` without `args` drops the image `CMD` as well.\
-  Checked: `command: ["/docker-entrypoint.sh"]` on `nginx` exits at once with no output, because `nginx -g "daemon off;"` is no longer passed.
-- Setting `args` without `command` keeps the image `ENTRYPOINT`.
-- Image `busybox` has no `ENTRYPOINT` and `CMD ["sh"]`, so on `busybox` the `args` alone are the whole process.
-- `podman image inspect nginx` shows both values for `nginx`, under `Config.Entrypoint` and `Config.Cmd`.
-
-### One list element is one word of the process
-
-Shape: `args: ["<program>", "<word 1>", "<word 2>"]`, and Kubernetes never splits an element and never interprets `;`, `&&`, `|` or `$`.\
-Example: on `busybox`, `args: ["echo", "hello", "world"]` prints `hello world`.
-
-Checked on `busybox`, where `args` is the whole process:
-
-| `args` | Output |
-| --- | --- |
-| `["echo", "hello", "world"]` | `hello world` |
-| `["echo", "hello world"]` | `hello world` |
-| `["echo hello world"]` | fails: `exec: "echo hello world": executable file not found in $PATH` |
-| `["sh", "-c", "echo hello world"]` | `hello world` |
-| `["sh", "-c", "echo", "hello world"]` | an empty line |
-| `["sh", "-c", "echo hello; echo world"]` | `hello`, then `world` |
-| `["echo", "hello;", "echo", "world"]` | `hello; echo world` |
-
-- The first element is the program, so a first element holding spaces names a program that does not exist.
-- `sh -c` reads exactly one element as its script, as "sh -c reads exactly one element as its script" below explains.
-- Without `sh -c`, a `;` is just a character handed to the program.
-
-### kubectl run and the words after `--`
-
-Shape: `kubectl run` flags come before `--`, and every word after `--` becomes one element of `args`, or of `command` when `--command` is given.\
-Example: `kubectl run b --image=busybox --restart=Never -- echo hello world` sets `args: ["echo", "hello", "world"]` and prints `hello world`.
-
-Checked with `--dry-run=client`:
-
-| Command line ends with | Result |
-| --- | --- |
-| `-- echo hello world` | `args: ["echo", "hello", "world"]` |
-| `--command -- echo hello world` | `command: ["echo", "hello", "world"]` |
-
-- On `busybox` both lines run the same process, because `busybox` has no `ENTRYPOINT`.
-- On `nginx` they differ: without `--command`, the words run after `/docker-entrypoint.sh`, and with `--command`, they replace it.
-- The shell on your machine splits the line into words before kubectl runs, so quotes decide where an element ends.
-- On the `kubectl run` line, the words fill either `args` or `command`, never both.\
-  In YAML both can be set:
 
 | `command` | `args` | Process |
 | --- | --- | --- |
@@ -99,47 +40,46 @@ Checked with `--dry-run=client`:
 | unset | set | image `ENTRYPOINT` + `args` |
 | unset | unset | image `ENTRYPOINT` + image `CMD` |
 
-### Which one to use
+Image `nginx` has `ENTRYPOINT ["/docker-entrypoint.sh"]` and `CMD ["nginx", "-g", "daemon off;"]`.\
+Image `busybox` has no `ENTRYPOINT` and `CMD ["sh"]`.
 
-- To run a specific program, use `--command`, or set `command` in YAML.\
-  `command` replaces the image `ENTRYPOINT` whatever it is, and the image `CMD` is ignored, so the process is exactly the typed words on any image.\
-  Example: `kubectl run t --image=nginx --restart=Never --command -- sleep 30` runs `sleep 30`.
-- To run the image's own program with different arguments, such as a flag for an application, use plain `--`, or set `args` in YAML.\
-  Only then does the image `ENTRYPOINT` matter, and it is the image's normal program.
-- Plain `--` also runs a program on `busybox`, only because `busybox` has no `ENTRYPOINT`.\
-  On `nginx`, `-- sleep 30` runs `/docker-entrypoint.sh sleep 30`: the script skips its setup unless its first argument is `nginx`, then hands over with `exec "$@"`, so the main process is `sleep 30`.
-
-### Quoting on the command line
-
-Shape: your shell splits the line at spaces, except inside quotes, and each resulting word becomes one list element.\
-Example: `kubectl run q --image=busybox --restart=Never --command -- sh -c 'echo hello world'` sets `command: ["sh", "-c", "echo hello world"]` and prints `hello world`.
-
-Checked with `--dry-run=client`, all with `--command`:
-
-| After `--` | `command` | Output when run |
+| Pod spec | Outcome | Notes |
 | --- | --- | --- |
-| `sh -c 'echo hello world'` | `["sh", "-c", "echo hello world"]` | `hello world` |
-| `sh -c "echo hello; echo world"` | `["sh", "-c", "echo hello; echo world"]` | `hello`, then `world` |
-| `sh -c echo hello world` | `["sh", "-c", "echo", "hello", "world"]` | an empty line |
-| `"sh -c 'echo hello world'"` | `["sh -c 'echo hello world'"]` | fails: `exec: "sh -c 'echo hello world'": executable file not found` |
+| `nginx`, `args: ["echo", "hi"]` | prints `hi` | runs `/docker-entrypoint.sh echo hi` |
+| `nginx`, `command: ["/docker-entrypoint.sh"]` | exits at once, no output | the image `CMD` is dropped |
+| `busybox`, `args: ["echo", "hi"]` | prints `hi` | no `ENTRYPOINT`, so `args` is the whole process |
+| `busybox`, `command: sh` | rejected | `command` and `args` accept only a list of strings |
+| `busybox`, `args: [sleep, 3600]` | rejected | a number must be quoted, as in `"3600"` |
+| `busybox`, `command: [sh]`, `args: [-c "echo hello world"]` | fails: `sh: illegal option -` | without the comma, `-c "echo hello world"` is one element |
 
-- Quote the script after `sh -c` as one piece, and leave `sh` and `-c` unquoted.
-- Quoting the whole `sh -c ...` makes one element, which Kubernetes takes as the program name.
+- `podman image inspect nginx` shows the image lists under `Config.Entrypoint` and `Config.Cmd`.
+
+### One list element is one word of the process
+
+Kubernetes never splits an element and never interprets `;`, `&&`, `|` or `$`.\
+The first element is the program.
+
+On `busybox`, where `args` is the whole process:
+
+| `args` | Outcome | Notes |
+| --- | --- | --- |
+| `["echo", "hello", "world"]` | prints `hello world` | `echo` with two arguments |
+| `["echo", "hello world"]` | prints `hello world` | `echo` with one argument |
+| `["echo hello world"]` | fails: `executable file not found` | the program name holds spaces |
+| `["sh", "-c", "echo hello world"]` | prints `hello world` | the script is one element |
+| `["sh", "-c", "echo", "hello world"]` | prints an empty line | the script is only `echo` |
+| `["sh", "-c", "echo hello; echo world"]` | prints `hello`, then `world` | the shell reads the `;` |
+| `["echo", "hello;", "echo", "world"]` | prints `hello; echo world` | no shell, so `;` is a plain character |
 
 ### sh -c reads exactly one element as its script
 
-Shape: `sh -c <script> <extra 1> <extra 2>`, where the script is only the element right after `-c`.\
-Example: `sh -c 'echo hello world'` prints `hello world`, and `sh -c echo hello world` prints an empty line.
-
-The first example: the quotes keep `echo hello world` together as element 3, so all of it is the script.
+The script is only the element right after `-c`.
 
 ```
 element 1   element 2   element 3
 sh          -c          echo hello world
                         └── the script
 ```
-
-The second example: the shell on your machine splits the words, so only `echo` is the script, and `echo` with no arguments prints an empty line.
 
 ```
 element 1   element 2   element 3   element 4   element 5
@@ -148,31 +88,81 @@ sh          -c          echo        hello       world
                                     └── extra elements, not part of the script
 ```
 
-### An unquoted `;` ends the kubectl command on your machine
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `sh -c 'echo hello world'` | prints `hello world` | the quotes keep the script as one element |
+| `sh -c echo hello world` | prints an empty line | the script is only `echo` |
 
-Shape: your shell treats an unquoted `;`, `&&`, `|` or `>` as its own syntax, before kubectl runs.\
-Example: `kubectl run t --image=busybox --restart=Never --command -- sh -c echo one; echo two` creates the Pod with `command: ["sh", "-c", "echo", "one"]`, which prints an empty line, and then runs `echo two` on your machine, which prints `two` in your terminal.
+### kubectl run and the words after `--`
+
+`kubectl run` flags come before `--`.\
+Every word after `--` becomes one element of `args`, or of `command` with `--command`.\
+The line fills either `args` or `command`, never both.
+
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `kubectl run t --image=busybox --restart=Never -- echo hello world` | `args: ["echo", "hello", "world"]`, prints `hello world` | no `ENTRYPOINT` on `busybox` |
+| `kubectl run t --image=busybox --restart=Never --command -- echo hello world` | `command: ["echo", "hello", "world"]`, prints `hello world` | same process on `busybox` |
+| `kubectl run t --image=nginx --restart=Never -- sleep 30` | `args: ["sleep", "30"]`, runs `sleep 30` | goes through `/docker-entrypoint.sh` |
+| `kubectl run t --image=nginx --restart=Never --command -- sleep 30` | `command: ["sleep", "30"]`, runs `sleep 30` | `/docker-entrypoint.sh` never runs |
+| `kubectl run t --image=busybox --restart=Never -- hello world` | fails: `exec: "hello": executable file not found` | the first word must be a program |
+
+### Which one to use
+
+- To run a specific program, use `--command`, or set `command` in YAML.\
+  The process is exactly the typed words, on any image.
+- To run the image's own program with different arguments, such as a flag for an application, use plain `--`, or set `args` in YAML.
+- `/docker-entrypoint.sh` in `nginx` runs its setup only when its first argument is `nginx`, then runs its arguments with `exec "$@"`.
+
+### Quoting on the command line
+
+Your shell splits the line at spaces, except inside quotes, and each word becomes one list element.\
+Quote the script after `sh -c` as one piece, and leave `sh` and `-c` unquoted.
+
+| After `--command --` | Outcome | Notes |
+| --- | --- | --- |
+| `sh -c 'echo hello world'` | `["sh", "-c", "echo hello world"]`, prints `hello world` | |
+| `sh -c "echo hello; echo world"` | `["sh", "-c", "echo hello; echo world"]`, prints `hello`, then `world` | |
+| `sh -c echo hello world` | `["sh", "-c", "echo", "hello", "world"]`, prints an empty line | the script is only `echo` |
+| `"sh -c 'echo hello world'"` | `["sh -c 'echo hello world'"]`, fails: `executable file not found` | one element, taken as the program name |
+| `sh -c echo one; echo two` | `["sh", "-c", "echo", "one"]`, prints an empty line, and `two` appears in your terminal | the unquoted `;` ends the kubectl command, and `echo two` runs on your machine |
+| `sh -c 'echo a' && echo b` | `["sh", "-c", "echo a"]`, prints `a`, and `b` appears in your terminal | the unquoted `&&` runs `echo b` on your machine |
+
+### Brackets belong to YAML, not to the command line
+
+In YAML, write the list with brackets or `- ` lines.\
+On the `kubectl run` line, write space-separated words, and quote a word that holds spaces.
+
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `kubectl run t --image=busybox --restart=Never --command -- echo 'hello world'` | `command: ["echo", "hello world"]` | |
+| `kubectl run t --image=busybox --restart=Never --command -- [echo, hi]` | `command: ["[echo,", "hi]"]` in bash | brackets are plain characters |
+| `kubectl run t --image=busybox --restart=Never --command -- '["echo", "hi"]'` | one element holding the bracket text | taken as the program name |
 
 ### When a shell is needed
 
-Shape: use `sh -c '<script>'` only when the command uses shell syntax: `;`, `&&`, `||`, `|`, `>`, `<`, `$VAR`, `*`, or a loop.\
-Example: `["echo", "$HOME"]` prints `$HOME`, and `["sh", "-c", "echo $HOME"]` prints `/root`.
+Use `sh -c` only when the command uses shell syntax: `;`, `&&`, `||`, `|`, `>`, `<`, `$VAR`, `*`, or a loop.\
+Without a shell, these characters reach the program as plain text.
 
-Checked on `busybox`:
+On `busybox`:
 
-| Without a shell | Prints | With `sh -c` | Prints |
-| --- | --- | --- | --- |
-| `["echo", "$HOME"]` | `$HOME` | `["sh", "-c", "echo $HOME"]` | `/root` |
-| `["echo", "hi", ">", "/tmp/x"]` | `hi > /tmp/x` | `["sh", "-c", "echo hi > /tmp/x; cat /tmp/x"]` | `hi` |
-| `["ls", "/etc/*.conf"]` | `ls: /etc/*.conf: No such file or directory` | `["sh", "-c", "ls /etc/*.conf"]` | `/etc/nsswitch.conf`, `/etc/resolv.conf` |
-
-- Without a shell, these characters reach the program as plain text.
-- A plain program with plain arguments, such as `["sleep", "3600"]`, needs no shell.
+| `command` | Outcome | Notes |
+| --- | --- | --- |
+| `["echo", "$HOME"]` | prints `$HOME` | no shell |
+| `["sh", "-c", "echo $HOME"]` | prints `/root` | |
+| `["echo", "hi", ">", "/tmp/x"]` | prints `hi > /tmp/x` | no shell |
+| `["sh", "-c", "echo hi > /tmp/x; cat /tmp/x"]` | prints `hi` | |
+| `["ls", "/etc/*.conf"]` | fails: `/etc/*.conf: No such file or directory` | no shell |
+| `["sh", "-c", "ls /etc/*.conf"]` | lists `/etc/nsswitch.conf` and `/etc/resolv.conf` | |
+| `["date", ">", "/tmp/d"]` | prints the usage of `date` | no shell |
+| `["sh", "-c", "date > /tmp/d"]` | writes the date to `/tmp/d` | |
+| `["sleep", "3600"]` | sleeps | plain program, no shell needed |
 
 ### Writing the list in YAML
 
-Shape: the same list can be written inline as `["a", "b"]`, or as lines starting with `- `, where every `- ` starts one element, and a `- |` element holds a multi-line script as one string.\
-Example: `command: ["sh", "-c", "echo one; echo two"]` and the block below run the same kind of process.
+Every `- ` starts one element.\
+A `- |` element holds a multi-line script as one string, so the whole script stays the single element after `-c`.\
+Each line of the script is one shell command, so no `;` is needed between lines.
 
 ```yaml
 command:
@@ -184,33 +174,35 @@ command:
   echo done
 ```
 
-Checked: the block above becomes `["sh", "-c", "echo one\nfor i in 1 2; do echo \"loop $i\"; done\necho done\n"]` and prints `one`, `loop 1`, `loop 2`, `done`.
-
-- `- |` keeps the lines and their line breaks as one element, so the whole script stays the single element after `-c`.
-- Each line of the script is one shell command, so no `;` is needed between lines.
+| YAML | Outcome | Notes |
+| --- | --- | --- |
+| the block above | prints `one`, `loop 1`, `loop 2`, `done` | 3 elements |
+| `command: ["sh", "-c", "echo one; echo two"]` | prints `one`, then `two` | the same list written inline |
+| `- sh`, `- -c`, `- echo one`, `- echo two` | prints `one` | `echo two` is an extra element |
 
 ### `$(VAR)` expanded by Kubernetes, `$VAR` expanded by a shell
 
-Shape: in `command` and `args`, Kubernetes replaces `$(VAR)` with the value of the container's `env` variable `VAR` before the container starts, and only a shell replaces `$VAR`.\
-Example: with `env` `DELAY` set to `"3"`, `["echo", "$(DELAY)"]` prints `3`, and `["echo", "$DELAY"]` prints `$DELAY`.
+In `command` and `args`, Kubernetes replaces `$(VAR)` with the container's `env` variable `VAR` before the container starts.\
+Only a shell replaces `$VAR`.\
+A variable missing from `env` is left as written, with no error.
 
-Checked on `busybox`, with `env` `DELAY` set to `"3"`:
+On `busybox`, with `env` `DELAY` set to `"3"`:
 
-| `command` | Prints |
-| --- | --- |
-| `["echo", "$(DELAY)"]` | `3` |
-| `["echo", "$DELAY"]` | `$DELAY` |
-| `["sh", "-c", "echo $DELAY"]` | `3` |
-| `["echo", "$(NOPE)"]`, with no `NOPE` in `env` | `$(NOPE)` |
-
-- `$(VAR)` needs no shell, so `["sleep", "$(DELAY)"]` works on any image.
-- A variable missing from `env` is left as written, with no error.
+| `command` | Outcome | Notes |
+| --- | --- | --- |
+| `["echo", "$(DELAY)"]` | prints `3` | no shell needed |
+| `["echo", "$DELAY"]` | prints `$DELAY` | no shell |
+| `["sh", "-c", "echo $DELAY"]` | prints `3` | the shell expands it |
+| `["sleep", "$(DELAY)"]` | sleeps 3 seconds | works on any image |
+| `["echo", "$(NOPE)"]` | prints `$(NOPE)` | `NOPE` is not in `env` |
 
 ### `--rm` on `kubectl run`
 
-Shape: `kubectl run <name> --image=<image> --restart=Never --rm -i -- <command>` shows the output in your terminal, then deletes the Pod when the command ends.\
-Example: `kubectl run rmtest --image=busybox --restart=Never --rm -i -- echo hi` prints `hi`, then `pod "rmtest" deleted`, and `kubectl get pod rmtest` then finds nothing.
+`--rm` deletes the Pod when the command ends, and works only while your terminal is attached, so it needs `-i`, or `-it` for an interactive shell.\
+`--restart=Never` makes the command run once.
 
-- `--rm` works only while your terminal is attached to the Pod, so it needs `-i`, or `-it` for an interactive shell.\
-  Checked: without `-i`, kubectl refuses with `--rm should only be used for attached containers`.
-- `--restart=Never` makes the Pod run the command once.
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `kubectl run t --image=busybox --restart=Never --rm -i -- echo hi` | prints `hi`, then `pod "t" deleted` | no Pod left |
+| `kubectl run t --image=busybox --restart=Never --rm -- echo hi` | refused: `--rm should only be used for attached containers` | no `-i` |
+| `kubectl run t -rm --image=busybox --restart=Never -i -- echo hi` | refused: `unknown shorthand flag: 'r' in -rm` | `--rm` needs two dashes |
