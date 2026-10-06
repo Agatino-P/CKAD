@@ -133,6 +133,11 @@ set tabstospaces
 
 `kubectl label pod nginx2 app=v2 --overwrite` (without `--overwrite`, an existing key is refused)
 
+### Label selectors (`-l`)
+
+* A second `-l` doesn't add a condition: it replaces the first, and only the last `-l` counts.
+* Selectors have no OR between different conditions: the comma always means AND (`-l 'app=v2,tier!=frontend'`).
+
 ### Imperatively Create a service for a deployment
 
 * E.g.: `kubectl expose deploy <deploy-name> --port=<desired port> --target-port=<pod's port> --type=NodePort [--name=<service-desired-name>]`
