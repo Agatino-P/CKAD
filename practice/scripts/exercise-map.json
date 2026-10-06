@@ -189,7 +189,8 @@
  "DGK-C-14": {
   "domain": "Application Design and Build",
   "topic": "Schedule a Pod onto a node with a given label using `nodeSelector` or node affinity.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-15": {
   "domain": "Application Design and Build",

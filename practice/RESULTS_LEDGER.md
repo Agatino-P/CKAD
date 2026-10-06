@@ -28,3 +28,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-06 | DGK-C-10 | pass | — | — | `description` annotation on the three Pods. |
 | 2026-10-06 | DGK-C-11 | pass | — | — | `kubectl describe pod nginx1 \| grep -i description`. |
 | 2026-10-06 | DGK-C-12 | pass | — | — | `description` and `owner` annotations removed. |
+| 2026-10-06 | DGK-C-13 | pass | — | — | Three Pods deleted. |
