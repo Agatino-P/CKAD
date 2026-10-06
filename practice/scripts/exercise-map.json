@@ -99,7 +99,8 @@
  "DGK-B-01": {
   "domain": "Application Design and Build",
   "topic": "Create a two-container busybox Pod and run a command in the second container.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-B-02": {
   "domain": "Application Design and Build",
