@@ -147,7 +147,8 @@
  "DGK-C-07": {
   "domain": "Application Design and Build",
   "topic": "Add a label to every Pod whose `app` label is `v1` or `v2`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-08": {
   "domain": "Application Design and Build",
