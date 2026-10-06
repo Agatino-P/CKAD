@@ -153,7 +153,8 @@
  "DGK-C-08": {
   "domain": "Application Design and Build",
   "topic": "Annotate every Pod with label `app=v2`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-09": {
   "domain": "Application Design and Build",
