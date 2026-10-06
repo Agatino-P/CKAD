@@ -16,3 +16,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-05 | DGK-A-17 | fail | — | recall | Did not recall `--rm` on `kubectl run`, after a hint. Practice paused to study command, args and `sh -c`. |
 | 2026-10-06 | DGK-B-01 | pass | — | — | Two containers with `args: ["sh", "-c", "echo hello; sleep 3600"]`, `ls` run with `kubectl exec -c`. |
 | 2026-10-06 | DGK-B-02 | pass | — | — | Init container wrote the page into an `emptyDir`, and `wget` from a busybox Pod returned `Test`. |
+| 2026-10-06 | DGK-C-01 | pass | — | — | Three nginx Pods with label `app=v1`. |

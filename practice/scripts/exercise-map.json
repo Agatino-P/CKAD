@@ -111,12 +111,14 @@
  "DGK-C-01": {
   "domain": "Application Design and Build",
   "topic": "Create three nginx Pods carrying the label `app=v1`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-02": {
   "domain": "Application Design and Build",
   "topic": "Show the labels of all Pods.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-03": {
   "domain": "Application Design and Build",
