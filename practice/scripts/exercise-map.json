@@ -183,7 +183,8 @@
  "DGK-C-13": {
   "domain": "Application Design and Build",
   "topic": "Delete the three Pods.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-14": {
   "domain": "Application Design and Build",
