@@ -20,5 +20,5 @@ Agatino Pesce asked for: passing a command with several arguments on the `kubect
 | e | Quoting: the local shell splits the words, so one quoted string becomes one list element. | checked |
 | f | When a shell is needed: `;`, `&&`, pipes, redirection, `$VAR` and loops. | checked |
 | g | Writing it in YAML: flow list, block list, and a `- \|` multi-line script. | checked |
-| h | `$(VAR)` expanded by Kubernetes versus `$VAR` expanded by a shell. | todo |
-| i | `--rm` on `kubectl run`, and why it needs `-i` or `-it`. | todo |
+| h | `$(VAR)` expanded by Kubernetes versus `$VAR` expanded by a shell. | checked |
+| i | `--rm` on `kubectl run`, and why it needs `-i` or `-it`. | taught |

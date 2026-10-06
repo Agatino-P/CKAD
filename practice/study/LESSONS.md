@@ -188,3 +188,29 @@ Checked: the block above becomes `["sh", "-c", "echo one\nfor i in 1 2; do echo 
 
 - `- |` keeps the lines and their line breaks as one element, so the whole script stays the single element after `-c`.
 - Each line of the script is one shell command, so no `;` is needed between lines.
+
+### `$(VAR)` expanded by Kubernetes, `$VAR` expanded by a shell
+
+Shape: in `command` and `args`, Kubernetes replaces `$(VAR)` with the value of the container's `env` variable `VAR` before the container starts, and only a shell replaces `$VAR`.\
+Example: with `env` `DELAY` set to `"3"`, `["echo", "$(DELAY)"]` prints `3`, and `["echo", "$DELAY"]` prints `$DELAY`.
+
+Checked on `busybox`, with `env` `DELAY` set to `"3"`:
+
+| `command` | Prints |
+| --- | --- |
+| `["echo", "$(DELAY)"]` | `3` |
+| `["echo", "$DELAY"]` | `$DELAY` |
+| `["sh", "-c", "echo $DELAY"]` | `3` |
+| `["echo", "$(NOPE)"]`, with no `NOPE` in `env` | `$(NOPE)` |
+
+- `$(VAR)` needs no shell, so `["sleep", "$(DELAY)"]` works on any image.
+- A variable missing from `env` is left as written, with no error.
+
+### `--rm` on `kubectl run`
+
+Shape: `kubectl run <name> --image=<image> --restart=Never --rm -i -- <command>` shows the output in your terminal, then deletes the Pod when the command ends.\
+Example: `kubectl run rmtest --image=busybox --restart=Never --rm -i -- echo hi` prints `hi`, then `pod "rmtest" deleted`, and `kubectl get pod rmtest` then finds nothing.
+
+- `--rm` works only while your terminal is attached to the Pod, so it needs `-i`, or `-it` for an interactive shell.\
+  Checked: without `-i`, kubectl refuses with `--rm should only be used for attached containers`.
+- `--restart=Never` makes the Pod run the command once.
