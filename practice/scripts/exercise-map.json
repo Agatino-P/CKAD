@@ -105,7 +105,8 @@
  "DGK-B-02": {
   "domain": "Application Design and Build",
   "topic": "Init container writes a page into a shared emptyDir that nginx serves, then fetch it.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-01": {
   "domain": "Application Design and Build",
