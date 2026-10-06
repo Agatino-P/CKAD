@@ -135,7 +135,8 @@
  "DGK-C-05": {
   "domain": "Application Design and Build",
   "topic": "List only the Pods with label `app=v2`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-06": {
   "domain": "Application Design and Build",
