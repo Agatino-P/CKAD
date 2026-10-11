@@ -317,12 +317,14 @@
  "DGK-C-38": {
   "domain": "Application Design and Build",
   "topic": "Wait for the Job to complete and read its output.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-39": {
   "domain": "Application Design and Build",
   "topic": "Create a busybox Job that echoes, sleeps 30 seconds and echoes again.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-40": {
   "domain": "Application Observability and Maintenance",

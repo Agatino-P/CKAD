@@ -30,3 +30,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-06 | DGK-C-12 | pass | — | — | `description` and `owner` annotations removed. |
 | 2026-10-06 | DGK-C-13 | pass | — | — | Three Pods deleted. |
 | 2026-10-06 | DGK-C-37 | partial | — | slip | Image `perl:5.34.0` instead of `perl:5.34`. Command, completion and output were correct. |
+| 2026-10-06 | DGK-C-38 | pass | — | — | Done within the DGK-C-37 attempt: waited for the Job and read the output with `kubectl logs job/pi`. |

@@ -154,3 +154,10 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Moved:** The lesson is now the section "Running commands with args in Docker and K8s" of `Study notes/CKAD appunti.md`, under "Application Design and Build", and `practice/study/LESSONS.md` points to it.
 - **Next action:** Resume the practice loop in `practice/PRACTICE_PLAN.md`.
 - **User decision, 2026-10-06:** Skip the node-placement exercises for now (`nodeSelector`, node affinity, `nodeName`, taints and tolerations) and come back to them at the end, if time allows. `practice/scripts/exercise-map.json` marks them with `deferred`, the index shows "deferred", and the "Pick" step in `practice/PRACTICE_PLAN.md` passes over them. DGK-C-14 to DGK-C-17 are marked, and ckad-dojo questions on these topics are marked when the pick reaches them.
+
+### 2026-10-11 — Nano refresher done, DGK-C-38 recorded
+
+- **Nano refresher:** User finished every bite in `practice/study/nano/CURRICULUM.md`. The main obstacle was mapping the Option key as Meta in iTerm2 and in the VS Code terminal, recorded in `practice/study/nano/GOTCHAS.md`.
+- **DGK-C-38:** recorded as a pass from the DGK-C-37 attempt, where User waited for the Job and read its output with `kubectl logs job/pi`.
+- **Verified on v1.37:** the reference solutions of DGK-C-38 and DGK-C-39.
+- **Next action:** DGK-C-39.
