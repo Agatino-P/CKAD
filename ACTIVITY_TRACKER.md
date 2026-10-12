@@ -161,3 +161,10 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **DGK-C-38:** recorded as a pass from the DGK-C-37 attempt, where User waited for the Job and read its output with `kubectl logs job/pi`.
 - **Verified on v1.37:** the reference solutions of DGK-C-38 and DGK-C-39.
 - **Next action:** DGK-C-39.
+
+### 2026-10-12 — Practice session, DGK-C-39 to DGK-G-01
+
+- **Attempts:** DGK-C-39 to DGK-G-01 are recorded in `practice/RESULTS_LEDGER.md`. DGK-C-39 and DGK-C-43 are partial with gap class slip, because the script ended with `echo world.`. Every other attempt passed.
+- **User decision:** Claude presents each exercise before verifying it, and verifies in the background while User reads. Recorded in the "Prepare" step of `practice/PRACTICE_PLAN.md`.
+- **User preferences:** A long `sleep` in an exercise is shortened, such as `sleep 3` for `sleep 30`, when the wait teaches nothing. A step that tests Linux text tools rather than Kubernetes, such as `cut` on `/etc/passwd`, is dropped. The ledger note of each affected attempt says so.
+- **Next action:** DGK-G-02, already verified on v1.37. The cluster has no PersistentVolume and `default` is empty.
