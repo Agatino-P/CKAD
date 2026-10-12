@@ -2062,6 +2062,42 @@ spec:
 
 * Use spaces when you edit YAML, not tabs: YAML forbids tab characters in indentation.
 
+## Shell setup at the start of a session
+
+```
+alias k=kubectl
+export KUBE_EDITOR=nano
+k config use-context kind-ckad
+k config set-context --current --namespace=mynamespace
+```
+
+* `export KUBE_EDITOR=nano` makes every `kubectl edit` in the current shell open nano, in bash and in zsh.
+* `alias k`, `export KUBE_EDITOR` and the `dr` variable below last only for the current shell session.
+* The two `k config` commands are saved in the kubeconfig file, so they stay set in new sessions.
+
+### Dry run shortening
+
+Bash (CKAD)
+
+```
+dr='--dry-run=client -o yaml'
+```
+
+Mac zsh only
+
+```
+dr=(--dry-run=client -o yaml)
+```
+
+Both forms are used the same way:
+
+```
+k run nginx --image=nginx $dr > pod.yaml
+```
+
+* Bash splits the unquoted string `$dr` into three words.\
+  zsh does not split an unquoted string, so in zsh `$dr` must be the array form.
+
 ## Setting alias for Kubectl
 
 * Powershell `set-alias k kubectl`

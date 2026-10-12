@@ -1,8 +1,33 @@
 # General
 
-## Setting alias for Kubectl
+## Shell setup at the start of a session
 
-* Linux `alias k=kubectl`
+```
+alias k=kubectl
+export KUBE_EDITOR=nano
+k config use-context kind-ckad
+k config set-context --current --namespace=mynamespace
+```
+
+### Dry run shortening
+
+Bash (CKAD)
+
+```
+dr='--dry-run=client -o yaml'
+```
+
+Mac zsh only
+
+```
+dr=(--dry-run=client -o yaml)
+```
+
+Both forms are used the same way:
+
+```
+k run nginx --image=nginx $dr > pod.yaml
+```
 
 ## Change the editor for K8s commands edit (memorize this)
 
