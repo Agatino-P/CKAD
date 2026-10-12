@@ -364,7 +364,8 @@
  "DGK-C-46": {
   "domain": "Application Design and Build",
   "topic": "Create a busybox CronJob that runs every minute and prints the date.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-47": {
   "domain": "Application Design and Build",
