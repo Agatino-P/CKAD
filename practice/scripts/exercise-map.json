@@ -370,7 +370,8 @@
  "DGK-C-47": {
   "domain": "Application Design and Build",
   "topic": "Read the CronJob's Pod logs and delete the CronJob.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-48": {
   "domain": "Application Design and Build",
