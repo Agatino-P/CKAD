@@ -382,7 +382,8 @@
  "DGK-C-49": {
   "domain": "Application Design and Build",
   "topic": "Create a CronJob with a 17 second `startingDeadlineSeconds`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-50": {
   "domain": "Application Design and Build",
