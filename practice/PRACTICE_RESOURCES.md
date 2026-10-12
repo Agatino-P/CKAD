@@ -1,7 +1,7 @@
 # Free CKAD Practice Resources
 
 Verified on 2026-09-29.\
-The official CKAD page listed Kubernetes v1.37 on 2026-09-30.\
+The official CKAD page listed Kubernetes v1.37 on 2026-10-12.\
 Recheck the version near the exam date.
 
 ## Selection standard
@@ -24,7 +24,7 @@ Popularity alone is not enough.
 - **Link:** [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises)
 - **Why selected:** The repository is open under the MIT licence, organised by domain, solution-oriented, widely reviewed, and its last commit is from 2026-08-18.
 - **Use:** Short drills by topic on the lab, solution hidden, timed.
-- **Caveat:** The README still shows the older seven-domain structure and weights. Each question is mapped to the v1.35 curriculum (the newest in cncf/curriculum on 2026-09-30) in `practice/EXERCISE_INDEX.md`, and each solution is checked against v1.37 before use. Question count: the `###` headings in the ten exercise files, counted at commit `d7b9a5c`.
+- **Caveat:** The README still shows the older seven-domain structure and weights. Each question is mapped to the v1.37 curriculum (the newest in cncf/curriculum on 2026-10-12) in `practice/EXERCISE_INDEX.md`, and each solution is checked against v1.37 before use. Question count: the `###` headings in the ten exercise files, counted at commit `d7b9a5c`.
 - **Verification:** [Commit history](https://github.com/dgkanatsios/CKAD-exercises/commits/main/) and a clone inspected on 2026-09-29.
 
 ### 3. `bmuschko/ckad-crash-course`
@@ -56,9 +56,9 @@ The following sources are not mock exams.\
 They are the correctness baseline for checking community exercises and for building lab drills.
 
 - [Current CKAD exam page](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/): domains, weights, and current environment version.
-- [CKAD curriculum v1.35](https://github.com/cncf/curriculum): the five domains, their weights, and the topic bullets under each.
+- [CKAD curriculum v1.37](https://github.com/cncf/curriculum): the five domains, their weights, and the topic bullets under each.
 - [Kubernetes tasks](https://kubernetes.io/docs/tasks/): official task walkthroughs for workloads, configuration, debugging, networking, and security.
-- [kubectl cheat sheet](https://v1-35.docs.kubernetes.io/docs/reference/kubectl/quick-reference/): imperative commands, output formats, and productivity patterns.
+- [kubectl cheat sheet](https://kubernetes.io/docs/reference/kubectl/quick-reference/): imperative commands, output formats, and productivity patterns.
 - [kind quick start](https://kind.sigs.k8s.io/docs/user/quick-start/): versioned local clusters and local image loading.
 - [Helm documentation](https://helm.sh/docs/): authoritative Helm command and chart reference.
 

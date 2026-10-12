@@ -12,8 +12,8 @@ A failed exercise comes back until it is mastered.
 
 ## Facts
 
-- The exam runs on Kubernetes v1.37 and lasts 2 hours: [Linux Foundation CKAD page](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/), read on 2026-09-30.
-- The five domains and their weights are in `CKAD_Curriculum_v1.35.pdf` in [cncf/curriculum](https://github.com/cncf/curriculum), still the newest CKAD curriculum file there on 2026-09-30.
+- The exam runs on Kubernetes v1.37 and lasts 2 hours: [Linux Foundation CKAD page](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/), read on 2026-10-12.
+- The five domains and their weights are in `CKAD_Curriculum_v1.37.pdf` in [cncf/curriculum](https://github.com/cncf/curriculum), the newest CKAD curriculum file there on 2026-10-12.
 - Agatino Pesce holds the exam voucher and targets early November 2026. When he practises is his own business.
 
 ## Files

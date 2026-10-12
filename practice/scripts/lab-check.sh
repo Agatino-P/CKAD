@@ -18,8 +18,10 @@ kc create namespace netpol-check >/dev/null
 kc -n netpol-check run web --image=nginx:alpine --port=80 --labels=app=web >/dev/null
 kc -n netpol-check expose pod web --port=80 >/dev/null
 kc -n netpol-check wait --for=condition=Ready pod/web --timeout=120s >/dev/null
+# The leading sleep keeps the client alive until kubectl attaches: a container that exits first
+# sends kubectl to its log fallback, which can return nothing.
 before=$(kc -n netpol-check run c1 --image=busybox:1.36 --restart=Never --rm -i -q -- \
-  sh -c 'wget -qO- --timeout=3 http://web >/dev/null && echo open || echo closed' 2>/dev/null | tail -1)
+  sh -c 'sleep 2; wget -qO- --timeout=3 http://web >/dev/null && echo open || echo closed' 2>/dev/null | tail -1)
 [[ "$before" == open ]] || fail "web pod unreachable before any policy ($before)"
 cat <<'YAML' | kc -n netpol-check apply -f - >/dev/null
 apiVersion: networking.k8s.io/v1
@@ -32,7 +34,7 @@ spec:
 YAML
 sleep 3
 after=$(kc -n netpol-check run c2 --image=busybox:1.36 --restart=Never --rm -i -q -- \
-  sh -c 'wget -qO- --timeout=3 http://web >/dev/null && echo open || echo closed' 2>/dev/null | tail -1)
+  sh -c 'sleep 2; wget -qO- --timeout=3 http://web >/dev/null && echo open || echo closed' 2>/dev/null | tail -1)
 kc delete namespace netpol-check --wait=false >/dev/null
 [[ "$after" == closed ]] || fail "deny-all NetworkPolicy is not enforced: the CNI ignores policies"
 

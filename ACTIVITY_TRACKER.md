@@ -162,6 +162,16 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Verified on v1.37:** the reference solutions of DGK-C-38 and DGK-C-39.
 - **Next action:** DGK-C-39.
 
+### 2026-10-12 — Shell setup in the notes, update check and lab check, on CH-LAM-WS052
+
+- **Notes:** A section "Shell setup at the start of a session" now opens "General" in `Study notes/CKAD cheat sheet.md` and "General Knowledge" in `Study notes/CKAD appunti.md`: `alias k`, `export KUBE_EDITOR=nano`, `use-context` and the namespace, and the `dr` dry-run variable in its bash string form and its zsh array form. In the cheat sheet the section replaces "Setting alias for Kubectl".
+- **User decision:** nano is always the editor, set with `export KUBE_EDITOR=nano`. The per-command `KUBE_EDITOR="nano"` prefix and the `ke` alias stay in both files as an alternative.
+- **Update check:** Homebrew had no update for kind, kubectl, helm, podman, jq or uv. The podman client and machine run the same version. kind v0.33.0 is still the latest release, so the pinned v1.37.0 node image stays. The Linux Foundation page still says Kubernetes v1.37.
+- **Curriculum:** cncf/curriculum now has `CKAD_Curriculum_v1.37.pdf`, with text identical to the v1.35 file. `practice/PRACTICE_PLAN.md` and `practice/PRACTICE_RESOURCES.md` now name the v1.37 file, and the kubectl quick-reference link points at the current docs.
+- **Sources:** dgkanatsios and bmuschko have no new upstream commits. ckad-dojo has three, which change only its `README.md`, so the submodule pin was not moved.
+- **Fixed:** `practice/scripts/lab-check.sh` failed once at the NetworkPolicy step with an empty result, while the network worked. The client container exited before `kubectl run -i` attached, and the log fallback returned nothing. Both client commands now start with `sleep 2`, and the full check then passed three runs in a row.
+- **Next action:** DGK-C-39.
+
 ### 2026-10-12 — Practice session, DGK-C-39 to DGK-G-01
 
 - **Attempts:** DGK-C-39 to DGK-G-01 are recorded in `practice/RESULTS_LEDGER.md`. DGK-C-39 and DGK-C-43 are partial with gap class slip, because the script ended with `echo world.`. Every other attempt passed.
