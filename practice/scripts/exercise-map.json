@@ -376,7 +376,8 @@
  "DGK-C-48": {
   "domain": "Application Design and Build",
   "topic": "Recreate the CronJob, watch the Jobs it creates, read a log, delete it.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-49": {
   "domain": "Application Design and Build",
