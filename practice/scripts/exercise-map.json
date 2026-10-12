@@ -400,7 +400,8 @@
  "DGK-C-52": {
   "domain": "Application Design and Build",
   "topic": "Create a Job manually from an existing CronJob.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-D-01": {
   "domain": "Application Environment, Configuration and Security",
