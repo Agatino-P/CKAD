@@ -388,7 +388,8 @@
  "DGK-C-50": {
   "domain": "Application Design and Build",
   "topic": "Create a CronJob whose Jobs are stopped after 12 seconds by `activeDeadlineSeconds`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-51": {
   "domain": "Application Design and Build",
