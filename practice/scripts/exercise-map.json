@@ -352,7 +352,8 @@
  "DGK-C-44": {
   "domain": "Application Design and Build",
   "topic": "Recreate the Job with parallelism 5.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-45": {
   "domain": "Application Design and Build",
