@@ -660,7 +660,8 @@
   "topic": "Create a 10Gi hostPath PersistentVolume with two access modes and list it.",
   "lab": [
    "storage"
-  ]
+  ],
+  "verified": "v1.37"
  },
  "DGK-G-03": {
   "domain": "Application Design and Build",
