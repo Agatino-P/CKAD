@@ -346,7 +346,8 @@
  "DGK-C-43": {
   "domain": "Application Design and Build",
   "topic": "Recreate the Job with 5 sequential completions in Indexed mode, verify, delete.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-44": {
   "domain": "Application Design and Build",
