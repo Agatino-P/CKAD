@@ -35,3 +35,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-12 | DGK-C-41 | pass | — | — | `k get job`, `k describe job busybox`, `k logs job/busybox`. |
 | 2026-10-12 | DGK-C-42 | pass | — | — | `busybox` Job and its Pod deleted. |
 | 2026-10-12 | DGK-C-43 | partial | — | slip | Run with `sleep 3` instead of `sleep 30`, at User's request. Five sequential completions were correct, but the script ended with `echo world.` instead of `echo world`, as in DGK-C-39. |
+| 2026-10-12 | DGK-C-44 | pass | — | — | Run with `sleep 3`. `parallelism: 5` and `completions: 5`, five Pods created together, all succeeded. |

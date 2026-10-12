@@ -358,7 +358,8 @@
  "DGK-C-45": {
   "domain": "Application Design and Build",
   "topic": "Create a Job that is terminated after 30 seconds by `activeDeadlineSeconds`.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-46": {
   "domain": "Application Design and Build",
