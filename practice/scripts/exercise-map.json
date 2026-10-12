@@ -394,7 +394,8 @@
  "DGK-C-51": {
   "domain": "Application Design and Build",
   "topic": "Set a CronJob's successful and failed Jobs history limits.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-52": {
   "domain": "Application Design and Build",
