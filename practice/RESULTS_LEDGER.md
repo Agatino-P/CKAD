@@ -44,3 +44,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-12 | DGK-C-50 | pass | — | — | `activeDeadlineSeconds: 12` in the Job template spec, a run logged the date and the message. |
 | 2026-10-12 | DGK-C-51 | pass | — | — | `successfulJobsHistoryLimit: 2` and `failedJobsHistoryLimit: 1` on the CronJob spec. |
 | 2026-10-12 | DGK-C-52 | pass | — | — | `sample-job` created from `cronjob/sample-cron-job`, owned by the CronJob, completed. |
+| 2026-10-12 | DGK-G-01 | pass | — | — | Run with any content instead of the first column of `/etc/passwd`, at User's request. One `emptyDir` at `/etc/foo` in both containers, the file written in one was read from the other. |
