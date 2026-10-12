@@ -38,3 +38,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-12 | DGK-C-44 | pass | — | — | Run with `sleep 3`. `parallelism: 5` and `completions: 5`, five Pods created together, all succeeded. |
 | 2026-10-12 | DGK-C-45 | pass | — | — | `activeDeadlineSeconds: 30` on the Job spec, Failed with reason `DeadlineExceeded`. |
 | 2026-10-12 | DGK-C-46 | pass | — | — | `*/1 * * * *` schedule, `sh -c` in `command`, each Job logged the date and the message. |
+| 2026-10-12 | DGK-C-47 | pass | — | — | `k logs` on a Pod of the CronJob, then the CronJob deleted with its Jobs and Pods. |
