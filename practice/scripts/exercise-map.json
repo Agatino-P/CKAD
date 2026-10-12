@@ -652,7 +652,8 @@
  "DGK-G-01": {
   "domain": "Application Design and Build",
   "topic": "Two busybox containers share an emptyDir, written by one and read by the other.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-G-02": {
   "domain": "Application Design and Build",
