@@ -340,7 +340,8 @@
  "DGK-C-42": {
   "domain": "Application Design and Build",
   "topic": "Delete the Job.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-43": {
   "domain": "Application Design and Build",
