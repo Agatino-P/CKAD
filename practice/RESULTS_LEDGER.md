@@ -41,3 +41,4 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-12 | DGK-C-47 | pass | — | — | `k logs` on a Pod of the CronJob, then the CronJob deleted with its Jobs and Pods. |
 | 2026-10-12 | DGK-C-48 | pass | — | — | `k get job --watch` showed the run, `k logs job/<name>` showed the date and the message, CronJob deleted. |
 | 2026-10-12 | DGK-C-49 | pass | — | — | `startingDeadlineSeconds: 17` on the CronJob spec, every-minute schedule, a run logged the date and the message. |
+| 2026-10-12 | DGK-C-50 | pass | — | — | `activeDeadlineSeconds: 12` in the Job template spec, a run logged the date and the message. |
