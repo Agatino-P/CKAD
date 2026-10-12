@@ -334,7 +334,8 @@
  "DGK-C-41": {
   "domain": "Application Design and Build",
   "topic": "Show the Job status, describe it and read its logs.",
-  "lab": []
+  "lab": [],
+  "verified": "v1.37"
  },
  "DGK-C-42": {
   "domain": "Application Design and Build",
