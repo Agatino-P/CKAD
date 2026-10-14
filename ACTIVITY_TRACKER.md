@@ -178,3 +178,13 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **User decision:** Claude presents each exercise before verifying it, and verifies in the background while User reads. Recorded in the "Prepare" step of `practice/PRACTICE_PLAN.md`.
 - **User preferences:** A long `sleep` in an exercise is shortened, such as `sleep 3` for `sleep 30`, when the wait teaches nothing. A step that tests Linux text tools rather than Kubernetes, such as `cut` on `/etc/passwd`, is dropped. The ledger note of each affected attempt says so.
 - **Next action:** DGK-G-02, already verified on v1.37. The cluster has no PersistentVolume and `default` is empty.
+
+### 2026-10-13 to 2026-10-14 — Practice session, DGK-G-02 to DGK-G-05, on CH-LAM-WS052
+
+- **Lab:** The three kind node containers were stopped. `podman start` on the three containers, then `practice/scripts/lab-up.sh` with `KIND_EXPERIMENTAL_PROVIDER=podman`, brought the cluster back.
+- **Attempts:** DGK-G-02 to DGK-G-05 are recorded in `practice/RESULTS_LEDGER.md`, and all four passed.
+- **Verified on v1.37:** the reference solutions of DGK-G-03, DGK-G-04 and DGK-G-05, each run under separate object names so that User's objects stayed untouched.
+- **Taught after DGK-G-05, at User's question:** a hostPath PersistentVolume is the directory on whichever node runs the Pod, and `ReadWriteOnce` does not keep a second Pod on the same node because a hostPath volume has no attach step. User's two Pods both ran on `ckad-worker`, so the second Pod saw the file. A Pod forced onto `ckad-worker2` with the same claim saw an empty `/etc/foo`.
+- **Paused by User** with the hostPath bite open for questions.
+- **Lab state left on CH-LAM-WS052:** `myvolume` (reclaim policy `Delete`) and `mypvc` are bound in `default`, no Pod runs in `default`, and `/etc/foo/passwd` exists only on the `ckad-worker` node. User's manifests are in `/tmp/ckad/`.
+- **Next action:** Answer User's remaining questions on hostPath. On "next", delete `mypvc`, `myvolume` and `/etc/foo` on the `ckad-worker` node, then present DGK-J-01.

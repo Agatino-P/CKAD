@@ -45,3 +45,7 @@ The retry queue is derived from this table by the mastery rule and is never stor
 | 2026-10-12 | DGK-C-51 | pass | — | — | `successfulJobsHistoryLimit: 2` and `failedJobsHistoryLimit: 1` on the CronJob spec. |
 | 2026-10-12 | DGK-C-52 | pass | — | — | `sample-job` created from `cronjob/sample-cron-job`, owned by the CronJob, completed. |
 | 2026-10-12 | DGK-G-01 | pass | — | — | Run with any content instead of the first column of `/etc/passwd`, at User's request. One `emptyDir` at `/etc/foo` in both containers, the file written in one was read from the other. |
+| 2026-10-13 | DGK-G-02 | pass | — | — | `pv.yaml` with 10Gi, `ReadWriteOnce` and `ReadWriteMany`, `storageClassName: normal`, `hostPath` `/etc/foo`, status `Available`. |
+| 2026-10-14 | DGK-G-03 | pass | — | — | `pvc.yaml` with 4Gi, `ReadWriteOnce`, `storageClassName: normal` and `volumeName: myvolume`, bound to `myvolume`. |
+| 2026-10-14 | DGK-G-04 | pass | — | — | `pod.yaml` with `args: [sleep, "3600"]` and `mypvc` mounted at `/etc/foo`, `/etc/passwd` copied into it. |
+| 2026-10-14 | DGK-G-05 | pass | — | — | `busybox2` from a copy of `pod.yaml` saw `passwd`, because both Pods ran on `ckad-worker`. Both Pods deleted. |

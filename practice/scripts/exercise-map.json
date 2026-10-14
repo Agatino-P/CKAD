@@ -668,21 +668,24 @@
   "topic": "Create a 4Gi PersistentVolumeClaim bound to that volume and list both.",
   "lab": [
    "storage"
-  ]
+  ],
+  "verified": "v1.37"
  },
  "DGK-G-04": {
   "domain": "Application Design and Build",
   "topic": "Mount the PersistentVolumeClaim in a Pod and copy a file into it.",
   "lab": [
    "storage"
-  ]
+  ],
+  "verified": "v1.37"
  },
  "DGK-G-05": {
   "domain": "Application Design and Build",
   "topic": "Create an identical second Pod and check whether the file is visible.",
   "lab": [
    "storage"
-  ]
+  ],
+  "verified": "v1.37"
  },
  "DGK-G-06": {
   "domain": "Application Observability and Maintenance",
