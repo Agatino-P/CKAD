@@ -195,4 +195,7 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Scope:** Node affinity is named only in the CKA curriculum (`CKA_Curriculum_v1.35.pdf`, "Configure Pod admission and scheduling"). `CKAD_Curriculum_v1.37.pdf` names no node-placement topic. Only node labels and `nodeSelector` were taught, recorded in `practice/study/LESSONS.md`.
 - **User decision:** A topic of one bite is presented directly, with no study plan section.
 - **Notes, approved by User:** `Study notes/CKAD appunti.md` gained "Selecting by label with `-l`", "Labels with no value" and "Selectors in YAML" after "Labels with `kubectl label`". `Study notes/CKAD cheat sheet.md` gained five bullets under "Label selectors (`-l`)". Every row was run on the lab and, for the quoting rows, in an interactive bash 5.3.
-- **Next action:** Bite exercise once User has no questions, then the next action of the entry above.
+- **Exercise:** User labelled `ckad-worker` with `zone=blue`, placed an nginx Pod on it with a required node affinity, and removed the label. All three items were correct.
+- **Cleanup, on CH-LAM-WS052:** `mypvc`, `myvolume` and `/etc/foo` on the `ckad-worker` node are deleted. After `mypvc` was deleted, `myvolume` went `Failed`, because its reclaim policy was `Delete` and the hostPath deleter refuses a path outside `/tmp`. The cluster has no PersistentVolume and `default` is empty. The cluster stays up.
+- **Paused by User** for another task.
+- **Next action:** Present DGK-J-01.
