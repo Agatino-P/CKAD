@@ -188,3 +188,11 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Paused by User** with the hostPath bite open for questions.
 - **Lab state left on CH-LAM-WS052:** `myvolume` (reclaim policy `Delete`) and `mypvc` are bound in `default`, no Pod runs in `default`, and `/etc/foo/passwd` exists only on the `ckad-worker` node. User's manifests are in `/tmp/ckad/`.
 - **Next action:** Answer User's remaining questions on hostPath. On "next", delete `mypvc`, `myvolume` and `/etc/foo` on the `ckad-worker` node, then present DGK-J-01.
+
+### 2026-10-14 — Node labels and `nodeSelector` taught
+
+- **Request:** User asked for a quick lesson on node affinity, which `Study notes/CKAD appunti.md` does not cover.
+- **Scope:** Node affinity is named only in the CKA curriculum (`CKA_Curriculum_v1.35.pdf`, "Configure Pod admission and scheduling"). `CKAD_Curriculum_v1.37.pdf` names no node-placement topic. Only node labels and `nodeSelector` were taught, recorded in `practice/study/LESSONS.md`.
+- **User decision:** A topic of one bite is presented directly, with no study plan section.
+- **Notes, approved by User:** `Study notes/CKAD appunti.md` gained "Selecting by label with `-l`", "Labels with no value" and "Selectors in YAML" after "Labels with `kubectl label`". `Study notes/CKAD cheat sheet.md` gained five bullets under "Label selectors (`-l`)". Every row was run on the lab and, for the quoting rows, in an interactive bash 5.3.
+- **Next action:** Bite exercise once User has no questions, then the next action of the entry above.

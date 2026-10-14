@@ -161,7 +161,12 @@ set tabstospaces
 ### Label selectors (`-l`)
 
 * A second `-l` doesn't add a condition: it replaces the first, and only the last `-l` counts.
-* Selectors have no OR between different conditions: the comma always means AND (`-l 'app=v2,tier!=frontend'`).
+* Selectors have no OR between different conditions: the comma always means AND (`-l 'app=v2,tier!=frontend'`). The only OR is between values of one key: `-l 'app in (v1,v2)'`.
+* `-l app` matches the key with any value, even empty. `-l '!app'` matches the key absent.
+* `!=` and `notin` also match objects that don't have the key.
+* Single quotes when the selector holds `!` or `(`: in bash, `"!app"` still fails with `event not found`.
+* Empty value: `k label pod d canary=`, and `canary: ""` in YAML. A bare `canary:` silently drops the label. `-L` can't tell empty from absent, `--show-labels` can.
+* A Service `selector` can't say "absent". `matchExpressions` with `DoesNotExist` can, in Deployments and NetworkPolicies.
 
 ### Imperatively Create a service for a deployment
 

@@ -693,6 +693,63 @@ Changing the value of an existing key needs `--overwrite`.
 | `kubectl label pod nginx2 app=v2 --overwrite` | `app` becomes `v2` | |
 | `kubectl label pod nginx2 tier-` | removes `tier` | a trailing dash removes the key |
 
+### Selecting by label with `-l`
+
+`-l`, long form `--selector`, filters by label in `get`, `delete`, `label`, `logs` and other commands.\
+A comma means AND, and only `in (...)` gives an OR, between the values of one key.\
+`!=` and `notin` also match objects that do not have the key.\
+In bash, put a selector holding `!` or parentheses in single quotes: inside double quotes, bash still reads `!app` as a history reference.
+
+The Pods in the table carry these labels:
+
+- `a`: `app=v1,tier=frontend`
+- `b`: `app=v2,tier=backend`
+- `c`: `app=v2`
+- `d`: `canary=`, an empty value
+
+| Command | Outcome | Notes |
+| --- | --- | --- |
+| `k get pod -l app=v2` | `b`, `c` | `==` is the same as `=` |
+| `k get pod -l 'tier!=frontend'` | `b`, `c`, `d` | `c` and `d` have no `tier` |
+| `k get pod -l 'app=v2,tier!=frontend'` | `b`, `c` | the comma means AND |
+| `k get pod -l 'app in (v1,v2)'` | `a`, `b`, `c` | OR between the values of `app` |
+| `k get pod -l 'app notin (v1)'` | `b`, `c`, `d` | `d` has no `app` |
+| `k get pod -l app` | `a`, `b`, `c` | the key exists, with any value |
+| `k get pod -l '!app'` | `d` | the key is absent |
+| `k get pod -l 'app,!tier'` | `c` | |
+| `k get pod -l canary` | `d` | an empty value counts as present |
+| `k get pod -l canary=` | `d` | matches the empty value |
+| `k get pod -l app=v1 -l app=v2` | `b`, `c` | only the last `-l` counts |
+| `k get pod -l "!app"` | `bash: !app: event not found` | the same without quotes |
+| `k get pod -l app in (v1,v2)` | `bash: syntax error near unexpected token '('` | |
+
+### Labels with no value
+
+`kubectl label pod d canary=` sets the label `canary` with an empty value, and `--show-labels` shows it as `canary=`.\
+In YAML the empty value must be written `""`.\
+A key with nothing after the colon is null, and the label is dropped without an error.\
+`-L` shows an empty column both for an empty value and for a missing label, so only `--show-labels` tells them apart.
+
+| Command or YAML | Outcome | Notes |
+| --- | --- | --- |
+| `kubectl label pod d canary=` | `canary=` in `--show-labels` | |
+| `labels:` with `canary: ""` | `canary=` in `--show-labels` | |
+| `labels:` with `canary:` and nothing after it | `<none>` in `--show-labels` | no error |
+| `k get pod -L canary` | an empty `CANARY` column for `d` and for every Pod without `canary` | |
+
+### Selectors in YAML
+
+A Service `spec.selector` is a plain map of keys and values, so it cannot express "key absent".\
+A Deployment `spec.selector` and a NetworkPolicy `podSelector` take `matchLabels` and `matchExpressions`, and every condition must hold.\
+The `matchExpressions` operators are `In`, `NotIn`, `Exists` and `DoesNotExist`.
+
+| Command or YAML | Outcome | Notes |
+| --- | --- | --- |
+| Service `selector:` with `canary: ""` | selects the Pods labelled `canary=` | |
+| `kubectl set selector svc canary '!canary'` | `error: match expression [{canary DoesNotExist []}] not supported on this object` | |
+| Deployment `selector:` with `matchLabels: {app: web}` and `matchExpressions: [{key: canary, operator: DoesNotExist}]`, template labels `app: web` | created | |
+| The same Deployment, template labels `app: web` and `canary: ""` | `` `selector` does not match template `labels` `` | `DoesNotExist` rejects an empty value too |
+
 ### Imperatively changing the selector on a service
 
 `kubectl set selector svc <svc-name> 'role=green'`
