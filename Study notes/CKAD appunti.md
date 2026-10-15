@@ -624,9 +624,12 @@ Ref: [Sidecar containers](https://kubernetes.io/docs/concepts/workloads/pods/sid
 
 Tells the cluster what to do with a PV after its PVC is deleted (the volume is "released" from its claim).
 
-* `Delete` deletes the PV object and the associated storage asset in the external infrastructure. Default for PVs dynamically created by a StorageClass.
+* `Delete` deletes the PV object and the associated storage asset in the external infrastructure. Default for PVs dynamically created by a StorageClass.\
+  On a hostPath volume outside `/tmp`, the delete is refused: after the claim is deleted, the PV shows `Failed` with the event `host_path deleter only supports /tmp/.+`, and stays.\
+  `kubectl delete pv` then removes the PV object, and the directory on the node stays.
 
-* `Retain` keeps the PV (status "released", not available to another claim) and its data, for manual reclamation.
+* `Retain` keeps the PV (status "released", not available to another claim) and its data, for manual reclamation.\
+  Default for a PV written by hand, without `persistentVolumeReclaimPolicy`.
 
 #### VolumeBindingMode
 
@@ -643,6 +646,18 @@ Are not referenced directly by the pod: `containers[].volumeMounts[].name` refer
 ### Persistent Volume Claims (PVC)
 
 Are referred inside the pod in `spec.volumes[].persistentVolumeClaim.claimName`. The PVC must be in the same namespace as the pod.
+
+### hostPath volumes
+
+A hostPath volume is the directory `path` on the node that runs the Pod, and every node has its own copy of that path.\
+Two Pods using the same hostPath claim on different nodes see different directories.\
+`ReadWriteOnce` does not keep them on one node, because a hostPath volume has no attach step.\
+To share files across nodes, the volume must be storage that every node reaches, such as NFS.
+
+| Command or state | Outcome | Notes |
+| --- | --- | --- |
+| A Pod on `ckad-worker` writes `/data/f` on a hostPath claim | `ls /data` shows `f` | |
+| A Pod on `ckad-worker2` with the same claim | `ls /data` is empty | both Pods `Running` |
 
 ### Ephemeral Volumes   
 

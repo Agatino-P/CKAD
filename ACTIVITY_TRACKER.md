@@ -198,4 +198,5 @@ Codex records useful decisions, constraints, preferences, research findings, and
 - **Exercise:** User labelled `ckad-worker` with `zone=blue`, placed an nginx Pod on it with a required node affinity, and removed the label. All three items were correct.
 - **Cleanup, on CH-LAM-WS052:** `mypvc`, `myvolume` and `/etc/foo` on the `ckad-worker` node are deleted. After `mypvc` was deleted, `myvolume` went `Failed`, because its reclaim policy was `Delete` and the hostPath deleter refuses a path outside `/tmp`. The cluster has no PersistentVolume and `default` is empty. The cluster stays up.
 - **Paused by User** for another task.
+- **Notes, approved by User on 2026-10-15:** `Study notes/CKAD appunti.md` gained the section "hostPath volumes" and two sentences under "Reclaim policy": the `Retain` default for a hand-written PersistentVolume, and the `Failed` volume left by `Delete` on a hostPath outside `/tmp`. `Study notes/CKAD cheat sheet.md` gained the same two facts as bullets under the volume lines. Both facts were run again on the lab, with the scheduler placing the two Pods through node affinity.
 - **Next action:** Present DGK-J-01.

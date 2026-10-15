@@ -140,6 +140,9 @@ set tabstospaces
 
 ###  `Persistent Volume Claims` (PVC) Are referred inside the pod in spec.volumes[].persistentVolumeClaim.claimName
 
+* hostPath = a directory on the node running the Pod: Pods on different nodes don't share its files, and `ReadWriteOnce` doesn't keep them on one node.
+* A hand-written PV defaults to `Retain`. With `Delete` on a hostPath outside `/tmp`, deleting the PVC leaves the PV `Failed`, and `kubectl delete pv` removes it.
+
 ### `Ephemeral volumes` are specified inline in the Pod spec, which simplifies application deployment and management.
 
 # Application Deployment
